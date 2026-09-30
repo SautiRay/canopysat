@@ -1,0 +1,690 @@
+[
+  {
+    "zone": "Amazon Rainforest",
+    "biome": "Tropical",
+    "lat": -3.4653,
+    "lng": -62.2159,
+    "climate": {
+      "temp_current_c": 26.6,
+      "temp_2050_c": 29.2,
+      "temp_change_c": 2.5,
+      "precip_current_mm": 2612,
+      "precip_2050_mm": 2108,
+      "precip_change_pct": -19.3,
+      "scenario": "SSP2-4.5 (2050) \u2014 5-model ensemble"
+    },
+    "suitability": {
+      "species_analyzed": 15,
+      "suitable": 9,
+      "moderate_risk": 6,
+      "at_risk": 0
+    },
+    "maxent_consistent": true,
+    "species_detail": [
+      {
+        "family": "Bromeliaceae",
+        "score": 0.91,
+        "species": "Aechmea fernandae",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "19.3\u201328.8\u00b0C"
+      },
+      {
+        "family": "Fabaceae",
+        "score": 0.91,
+        "species": "Macrolobium acaciifolium",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "13.1\u201329.0\u00b0C"
+      },
+      {
+        "family": "Rubiaceae",
+        "score": 0.83,
+        "species": "Isertia hypoleuca",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "18.8\u201328.9\u00b0C"
+      },
+      {
+        "family": "Lecythidaceae",
+        "score": 0.81,
+        "species": "Couratari tenuicarpa",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "19.4\u201328.5\u00b0C"
+      },
+      {
+        "family": "Fabaceae",
+        "score": 0.75,
+        "species": "Inga pilosula",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "12.5\u201328.5\u00b0C"
+      },
+      {
+        "family": "Nymphaeaceae",
+        "score": 0.74,
+        "species": "Victoria amazonica",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "19.8\u201327.8\u00b0C"
+      },
+      {
+        "family": "Rubiaceae",
+        "score": 0.72,
+        "species": "Mussaenda erythrophylla",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "10.7\u201328.8\u00b0C"
+      },
+      {
+        "family": "Chrysobalanaceae",
+        "score": 0.71,
+        "species": "Hirtella racemosa",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "14.0\u201328.5\u00b0C"
+      },
+      {
+        "family": "Cyperaceae",
+        "score": 0.7,
+        "species": "Eleocharis filiculmis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "13.4\u201328.5\u00b0C"
+      },
+      {
+        "family": "Fabaceae",
+        "score": 0.65,
+        "species": "Neptunia prostrata",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "12.1\u201328.3\u00b0C"
+      },
+      {
+        "family": "Chrysobalanaceae",
+        "score": 0.65,
+        "species": "Couepia paraensis",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "16.9\u201327.7\u00b0C"
+      },
+      {
+        "family": "Araceae",
+        "score": 0.63,
+        "species": "Pistia stratiotes",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "-1.6\u201328.7\u00b0C"
+      },
+      {
+        "family": "Pontederiaceae",
+        "score": 0.62,
+        "species": "Pontederia crassipes",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "4.0\u201328.6\u00b0C"
+      },
+      {
+        "family": "Cyperaceae",
+        "score": 0.54,
+        "species": "Cyperus haspan",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "7.3\u201328.1\u00b0C"
+      },
+      {
+        "family": "Polygonaceae",
+        "score": 0.5,
+        "species": "Triplaris gardneriana",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "13.1\u201327.1\u00b0C"
+      }
+    ]
+  },
+  {
+    "zone": "Congo Basin",
+    "biome": "Tropical",
+    "lat": 0.5,
+    "lng": 24.0,
+    "climate": {
+      "temp_current_c": 24.7,
+      "temp_2050_c": 27.3,
+      "temp_change_c": 2.6,
+      "precip_current_mm": 1885,
+      "precip_2050_mm": 1751,
+      "precip_change_pct": -7.1,
+      "scenario": "SSP2-4.5 (2050) \u2014 5-model ensemble"
+    },
+    "suitability": {
+      "species_analyzed": 15,
+      "suitable": 14,
+      "moderate_risk": 1,
+      "at_risk": 0
+    },
+    "maxent_consistent": true,
+    "species_detail": [
+      {
+        "family": "Rubiaceae",
+        "score": 1.0,
+        "species": "Coffea dactylifera",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "23.2\u201328.9\u00b0C"
+      },
+      {
+        "family": "Rubiaceae",
+        "score": 1.0,
+        "species": "Coffea lebruniana",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "24.1\u201328.9\u00b0C"
+      },
+      {
+        "family": "Rubiaceae",
+        "score": 1.0,
+        "species": "Morinda morindoides",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "19.6\u201328.8\u00b0C"
+      },
+      {
+        "family": "Annonaceae",
+        "score": 1.0,
+        "species": "Greenwayodendron suaveolens",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "22.4\u201329.0\u00b0C"
+      },
+      {
+        "family": "Clusiaceae",
+        "score": 1.0,
+        "species": "Garcinia punctata",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "22.3\u201328.9\u00b0C"
+      },
+      {
+        "family": "Apocynaceae",
+        "score": 1.0,
+        "species": "Tabernaemontana crassa",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "14.0\u201329.0\u00b0C"
+      },
+      {
+        "family": "Fabaceae",
+        "score": 1.0,
+        "species": "Tessmannia anomala",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "23.2\u201329.0\u00b0C"
+      },
+      {
+        "family": "Huaceae",
+        "score": 1.0,
+        "species": "Hua gabonii",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "23.2\u201329.0\u00b0C"
+      },
+      {
+        "family": "Apocynaceae",
+        "score": 1.0,
+        "species": "Hunteria congolana",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "22.4\u201329.0\u00b0C"
+      },
+      {
+        "family": "Annonaceae",
+        "score": 1.0,
+        "species": "Anonidium mannii",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "24.4\u201329.0\u00b0C"
+      },
+      {
+        "family": "Annonaceae",
+        "score": 1.0,
+        "species": "Monodora myristica",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "10.8\u201329.0\u00b0C"
+      },
+      {
+        "family": "Euphorbiaceae",
+        "score": 1.0,
+        "species": "Grossera multinervis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "22.3\u201328.7\u00b0C"
+      },
+      {
+        "family": "Ixonanthaceae",
+        "score": 1.0,
+        "species": "Phyllocosmus africanus",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "20.0\u201329.0\u00b0C"
+      },
+      {
+        "family": "Bignoniaceae",
+        "score": 0.97,
+        "species": "Newbouldia laevis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "13.2\u201329.0\u00b0C"
+      },
+      {
+        "family": "Rubiaceae",
+        "score": 0.46,
+        "species": "Coffea canephora",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "14.3\u201324.5\u00b0C"
+      }
+    ]
+  },
+  {
+    "zone": "Black Forest",
+    "biome": "Temperate",
+    "lat": 48.0,
+    "lng": 8.0,
+    "climate": {
+      "temp_current_c": 8.4,
+      "temp_2050_c": 9.1,
+      "temp_change_c": 0.7,
+      "precip_current_mm": 1039,
+      "precip_2050_mm": 1024,
+      "precip_change_pct": -1.4,
+      "scenario": "SSP2-4.5 (2050) \u2014 5-model ensemble"
+    },
+    "suitability": {
+      "species_analyzed": 15,
+      "suitable": 10,
+      "moderate_risk": 4,
+      "at_risk": 1
+    },
+    "maxent_consistent": true,
+    "species_detail": [
+      {
+        "family": "Rosaceae",
+        "score": 1.0,
+        "species": "Prunus amygdalus",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-0.1\u201314.4\u00b0C"
+      },
+      {
+        "family": "Oleaceae",
+        "score": 1.0,
+        "species": "Olea europaea",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-0.2\u201317.5\u00b0C"
+      },
+      {
+        "family": "Ulmaceae",
+        "score": 0.86,
+        "species": "Ulmus minor",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-6.1\u201313.5\u00b0C"
+      },
+      {
+        "family": "Poaceae",
+        "score": 0.83,
+        "species": "Phragmites australis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-6.2\u201314.5\u00b0C"
+      },
+      {
+        "family": "Equisetaceae",
+        "score": 0.83,
+        "species": "Equisetum hyemale",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-7.4\u201320.3\u00b0C"
+      },
+      {
+        "family": "Araliaceae",
+        "score": 0.8,
+        "species": "Hedera helix",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-3.9\u201311.5\u00b0C"
+      },
+      {
+        "family": "Asteraceae",
+        "score": 0.75,
+        "species": "Bellis perennis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-5.8\u201316.8\u00b0C"
+      },
+      {
+        "family": "Fagaceae",
+        "score": 0.7,
+        "species": "Quercus robur",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-7.4\u201311.4\u00b0C"
+      },
+      {
+        "family": "Elaeagnaceae",
+        "score": 0.7,
+        "species": "Hippophae rhamnoides",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-8.2\u201312.0\u00b0C"
+      },
+      {
+        "family": "Rosaceae",
+        "score": 0.7,
+        "species": "Filipendula vulgaris",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-6.4\u20139.3\u00b0C"
+      },
+      {
+        "family": "Euphorbiaceae",
+        "score": 0.67,
+        "species": "Mercurialis perennis",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "-3.7\u20138.8\u00b0C"
+      },
+      {
+        "family": "Betulaceae",
+        "score": 0.54,
+        "species": "Corylus avellana",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "-6.3\u20138.0\u00b0C"
+      },
+      {
+        "family": "Viscaceae",
+        "score": 0.51,
+        "species": "Viscum album",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "-6.0\u20137.6\u00b0C"
+      },
+      {
+        "family": "Primulaceae",
+        "score": 0.41,
+        "species": "Hottonia palustris",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "-4.2\u20137.1\u00b0C"
+      },
+      {
+        "family": "Oleaceae",
+        "score": 0.32,
+        "species": "Ligustrum vulgare",
+        "status": "At risk",
+        "status_fr": "A risque",
+        "temp_range": "-6.2\u20136.3\u00b0C"
+      }
+    ]
+  },
+  {
+    "zone": "Borneo",
+    "biome": "Tropical SE Asia",
+    "lat": 1.0,
+    "lng": 114.0,
+    "climate": {
+      "temp_current_c": 21.9,
+      "temp_2050_c": 24.8,
+      "temp_change_c": 2.9,
+      "precip_current_mm": 3639,
+      "precip_2050_mm": 4169,
+      "precip_change_pct": 14.6,
+      "scenario": "SSP2-4.5 (2050) \u2014 5-model ensemble"
+    },
+    "suitability": {
+      "species_analyzed": 11,
+      "suitable": 11,
+      "moderate_risk": 0,
+      "at_risk": 0
+    },
+    "maxent_consistent": true,
+    "species_detail": [
+      {
+        "family": "Orchidaceae",
+        "score": 1.0,
+        "species": "Coelogyne asperata",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "4.3\u201328.7\u00b0C"
+      },
+      {
+        "family": "Moraceae",
+        "score": 1.0,
+        "species": "Ficus hemsleyana",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "21.8\u201328.8\u00b0C"
+      },
+      {
+        "family": "Fabaceae",
+        "score": 1.0,
+        "species": "Whitfordiodendron nieuwenhuisii",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "21.8\u201329.0\u00b0C"
+      },
+      {
+        "family": "Rafflesiaceae",
+        "score": 1.0,
+        "species": "Rafflesia arnoldi",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "20.4\u201329.0\u00b0C"
+      },
+      {
+        "family": "Oleandraceae",
+        "score": 1.0,
+        "species": "Oleandra neriiformis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "10.3\u201328.5\u00b0C"
+      },
+      {
+        "family": "Arecaceae",
+        "score": 1.0,
+        "species": "Salacca affinis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "21.6\u201328.7\u00b0C"
+      },
+      {
+        "family": "Arecaceae",
+        "score": 1.0,
+        "species": "Pinanga variegata",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "21.8\u201328.7\u00b0C"
+      },
+      {
+        "family": "Orchidaceae",
+        "score": 0.9,
+        "species": "Arundina graminifolia",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "13.3\u201328.9\u00b0C"
+      },
+      {
+        "family": "Melastomataceae",
+        "score": 0.86,
+        "species": "Miconia crenata",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "11.6\u201328.3\u00b0C"
+      },
+      {
+        "family": "Fabaceae",
+        "score": 0.82,
+        "species": "Mimosa pudica",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "9.8\u201329.0\u00b0C"
+      },
+      {
+        "family": "Rubiaceae",
+        "score": 0.74,
+        "species": "Neolamarckia cadamba",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "9.2\u201328.3\u00b0C"
+      }
+    ]
+  },
+  {
+    "zone": "Boreal Canada",
+    "biome": "Boreal",
+    "lat": 55.0,
+    "lng": -100.0,
+    "climate": {
+      "temp_current_c": -1.7,
+      "temp_2050_c": 1.5,
+      "temp_change_c": 3.2,
+      "precip_current_mm": 485,
+      "precip_2050_mm": 456,
+      "precip_change_pct": -6.1,
+      "scenario": "SSP2-4.5 (2050) \u2014 5-model ensemble"
+    },
+    "suitability": {
+      "species_analyzed": 15,
+      "suitable": 14,
+      "moderate_risk": 1,
+      "at_risk": 0
+    },
+    "maxent_consistent": true,
+    "species_detail": [
+      {
+        "family": "Ranunculaceae",
+        "score": 1.0,
+        "species": "Aquilegia brevistyla",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-8.3\u20135.9\u00b0C"
+      },
+      {
+        "family": "Liliaceae",
+        "score": 1.0,
+        "species": "Lilium philadelphicum",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-3.7\u201310.0\u00b0C"
+      },
+      {
+        "family": "Orchidaceae",
+        "score": 1.0,
+        "species": "Galearis rotundifolia",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-10.2\u20135.1\u00b0C"
+      },
+      {
+        "family": "Ericaceae",
+        "score": 1.0,
+        "species": "Kalmia polifolia",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-0.4\u20137.7\u00b0C"
+      },
+      {
+        "family": "Pteridaceae",
+        "score": 1.0,
+        "species": "Cryptogramma acrostichoides",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-1.7\u20138.4\u00b0C"
+      },
+      {
+        "family": "Ericaceae",
+        "score": 1.0,
+        "species": "Andromeda polifolia",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-11.2\u20137.7\u00b0C"
+      },
+      {
+        "family": "Asparagaceae",
+        "score": 1.0,
+        "species": "Maianthemum trifolium",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-4.3\u20137.2\u00b0C"
+      },
+      {
+        "family": "Rubiaceae",
+        "score": 1.0,
+        "species": "Galium boreale",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-6.6\u20138.1\u00b0C"
+      },
+      {
+        "family": "Papaveraceae",
+        "score": 0.99,
+        "species": "Capnoides sempervirens",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-1.0\u201310.8\u00b0C"
+      },
+      {
+        "family": "Sarraceniaceae",
+        "score": 0.95,
+        "species": "Sarracenia purpurea",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-4.0\u201311.4\u00b0C"
+      },
+      {
+        "family": "Araliaceae",
+        "score": 0.94,
+        "species": "Aralia nudicaulis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-0.7\u201310.8\u00b0C"
+      },
+      {
+        "family": "Liliaceae",
+        "score": 0.94,
+        "species": "Clintonia borealis",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "0.9\u201310.5\u00b0C"
+      },
+      {
+        "family": "Orchidaceae",
+        "score": 0.92,
+        "species": "Calypso bulbosa",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-1.5\u20139.5\u00b0C"
+      },
+      {
+        "family": "Rosaceae",
+        "score": 0.83,
+        "species": "Rubus arcticus",
+        "status": "Suitable",
+        "status_fr": "Favorable",
+        "temp_range": "-9.9\u20132.8\u00b0C"
+      },
+      {
+        "family": "Orchidaceae",
+        "score": 0.69,
+        "species": "Cypripedium parviflorum",
+        "status": "Moderate risk",
+        "status_fr": "Risque mod\u00e9r\u00e9",
+        "temp_range": "3.1\u201311.7\u00b0C"
+      }
+    ]
+  }
+]

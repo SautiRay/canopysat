@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat Community Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; padding: 20px; }
+        h1 { color: #3DAA6B; margin-bottom: 20px; font-size: 22px; }
+        h2 { color: #3DAA6B; margin: 20px 0 10px; font-size: 16px; border-bottom: 1px solid #1B6B45; padding-bottom: 6px; }
+        .card { background: #1B4332; border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 1px solid #1B6B45; }
+        input, textarea, select { width: 100%; padding: 8px 12px; background: #0D3B2E; border: 1px solid #1B6B45; border-radius: 6px; color: white; font-size: 13px; margin-bottom: 10px; }
+        textarea { height: 80px; resize: vertical; }
+        .btn { padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; }
+        .btn-add { background: #2D8A5A; color: white; }
+        .btn-del { background: #E53935; color: white; padding: 4px 10px; font-size: 11px; }
+        .event-row { background: #0D3B2E; border-radius: 6px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .event-info { font-size: 12px; }
+        .event-title { color: white; font-weight: bold; }
+        .event-date { color: #3DAA6B; font-size: 11px; }
+        .event-type { color: #D6EFE1; font-size: 10px; }
+        .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; font-size: 12px; }
+        .msg-ok { background: #1B6B45; color: #D6EFE1; }
+        .msg-err { background: #E53935; color: white; }
+        label { font-size: 11px; color: #3DAA6B; display: block; margin-bottom: 3px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+<h1>🛰️ CanopySat Community Admin</h1>
+
+<div class="card">
+    <h2>📅 Add New Event</h2>
+    <div id="msg"></div>
+    <label>Title</label>
+    <input type="text" id="title" placeholder="Event title">
+    <label>Description</label>
+    <textarea id="description" placeholder="Event description"></textarea>
+    <div class="grid">
+        <div>
+            <label>Date</label>
+            <input type="date" id="date">
+        </div>
+        <div>
+            <label>Type</label>
+            <select id="type">
+                <option value="webinar">Webinar</option>
+                <option value="hackathon">Hackathon</option>
+                <option value="challenge">Challenge</option>
+                <option value="conference">Conference</option>
+                <option value="workshop">Workshop</option>
+                <option value="event">Event</option>
+            </select>
+        </div>
+    </div>
+    <label>Link (optional)</label>
+    <input type="text" id="link" placeholder="/contact" value="/contact">
+    <button class="btn btn-add" onclick="addEvent()">➕ Add Event</button>
+</div>
+
+<div class="card">
+    <h2>📋 Current Events</h2>
+    <div id="events-list">Loading...</div>
+</div>
+
+<script>
+async function loadEvents() {
+    const res = await fetch('/community/stats');
+    const data = await res.json();
+    const events = data.events || [];
+    const list = document.getElementById('events-list');
+    if (events.length === 0) {
+        list.innerHTML = '<p style="color:#2D6A4F;font-size:12px;">No events yet.</p>';
+        return;
+    }
+    list.innerHTML = events.map(e => `
+        <div class="event-row">
+            <div class="event-info">
+                <div class="event-title">${e.title}</div>
+                <div class="event-date">📅 ${e.date} · <span class="event-type">${e.type}</span></div>
+                <div style="color:#D6EFE1;font-size:11px;margin-top:2px;">${e.description}</div>
+            </div>
+            <button class="btn btn-del" onclick="deleteEvent(${e.id})">🗑️ Delete</button>
+        </div>
+    `).join('');
+}
+
+async function addEvent() {
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const date = document.getElementById('date').value;
+    const type = document.getElementById('type').value;
+    const link = (document.getElementById('link').value.trim() || '/contact').toLowerCase();
+    
+    if (!title || !date) {
+        showMsg('Title and date are required', 'err');
+        return;
+    }
+    
+    const res = await fetch('/community/event/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({title, description, date, type, link})
+    });
+    const data = await res.json();
+    if (data.success) {
+        showMsg('Event added successfully!', 'ok');
+        document.getElementById('title').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('date').value = '';
+        loadEvents();
+    } else {
+        showMsg('Error: ' + (data.error || 'Unknown'), 'err');
+    }
+}
+
+async function deleteEvent(id) {
+    if (!confirm('Delete this event?')) return;
+    const res = await fetch('/community/event/delete/' + id, {method: 'POST'});
+    const data = await res.json();
+    if (data.success) {
+        showMsg('Event deleted', 'ok');
+        loadEvents();
+    } else {
+        showMsg('Error deleting event', 'err');
+    }
+}
+
+function showMsg(text, type) {
+    const msg = document.getElementById('msg');
+    msg.className = 'msg msg-' + type;
+    msg.textContent = text;
+    setTimeout(() => msg.textContent = '', 3000);
+}
+
+loadEvents();
+</script>
+</body>
+</html>

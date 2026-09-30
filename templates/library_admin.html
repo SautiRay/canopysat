@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat Library — Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; }
+        header { background: #0A2E20; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #E53935; }
+        .logo { font-size: 16px; font-weight: bold; color: white; }
+        .admin-badge { background: #E53935; padding: 4px 12px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+        .container { max-width: 960px; margin: 0 auto; padding: 30px 20px; }
+        h2 { font-size: 22px; color: #3DAA6B; margin-bottom: 5px; }
+        .stats { display: flex; gap: 15px; margin: 15px 0; flex-wrap: wrap; }
+        .stat { background: #1B4332; border-radius: 8px; padding: 12px 20px; text-align: center; }
+        .stat-num { font-size: 22px; font-weight: bold; color: #F9A825; }
+        .stat-label { font-size: 10px; color: #D6EFE1; }
+        h3 { font-size: 16px; color: #3DAA6B; margin: 25px 0 12px; border-bottom: 1px solid #1B6B45; padding-bottom: 6px; }
+        .item-card { background: #1B4332; border-radius: 10px; padding: 18px; margin-bottom: 12px; border: 1px solid #1B6B45; }
+        .item-title { font-size: 14px; font-weight: bold; color: white; margin-bottom: 6px; }
+        .item-authors { font-size: 12px; color: #3DAA6B; margin-bottom: 3px; }
+        .item-org { font-size: 11px; color: #D6EFE1; margin-bottom: 6px; }
+        .item-abstract { font-size: 11px; color: #D6EFE1; line-height: 1.6; margin-bottom: 10px; background: #0D3B2E; padding: 8px; border-radius: 6px; }
+        .item-meta { font-size: 10px; color: #2D6A4F; margin-bottom: 10px; }
+        .item-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-approve { padding: 8px 18px; background: #2D8A5A; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .btn-approve:hover { background: #3DAA6B; }
+        .btn-reject { padding: 8px 18px; background: #E53935; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .btn-reject:hover { background: #c62828; }
+        .btn-download { padding: 8px 14px; background: #1B6B45; color: white; border-radius: 6px; text-decoration: none; font-size: 11px; }
+        .empty-state { text-align: center; padding: 30px; color: #2D6A4F; font-size: 13px; }
+        .approved-badge { background: #2D8A5A; padding: 3px 10px; border-radius: 10px; font-size: 10px; }
+        .rejected-badge { background: #E53935; padding: 3px 10px; border-radius: 10px; font-size: 10px; }
+        .msg { padding: 10px; border-radius: 6px; margin-bottom: 10px; text-align: center; font-size: 12px; display: none; }
+        .msg-success { background: #1B6B45; }
+        .msg-error { background: #E53935; }
+        .refresh-btn { padding: 8px 16px; background: #1B4332; color: #3DAA6B; border: 1px solid #3DAA6B; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        footer { text-align: center; padding: 15px; font-size: 11px; color: #2D6A4F; border-top: 1px solid #1B6B45; margin-top: 40px; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">🛰️ CanopySat Library — Admin Panel</div>
+    <div>
+        <span class="admin-badge">🔐 ADMIN</span>
+        <a href="/library" style="color:#D6EFE1;text-decoration:none;font-size:12px;margin-left:12px;">← Back to Library</a>
+    </div>
+</header>
+
+<div class="container">
+    <h2>📋 Pending Submissions</h2>
+    <p style="color:#D6EFE1;font-size:13px;">Review and approve or reject submissions before they appear on the public library.</p>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-num" id="pending-pubs">...</div><div class="stat-label">Pending Publications</div></div>
+        <div class="stat"><div class="stat-num" id="pending-data">...</div><div class="stat-label">Pending Datasets</div></div>
+    </div>
+
+    <div class="msg msg-success" id="msg-success"></div>
+    <div class="msg msg-error" id="msg-error"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3>📖 Publications</h3>
+        <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+    </div>
+    <div id="pubs-container"><div class="empty-state">⏳ Loading...</div></div>
+
+    <h3>📊 Datasets</h3>
+    <div id="data-container"><div class="empty-state">⏳ Loading...</div></div>
+</div>
+
+<footer>CanopySat Library Admin · canopysat.org</footer>
+
+<script>
+async function loadData() {
+    try {
+        const res = await fetch('/library/admin/data');
+        const data = await res.json();
+
+        document.getElementById('pending-pubs').textContent = data.pending_publications.length;
+        document.getElementById('pending-data').textContent = data.pending_datasets.length;
+
+        // Render publications
+        const pubsEl = document.getElementById('pubs-container');
+        if (data.pending_publications.length > 0) {
+            pubsEl.innerHTML = data.pending_publications.map(p => `
+                <div class="item-card" id="pub-${p.id}">
+                    <div class="item-title">${p.title}</div>
+                    <div class="item-authors">👤 ${p.authors}</div>
+                    <div class="item-org">🏛️ ${p.org || 'N/A'} · ${p.country || 'N/A'} · 📅 ${p.date}</div>
+                    ${p.abstract ? `<div class="item-abstract">${p.abstract}</div>` : ''}
+                    <div class="item-meta">
+                        Type: ${p.type} 
+                        ${p.doi ? '· DOI: ' + p.doi : ''} 
+                        ${p.keywords ? '· Keywords: ' + p.keywords : ''}
+                        ${p.file ? '· 📎 File attached' : '· No file'}
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-approve" onclick="approve('publication', ${p.id})">✅ Approve & Publish</button>
+                        <button class="btn-reject" onclick="reject('publication', ${p.id})">❌ Reject</button>
+                        ${p.file ? `<a href="/${p.file}" target="_blank" class="btn-download">📥 View File</a>` : ''}
+                    </div>
+                </div>`).join('');
+        } else {
+            pubsEl.innerHTML = '<div class="empty-state">✅ No pending publications</div>';
+        }
+
+        // Render datasets
+        const dataEl = document.getElementById('data-container');
+        if (data.pending_datasets.length > 0) {
+            dataEl.innerHTML = data.pending_datasets.map(d => `
+                <div class="item-card" id="data-${d.id}">
+                    <div class="item-title">${d.title}</div>
+                    <div class="item-authors">👤 ${d.authors}</div>
+                    <div class="item-org">🏛️ ${d.org || 'N/A'} · ${d.country || 'N/A'} · 📅 ${d.date}</div>
+                    ${d.description ? `<div class="item-abstract">${d.description}</div>` : ''}
+                    <div class="item-meta">
+                        Format: ${d.format || 'N/A'}
+                        ${d.keywords ? '· Keywords: ' + d.keywords : ''}
+                        ${d.file ? '· 📎 File attached' : '· No file'}
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-approve" onclick="approve('dataset', ${d.id})">✅ Approve & Publish</button>
+                        <button class="btn-reject" onclick="reject('dataset', ${d.id})">❌ Reject</button>
+                        ${d.file ? `<a href="/${d.file}" target="_blank" class="btn-download">📥 View File</a>` : ''}
+                    </div>
+                </div>`).join('');
+        } else {
+            dataEl.innerHTML = '<div class="empty-state">✅ No pending datasets</div>';
+        }
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+async function approve(type, id) {
+    try {
+        const res = await fetch(`/library/approve/${type}/${id}`);
+        const data = await res.json();
+        if (data.success) {
+            showMsg('success', `✅ ${type} approved and published on the library!`);
+            document.getElementById(`${type === 'publication' ? 'pub' : 'data'}-${id}`).remove();
+            loadData();
+        }
+    } catch(e) { showMsg('error', 'Error: ' + e.message); }
+}
+
+async function reject(type, id) {
+    if (!confirm('Are you sure you want to reject this submission?')) return;
+    try {
+        const res = await fetch(`/library/reject/${type}/${id}`);
+        const data = await res.json();
+        if (data.success) {
+            showMsg('success', `❌ ${type} rejected and removed.`);
+            document.getElementById(`${type === 'publication' ? 'pub' : 'data'}-${id}`).remove();
+            loadData();
+        }
+    } catch(e) { showMsg('error', 'Error: ' + e.message); }
+}
+
+function showMsg(type, text) {
+    const el = document.getElementById('msg-' + type);
+    el.textContent = text;
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 4000);
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>

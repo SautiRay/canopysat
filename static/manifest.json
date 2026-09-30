@@ -1,0 +1,27 @@
+{
+    "name": "CanopySat — Forest Intelligence Ecosystem",
+    "short_name": "CanopySat",
+    "description": "Global satellite-based forest verification and monitoring platform",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0D3B2E",
+    "theme_color": "#0D3B2E",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "/static/img/logo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/static/img/logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["productivity", "utilities", "environment"],
+    "lang": "en",
+    "scope": "/"
+}

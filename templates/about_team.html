@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Team</title>
+    <meta name="description" content="CanopySat team — combining forest science, satellite Earth observation, geospatial technology and software engineering.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .nav-link:hover { background:#1B6B45; }
+        .container { max-width:860px; margin:0 auto; padding:40px 20px; }
+        .breadcrumb { font-size:11px; color:#2D6A4F; margin-bottom:15px; }
+        .breadcrumb a { color:#3DAA6B; text-decoration:none; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:28px; color:white; margin-bottom:8px; }
+        h2 { font-size:18px; color:#3DAA6B; margin:35px 0 15px; border-bottom:1px solid #1B6B45; padding-bottom:8px; }
+        h3 { font-size:15px; color:white; margin:20px 0 8px; }
+        .subtitle { font-size:14px; color:#D6EFE1; margin-bottom:40px; line-height:1.7; }
+        p { font-size:12px; color:#D6EFE1; line-height:1.8; margin-bottom:10px; }
+        /* Leadership card */
+        .leader-card { background:#1B4332; border-radius:14px; padding:28px; border:2px solid #3DAA6B; margin-bottom:30px; }
+        .leader-name { font-size:24px; font-weight:bold; color:white; margin-bottom:4px; }
+        .leader-role { font-size:13px; color:#3DAA6B; margin-bottom:18px; font-weight:bold; }
+        .leader-bio { font-size:12px; color:#D6EFE1; line-height:1.9; margin-bottom:20px; }
+        /* Expertise tags */
+        .tags { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+        .tag { background:#0D3B2E; border:1px solid #1B6B45; border-radius:20px; padding:4px 12px; font-size:11px; color:#3DAA6B; }
+        /* Education */
+        .edu-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin:12px 0; }
+        .edu-item { background:#0D3B2E; border-radius:8px; padding:12px; border:1px solid #1B6B45; }
+        .edu-label { font-size:9px; color:#3DAA6B; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+        .edu-value { font-size:11px; color:#D6EFE1; line-height:1.5; }
+        /* Links */
+        .links-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+        .link-btn { padding:7px 16px; border-radius:8px; font-size:11px; font-weight:bold; text-decoration:none; border:1px solid #3DAA6B; color:#3DAA6B; background:#0D3B2E; }
+        .link-btn:hover { background:#1B6B45; color:white; }
+        /* Expertise cards */
+        .expertise-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:14px; margin:16px 0; }
+        .expertise-card { background:#1B4332; border-radius:10px; padding:18px; border:1px solid #1B6B45; border-top:3px solid #3DAA6B; }
+        .expertise-title { font-size:13px; font-weight:bold; color:#3DAA6B; margin-bottom:6px; }
+        .expertise-desc { font-size:11px; color:#D6EFE1; line-height:1.7; }
+        /* Scientific validation */
+        .validation-box { background:#1B4332; border-radius:10px; padding:20px; border:1px solid #3DAA6B; margin:16px 0; }
+        .validation-stats { display:flex; gap:20px; flex-wrap:wrap; margin:12px 0; }
+        .val-stat { text-align:center; }
+        .val-number { font-size:28px; font-weight:bold; color:#3DAA6B; }
+        .val-label { font-size:10px; color:#D6EFE1; margin-top:2px; }
+        /* Growing team */
+        .domains-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:8px; margin:12px 0; }
+        .domain-item { background:#0D3B2E; border-radius:6px; padding:8px 12px; font-size:11px; color:#D6EFE1; border-left:2px solid #3DAA6B; }
+        /* CTA */
+        .cta-box { background:#1B4332; border-radius:12px; padding:28px; border:1px solid #1B6B45; text-align:center; margin:30px 0; }
+        .cta-title { font-size:18px; font-weight:bold; color:white; margin-bottom:10px; }
+        .cta-desc { font-size:12px; color:#D6EFE1; line-height:1.8; margin-bottom:18px; }
+        .cta-btn { display:inline-block; padding:10px 24px; background:#3DAA6B; color:white; border-radius:8px; font-size:12px; font-weight:bold; text-decoration:none; }
+        footer { text-align:center; padding:20px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:40px; }
+        .lang-btn { padding:4px 10px; border-radius:12px; border:1px solid #3DAA6B; background:transparent; color:#D6EFE1; text-decoration:none; font-size:11px; font-weight:bold; transition:all 0.3s; }
+        .lang-btn.active { background:#3DAA6B; color:white; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="lang-btn {% if lang == 'en' %}active{% endif %}" href="/about/team?lang=en">EN</a>
+        <a class="lang-btn {% if lang == 'fr' %}active{% endif %}" href="/about/team?lang=fr">FR</a>
+        <a href="/about" class="nav-link">← About</a>
+        <a href="/" class="nav-link">Home</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="breadcrumb">
+        <a href="/">Home</a> → <a href="/about">About</a> → Team
+    </div>
+    <div class="badge">ABOUT · TEAM</div>
+    <h1>{% if lang == 'fr' %}Notre Équipe{% else %}Our Team{% endif %}</h1>
+    <p class="subtitle">
+        {% if lang == 'fr' %}
+        CanopySat réunit des expertises en science forestière, observation satellitaire de la Terre, technologie géospatiale et ingénierie logicielle pour développer des outils pratiques de surveillance des écosystèmes forestiers.
+        {% else %}
+        CanopySat brings together expertise in forest science, satellite Earth observation, geospatial technology and software engineering to develop practical tools for understanding and monitoring forest ecosystems.
+        {% endif %}
+    </p>
+
+    <!-- Leadership -->
+    <h2>{% if lang == 'fr' %}Direction{% else %}Leadership{% endif %}</h2>
+
+    <div class="leader-card">
+        <div class="leader-name">Raymond Sauti</div>
+        <div class="leader-role">{% if lang == 'fr' %}Fondateur & Directeur Général{% else %}Founder & Chief Executive Officer{% endif %}</div>
+
+        <p class="leader-bio">
+            {% if lang == 'fr' %}
+            Raymond Sauti est le Fondateur et Directeur Général de CanopySat, une plateforme d'intelligence forestière combinant l'observation satellitaire de la Terre, la technologie géospatiale et la science forestière pour soutenir la surveillance des forêts et la prise de décision.
+            <br><br>
+            Avec une formation interdisciplinaire couvrant l'ingénierie forestière, l'agroforesterie et les technologies de l'information, Raymond dirige la direction stratégique, le développement produit et la vision technologique de CanopySat.
+            <br><br>
+            Son travail vise à rapprocher la science forestière et les technologies numériques pour rendre les informations géospatiales avancées plus accessibles, pratiques et utiles aux professionnels de la forêt, chercheurs, organisations de conservation et autres parties prenantes.
+            {% else %}
+            Raymond Sauti is the Founder and Chief Executive Officer of CanopySat, a forest intelligence platform combining satellite Earth observation, geospatial technology and forest science to support forest monitoring and decision-making.
+            <br><br>
+            With an interdisciplinary background spanning forest engineering, agroforestry and information technology, Raymond leads CanopySat's strategic direction, product development and technological vision.
+            <br><br>
+            His work focuses on bridging forest science and digital technologies to make advanced geospatial information more accessible, practical and useful for forest professionals, researchers, conservation organizations and other stakeholders.
+            {% endif %}
+        </p>
+
+        <h3>{% if lang == 'fr' %}Domaines d'expertise{% else %}Areas of Expertise{% endif %}</h3>
+        <div class="tags">
+            <span class="tag">Forest Engineering</span>
+            <span class="tag">Forest Monitoring</span>
+            <span class="tag">Satellite Earth Observation</span>
+            <span class="tag">Geospatial Technology</span>
+            <span class="tag">Remote Sensing</span>
+            <span class="tag">GIS & Spatial Analysis</span>
+            <span class="tag">Software Engineering</span>
+            <span class="tag">Agroforestry</span>
+        </div>
+
+        <h3>{% if lang == 'fr' %}Formation académique{% else %}Academic Background{% endif %}</h3>
+        <div class="edu-grid">
+            <div class="edu-item">
+                <div class="edu-label">MSc</div>
+                <div class="edu-value">Forest Engineering<br>Karadeniz Technical University, Türkiye</div>
+            </div>
+            <div class="edu-item">
+                <div class="edu-label">BSc</div>
+                <div class="edu-value">Agroforestry<br>University of Rwanda</div>
+            </div>
+            <div class="edu-item">
+                <div class="edu-label">BSc</div>
+                <div class="edu-value">Information Technology: Systems & Networks<br>EICPN, Namur, Belgium (2026)</div>
+            </div>
+            <div class="edu-item">
+                <div class="edu-label">Erasmus Exchange</div>
+                <div class="edu-value">Forest & Environmental Sciences<br>University of Freiburg, Germany</div>
+            </div>
+            <div class="edu-item">
+                <div class="edu-label">{% if lang == 'fr' %}Localisation{% else %}Based in{% endif %}</div>
+                <div class="edu-value">Liège, Belgium</div>
+            </div>
+        </div>
+
+        <div class="links-row">
+            <a href="https://www.linkedin.com/in/raymond-sauti-a742a7232/" target="_blank" class="link-btn" style="background:#0A66C2;color:white;border-color:#0A66C2;">LinkedIn</a>
+            <a href="https://github.com/SautiRay" target="_blank" class="link-btn" style="background:#24292E;color:white;border-color:#24292E;">GitHub</a>
+            <a href="mailto:contact@canopysat.org" class="link-btn" style="background:#2D8A5A;color:white;border-color:#2D8A5A;">contact@canopysat.org</a>
+        </div>
+    </div>
+
+    <!-- Our Expertise -->
+    <h2>{% if lang == 'fr' %}Notre Expertise{% else %}Our Expertise{% endif %}</h2>
+    <p>{% if lang == 'fr' %}CanopySat opère à l'intersection de plusieurs disciplines essentielles à la surveillance forestière moderne.{% else %}CanopySat operates at the intersection of several disciplines that are essential to modern forest monitoring.{% endif %}</p>
+
+    <div class="expertise-grid">
+        <div class="expertise-card">
+            
+            <div class="expertise-title">{% if lang == 'fr' %}Science Forestière{% else %}Forest Science{% endif %}</div>
+            <div class="expertise-desc">{% if lang == 'fr' %}Application des principes d'ingénierie forestière et d'agroforesterie pour comprendre les écosystèmes forestiers et leur dynamique.{% else %}Applying principles of forest engineering, forestry and agroforestry to understand forest ecosystems and their dynamics.{% endif %}</div>
+        </div>
+        <div class="expertise-card">
+            
+            <div class="expertise-title">{% if lang == 'fr' %}Observation de la Terre{% else %}Earth Observation{% endif %}</div>
+            <div class="expertise-desc">{% if lang == 'fr' %}Exploitation des technologies satellitaires ESA, NASA et des données LiDAR pour surveiller les paysages forestiers dans le temps.{% else %}Leveraging ESA, NASA satellite imagery and LiDAR data to monitor forest landscapes over time.{% endif %}</div>
+        </div>
+        <div class="expertise-card">
+            
+            <div class="expertise-title">{% if lang == 'fr' %}Intelligence Géospatiale{% else %}Geospatial Intelligence{% endif %}</div>
+            <div class="expertise-desc">{% if lang == 'fr' %}Transformation des données spatiales en informations exploitables via SIG, télédétection et analyse géospatiale.{% else %}Transforming spatial data into meaningful information through GIS, remote sensing and geospatial analysis.{% endif %}</div>
+        </div>
+        <div class="expertise-card">
+            
+            <div class="expertise-title">{% if lang == 'fr' %}Technologie & Logiciel{% else %}Technology & Software{% endif %}</div>
+            <div class="expertise-desc">{% if lang == 'fr' %}Développement d'outils numériques et d'applications rendant les données géospatiales et environnementales complexes plus accessibles.{% else %}Developing digital tools and applications that make complex geospatial and environmental data easier to explore and use.{% endif %}</div>
+        </div>
+        <div class="expertise-card">
+            
+            <div class="expertise-title">{% if lang == 'fr' %}Données & Analytique{% else %}Forest Data & Analytics{% endif %}</div>
+            <div class="expertise-desc">{% if lang == 'fr' %}Combinaison de sources de données environnementales multiples pour soutenir l'analyse, la surveillance et la prise de décision.{% else %}Combining multiple sources of environmental data to support analysis, monitoring and evidence-based decision-making.{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- Scientific Validation -->
+    <h2>{% if lang == 'fr' %}Validation Scientifique{% else %}Scientific Validation{% endif %}</h2>
+    <div class="validation-box">
+        <p>{% if lang == 'fr' %}CanopySat publie ses méthodologies et résultats de validation dans des rapports techniques ouverts, disponibles dans la Bibliothèque CanopySat.{% else %}CanopySat publishes its methodologies and validation results in open technical reports, available in the CanopySat Open Library.{% endif %}</p>
+        <div class="validation-stats">
+            <div class="val-stat">
+                <div class="val-number">4</div>
+                <div class="val-label">{% if lang == 'fr' %}Publications{% else %}Publications{% endif %}</div>
+            </div>
+            <div class="val-stat">
+                <div class="val-number">4</div>
+                <div class="val-label">{% if lang == 'fr' %}Datasets{% else %}Datasets{% endif %}</div>
+            </div>
+            <div class="val-stat">
+                <div class="val-number">3</div>
+                <div class="val-label">Zenodo DOIs</div>
+            </div>
+            <div class="val-stat">
+                <div class="val-number">CC BY 4.0</div>
+                <div class="val-label">{% if lang == 'fr' %}Licence ouverte{% else %}Open license{% endif %}</div>
+            </div>
+        </div>
+        <a href="/library" style="display:inline-block;margin-top:10px;padding:8px 20px;background:#3DAA6B;color:white;border-radius:8px;font-size:12px;font-weight:bold;text-decoration:none;">{% if lang == 'fr' %}Voir la Bibliothèque →{% else %}View Open Library →{% endif %}</a>
+    </div>
+
+    <!-- Growing Team -->
+    <h2>{% if lang == 'fr' %}Une Équipe en Croissance{% else %}Growing a Global Team{% endif %}</h2>
+    <p>{% if lang == 'fr' %}CanopySat construit une équipe multidisciplinaire de chercheurs, ingénieurs, développeurs et professionnels de la forêt partageant un objectif commun : rendre l'intelligence forestière plus accessible, exploitable et évolutive.{% else %}CanopySat is building a multidisciplinary team of researchers, engineers, developers and forest professionals who share a common goal: to make forest intelligence more accessible, actionable and scalable.{% endif %}</p>
+
+    <div class="domains-grid">
+        <div class="domain-item">Forest Science & Research</div>
+        <div class="domain-item">Remote Sensing & Earth Observation</div>
+        <div class="domain-item">Geospatial Engineering</div>
+        <div class="domain-item">Artificial Intelligence & Data Science</div>
+        <div class="domain-item">Software Engineering</div>
+        <div class="domain-item">Forest & Carbon Analytics</div>
+        <div class="domain-item">Conservation & Environmental Applications</div>
+        <div class="domain-item">Product & Technology</div>
+    </div>
+
+    <!-- Join Mission -->
+    <div class="cta-box">
+        <div class="cta-title">{% if lang == 'fr' %}Rejoindre la Mission{% else %}Join the Mission{% endif %}</div>
+        <p class="cta-desc">{% if lang == 'fr' %}Nous croyons que l'avenir de la surveillance forestière réside à l'intersection de la science, de la technologie et de l'accès ouvert à l'information. Si vous êtes passionné par les forêts, l'observation de la Terre, la technologie géospatiale ou l'innovation environnementale, nous serions heureux de vous entendre.{% else %}We believe that the future of forest monitoring lies at the intersection of science, technology and open access to information. If you are passionate about forests, Earth observation, geospatial technology or environmental innovation, we would be interested in hearing from you.{% endif %}</p>
+        <a href="/contact" class="cta-btn">{% if lang == 'fr' %}Rejoindre CanopySat →{% else %}Join CanopySat →{% endif %}</a>
+    </div>
+</div>
+
+<footer>CanopySat · Team · canopysat.org · 2026 · contact@canopysat.org</footer>
+</body>
+</html>

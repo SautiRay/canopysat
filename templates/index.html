@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YN97S75KQF"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YN97S75KQF');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="GvhajIi6dgSiZJAWmNEALd8Kw2ncHbGP484n6fRBbIU" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Forest Intelligence Ecosystem</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0D3B2E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CanopySat">
+    <link rel="apple-touch-icon" href="/static/img/logo.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"/>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; }
+
+        /* ── HEADER ── */
+        header {
+            background: #0D3B2E;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #1B6B45;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-emoji { font-size: 28px; }
+        .logo-text h1 { font-size: 18px; letter-spacing: 2px; color: white; }
+        .logo-text p { font-size: 9px; color: #3DAA6B; letter-spacing: 1px; }
+        .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .header-links { display: flex; gap: 8px; }
+        .header-links a {
+            color: #D6EFE1; text-decoration: none; font-size: 12px;
+            padding: 5px 12px; border: 1px solid #1B6B45;
+            border-radius: 20px; transition: all 0.3s;
+        }
+        .header-links a:hover { background: #1B6B45; }
+        .lang-switcher { display: flex; gap: 4px; }
+        .lang-btn {
+            padding: 4px 10px; border-radius: 12px;
+            border: 1px solid #3DAA6B; background: transparent;
+            color: #D6EFE1; cursor: pointer; font-size: 11px;
+            font-weight: bold; transition: all 0.3s;
+        }
+        .lang-btn.active { background: #3DAA6B; color: white; }
+
+        /* ── HERO ── */
+        .hero { text-align: center; padding: 15px 20px 10px; }
+        .hero h2 { font-size: 20px; color: white; margin-bottom: 6px; }
+        .hero p { color: #D6EFE1; font-size: 12px; max-width: 600px; margin: 0 auto; line-height: 1.5; }
+
+        /* ── MAIN LAYOUT ── */
+        .main { display: flex; height: calc(100vh - 165px); }
+        #map { flex: 1; }
+
+        /* ── PANEL ── */
+        .panel {
+            width: 300px; background: #0A2E20;
+            padding: 15px; overflow-y: auto;
+            border-left: 2px solid #1B6B45;
+        }
+        .panel h3 { color: #3DAA6B; font-size: 11px; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; }
+        .instructions { background: #1B4332; border-radius: 8px; padding: 10px; margin-bottom: 10px; font-size: 11px; color: #D6EFE1; line-height: 1.6; }
+        .instructions strong { color: #3DAA6B; }
+        .form-group { margin-bottom: 8px; }
+        .form-group label { display: block; font-size: 11px; color: #D6EFE1; margin-bottom: 3px; }
+        .form-group input { width: 100%; padding: 7px 10px; background: #1B4332; border: 1px solid #2D6A4F; border-radius: 6px; color: white; font-size: 12px; }
+        .form-group input:focus { outline: none; border-color: #3DAA6B; }
+        .btn-analyze { width: 100%; padding: 11px; background: #2D8A5A; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: background 0.3s; margin-bottom: 10px; }
+        .btn-analyze:hover { background: #3DAA6B; }
+        .btn-analyze:disabled { background: #1B4332; cursor: not-allowed; }
+        .status { background: #1B4332; border-radius: 8px; padding: 10px; font-size: 11px; color: #D6EFE1; display: none; margin-bottom: 10px; }
+        .status.active { display: block; }
+        .status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #3DAA6B; margin-right: 5px; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        .satellites { margin-top: 12px; border-top: 1px solid #1B6B45; padding-top: 10px; }
+        .sat-item { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 10px; color: #D6EFE1; }
+        .sat-dot { width: 5px; height: 5px; border-radius: 50%; background: #3DAA6B; flex-shrink: 0; }
+        .result-box { background: #1B4332; border-radius: 10px; padding: 12px; margin-top: 10px; }
+        .score-num { font-size: 48px; font-weight: bold; text-align: center; }
+        .score-label-text { font-size: 9px; color: #D6EFE1; letter-spacing: 1px; text-align: center; }
+        .score-status { font-size: 12px; font-weight: bold; text-align: center; margin-top: 3px; }
+        .result-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 10px; color: #D6EFE1; border-top: 1px solid #2D6A4F; padding-top: 6px; margin-top: 6px; }
+        .result-val { font-weight: bold; }
+        .btn-pdf { width: 100%; padding: 9px; background: #0D3B2E; color: #3DAA6B; border: 1px solid #3DAA6B; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 8px; letter-spacing: 1px; transition: all 0.3s; }
+        .btn-pdf:hover { background: #1B4332; }
+        footer { text-align: center; padding: 6px; font-size: 10px; color: #2D6A4F; border-top: 1px solid #1B6B45; }
+
+        /* ══════════════════════════════
+           RESPONSIVE — TABLET & MOBILE
+        ══════════════════════════════ */
+
+        /* Tablet (768px - 1024px) */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .panel { width: 260px; }
+            .header-links a { font-size: 11px; padding: 4px 10px; }
+        }
+
+        /* Mobile landscape & portrait */
+        @media (max-width: 768px) {
+            /* Header compact */
+            header { padding: 8px 12px; }
+            .logo-emoji { font-size: 22px; }
+            .logo-text h1 { font-size: 14px; letter-spacing: 1px; }
+            .logo-text p { font-size: 8px; }
+            .header-links { display: none; }
+            .lang-btn { font-size: 10px; padding: 3px 8px; }
+
+            /* Hero compact */
+            .hero { padding: 8px 12px 6px; }
+            .hero h2 { font-size: 14px; }
+            .hero p { font-size: 10px; }
+
+            /* Stack map + panel vertically */
+            .main { flex-direction: column; height: auto; min-height: auto; }
+            #map { width: 100%; height: 45vh; min-height: 220px; flex: none; }
+            .panel {
+                width: 100%; border-left: none;
+                border-top: 2px solid #1B6B45;
+                padding: 12px; max-height: none;
+            }
+
+            /* Bottom nav bar for mobile */
+            .mobile-nav {
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                display: flex !important;
+                background: #0A2E20;
+                border-top: 1px solid #1B6B45;
+                padding: 8px 0;
+            }
+            .mobile-nav a {
+                flex: 1; text-align: center;
+                color: #D6EFE1; text-decoration: none;
+                font-size: 11px; padding: 4px;
+                border-right: 1px solid #1B6B45;
+            }
+            .mobile-nav a:last-child { border-right: none; }
+            .mobile-nav a:hover { color: #3DAA6B; }
+        }
+
+        /* Small phones */
+        @media (max-width: 400px) {
+            .logo-text h1 { font-size: 12px; }
+            #map { height: 40vh; min-height: 200px; }
+            .score-num { font-size: 40px; }
+        }
+
+        /* Desktop large */
+        @media (min-width: 1400px) {
+            .panel { width: 340px; }
+            .hero h2 { font-size: 24px; }
+            .hero p { font-size: 13px; }
+        }
+
+        /* Mobile nav hidden on desktop */
+        .mobile-nav { display: none; }
+
+        /* PWA Install Banner */
+        .install-banner {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1B6B45;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 99999;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            border: 1px solid #3DAA6B;
+            white-space: nowrap;
+            animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp {
+            from { bottom: -50px; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
+        }
+        .install-banner:hover { background: #2D8A5A; }
+        .install-close {
+            margin-left: 10px;
+            opacity: 0.7;
+            font-size: 16px;
+            vertical-align: middle;
+        }
+    </style>
+    <script defer data-domain="canopysat.org" src="https://stats.geoenvdata.be/js/script.js"></script>
+</head>
+<body>
+
+<style>
+.nav-dropdown { position:relative; display:inline-block; }
+.nav-dropdown-btn { color:#D6EFE1; text-decoration:none; font-size:12px; padding:5px 12px; border:1px solid #1B6B45; border-radius:20px; transition:all 0.3s; background:transparent; cursor:pointer; font-family:'Segoe UI',Arial,sans-serif; }
+.nav-dropdown-btn:hover, .nav-dropdown-btn.active-menu { background:#1B6B45; }
+.nav-dropdown-menu { display:none; position:absolute; top:100%; left:0; background:#0D3B2E; border:1px solid #1B6B45; border-radius:10px; min-width:180px; z-index:9999; padding:6px 0; margin-top:4px; box-shadow:0 4px 20px rgba(0,0,0,0.4); }
+.nav-dropdown:hover .nav-dropdown-menu { display:block; }
+.nav-dropdown-menu:hover { display:block; }
+.nav-dropdown { padding-bottom:4px; }
+.nav-dropdown-menu a { display:block; padding:7px 16px; color:#D6EFE1; text-decoration:none; font-size:11px; transition:background 0.2s; }
+.nav-dropdown-menu a:hover { background:#1B4332; color:#3DAA6B; }
+.nav-dropdown-menu .menu-divider { border-top:1px solid #1B6B45; margin:4px 0; }
+.nav-dropdown-menu .menu-label { padding:5px 16px; font-size:9px; color:#2D6A4F; text-transform:uppercase; letter-spacing:1px; }
+.btn-analyze-main { background:#2D8A5A; border-color:#2D8A5A; color:white; font-weight:bold; }
+.btn-analyze-main:hover { background:#3DAA6B; border-color:#3DAA6B; }
+</style>
+
+<header>
+    <div class="logo">
+        <span class="logo-emoji">🛰️</span>
+        <div class="logo-text">
+            <h1>CANOPYSAT</h1>
+            <p>FOREST INTELLIGENCE ECOSYSTEM</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
+            <button class="lang-btn" onclick="setLang('fr')" id="btn-fr">FR</button>
+        </div>
+        <div class="header-links">
+            <!-- Analyze a Forest — bouton principal -->
+            <a href="/#analyze" class="btn-analyze-main" style="color:white;text-decoration:none;font-size:12px;padding:5px 14px;border:1px solid #2D8A5A;border-radius:20px;font-weight:bold;">Analyze a Forest</a>
+
+            <!-- Platform -->
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-btn" onclick="window.location='/platform'">Platform ▾</button>
+                <div class="nav-dropdown-menu">
+                    <div class="menu-label">Tools</div>
+                    <a href="/#analyze">Forest Analysis</a>
+                    <a href="/guardian">Guardian</a>
+                    <a href="/field">Field App</a>
+                    <a href="/api-docs">API</a>
+                </div>
+            </div>
+
+            <!-- Science -->
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-btn" onclick="window.location='/science'">Science ▾</button>
+                <div class="nav-dropdown-menu">
+                    <div class="menu-label">Scientific Framework</div>
+                    <a href="/validation">Validation</a>
+                    <a href="/science/methodology">Methodology</a>
+                    <a href="/science/forest-integrity-score">Forest Integrity Score</a>
+                    <a href="/science/limitations">Limitations</a>
+                </div>
+            </div>
+
+            <!-- Explore -->
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-btn" onclick="window.location='/explore'">Explore ▾</button>
+                <div class="nav-dropdown-menu">
+                    <div class="menu-label">Discover Forests</div>
+                    <a href="/map">Global Forest Map</a>
+                    <a href="/forest">Forest Cases</a>
+                    <a href="/library">Reports & Data</a>
+                    <a href="/carbon">Carbon Market</a>
+                </div>
+            </div>
+
+            <!-- Learn -->
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-btn" onclick="window.location='/learn'">Learn ▾</button>
+                <div class="nav-dropdown-menu">
+                    <div class="menu-label">Resources</div>
+                    <a href="/academy">Academy</a>
+                    <a href="/resources">Resources</a>
+                </div>
+            </div>
+
+            <!-- Research -->
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-btn" onclick="window.location='/library'">Research ▾</button>
+                <div class="nav-dropdown-menu">
+                    <div class="menu-label">Open Science</div>
+                    <a href="/library">Library</a>
+                </div>
+            </div>
+
+            <!-- Community -->
+            <a href="/community" style="color:#D6EFE1;text-decoration:none;font-size:12px;padding:5px 12px;border:1px solid #1B6B45;border-radius:20px;transition:all 0.3s;">Community</a>
+
+            <!-- About -->
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-btn" onclick="window.location='/about'">About ▾</button>
+                <div class="nav-dropdown-menu">
+                    <div class="menu-label">CanopySat</div>
+                    <a href="/about">About CanopySat</a>
+                    <a href="/about/open-source">Open Source</a>
+                    <a href="/about/team">Team</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="hero">
+    <h2 id="hero-title">🌍 Forest intelligence from space.</h2>
+    <p id="hero-desc">Analyze, monitor and understand any forest on Earth using satellite data — get forest cover, vegetation health, canopy structure, fire activity, 40-year trends, species climate suitability for 2050 and carbon CO2 assessment. No expertise required.</p>
+    <div id="hero-badges" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px;">
+        <div style="background:#1B4332;border:1px solid #1B6B45;border-radius:10px;padding:6px 14px;font-size:10px;color:#D6EFE1;text-align:center;">
+            <div style="color:#3DAA6B;font-weight:bold;margin-bottom:2px;">Optical</div>
+            <div>Vegetation & forest cover</div>
+        </div>
+        <div style="background:#1B4332;border:1px solid #1B6B45;border-radius:10px;padding:6px 14px;font-size:10px;color:#D6EFE1;text-align:center;">
+            <div style="color:#3DAA6B;font-weight:bold;margin-bottom:2px;">Radar</div>
+            <div>Structure under cloud cover</div>
+        </div>
+        <div style="background:#1B4332;border:1px solid #1B6B45;border-radius:10px;padding:6px 14px;font-size:10px;color:#D6EFE1;text-align:center;">
+            <div style="color:#3DAA6B;font-weight:bold;margin-bottom:2px;">LiDAR</div>
+            <div>Canopy height from ISS</div>
+        </div>
+        <div style="background:#1B4332;border:1px solid #1B6B45;border-radius:10px;padding:6px 14px;font-size:10px;color:#D6EFE1;text-align:center;">
+            <div style="color:#3DAA6B;font-weight:bold;margin-bottom:2px;">Fire</div>
+            <div>Recent fire activity</div>
+        </div>
+        <div style="background:#1B4332;border:1px solid #1B6B45;border-radius:10px;padding:6px 14px;font-size:10px;color:#D6EFE1;text-align:center;">
+            <div style="color:#3DAA6B;font-weight:bold;margin-bottom:2px;">Historical</div>
+            <div>40-year change since 1984</div>
+        </div>
+        <div style="background:#1B4332;border:1px solid #6A1B9A;border-radius:10px;padding:6px 14px;font-size:10px;color:#D6EFE1;text-align:center;">
+            <div style="color:#CE93D8;font-weight:bold;margin-bottom:2px;">Species</div>
+            <div>Climate suitability 2050</div>
+        </div>
+        <div style="background:#1B4332;border:1px solid #F9A825;border-radius:10px;padding:6px 14px;font-size:10px;color:#D6EFE1;text-align:center;">
+            <div style="color:#F9A825;font-weight:bold;margin-bottom:2px;">Carbon</div>
+            <div>CO2 & REDD+ assessment</div>
+        </div>
+    </div>
+    <p style="font-size:10px;color:#2D6A4F;margin-top:6px;">No account required · Global coverage · Satellite-based · Free</p>
+</div>
+
+<div class="main" id="analyze">
+    <div id="map"></div>
+    <div class="panel">
+        <h3 id="panel-title">🛰️ Analyze a Forest</h3>
+        <div class="instructions">
+            <strong id="how-title">Start in seconds:</strong><br>
+            <span id="step1">1. Click on the map to set coordinates</span><br>
+            <span id="step2">2. Or enter GPS coordinates below</span><br>
+            <span id="step3">3. Click Analyze Forest</span><br>
+            <span id="step4">4. Get your Forest Integrity Score + PDF</span>
+        </div>
+        <div class="form-group">
+            <label id="label-lat">Latitude (center)</label>
+            <input type="number" id="lat" placeholder="e.g. -3.4653" step="0.0001">
+        </div>
+        <div class="form-group">
+            <label id="label-lng">Longitude (center)</label>
+            <input type="number" id="lng" placeholder="e.g. -62.2159" step="0.0001">
+        </div>
+        <div class="form-group">
+            <label id="label-size">Zone size (km)</label>
+            <input type="number" id="size" value="10" min="1" max="100">
+        </div>
+        <button class="btn-analyze" id="btn-analyze" onclick="analyzeForest()">🔍 ANALYZE FOREST</button>
+        <div class="status" id="status">
+            <span class="status-dot"></span>
+            <span id="status-text">Connecting to satellites...</span>
+        </div>
+        <div id="result-container"></div>
+        <!-- Temporal Comparison Section -->
+        <div class="satellites" id="compare-section" style="margin-top:15px;">
+            <h3>Temporal Forest Comparison</h3>
+            <p style="font-size:11px;color:#D6EFE1;margin-bottom:10px;">Compare the same zone between two time periods to detect forest changes.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Period 1 — Start</label>
+                    <input type="date" id="date1-start" value="2020-01-01" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Period 1 — End</label>
+                    <input type="date" id="date1-end" value="2020-12-31" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Period 2 — Start</label>
+                    <input type="date" id="date2-start" value="2024-01-01" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Period 2 — End</label>
+                    <input type="date" id="date2-end" value="2024-12-31" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+            </div>
+            <button onclick="compareForest()" id="btn-compare" style="width:100%;padding:9px;background:#1565C0;color:white;border:none;border-radius:6px;font-size:12px;font-weight:bold;cursor:pointer;margin-bottom:8px;">COMPARE FOREST CHANGES</button>
+            <div id="compare-result"></div>
+        </div>
+
+        <!-- Species Climate Suitability -->
+        <div class="satellites" id="species-section" style="margin-top:15px;">
+            <h3 id="species-title">Species Climate Suitability</h3>
+            <p style="font-size:11px;color:#D6EFE1;margin-bottom:10px;" id="species-desc">Which tree species will thrive or decline in this zone under 2050 climate scenarios (SSP2-4.5)?</p>
+            <p style="font-size:10px;color:#2D6A4F;margin-bottom:8px;" id="species-coords-label">Uses coordinates from your last analysis</p>
+            <button onclick="analyzeSpeciesSuitability()" id="species-btn"
+                style="width:100%;padding:8px;background:#6A1B9A;color:white;border:none;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer;letter-spacing:1px;">
+                ANALYZE SPECIES SUITABILITY
+            </button>
+            <div id="species-results" style="display:none;margin-top:12px;"></div>
+        </div>
+
+        <!-- Forest Alert Section -->
+        <div class="satellites" id="alert-section" style="margin-top:15px;">
+            <h3>Forest Change Alert</h3>
+            <p style="font-size:11px;color:#D6EFE1;margin-bottom:10px;">Register your zone — receive an email alert when significant forest changes are detected.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">First Name *</label>
+                    <input type="text" id="alert-firstname" placeholder="John" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Last Name *</label>
+                    <input type="text" id="alert-lastname" placeholder="Smith" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Email *</label>
+                    <input type="email" id="alert-email" placeholder="john@example.com" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Phone</label>
+                    <input type="text" id="alert-phone" placeholder="+1234567890" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Country *</label>
+                    <input type="text" id="alert-country" placeholder="e.g. Brazil" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+                <div>
+                    <label style="font-size:10px;color:#3DAA6B;">Zone Name</label>
+                    <input type="text" id="alert-zonename" placeholder="e.g. Amazon Zone A" style="width:100%;padding:6px;background:#0D3B2E;border:1px solid #2D6A4F;border-radius:6px;color:white;font-size:11px;">
+                </div>
+            </div>
+            <p style="font-size:10px;color:#2D6A4F;margin-bottom:8px;">Uses the coordinates from your last analysis</p>
+            <a href="/guardian/register" style="display:block;width:100%;padding:9px;background:#E53935;color:white;border:none;border-radius:6px;font-size:12px;font-weight:bold;cursor:pointer;margin-bottom:8px;text-decoration:none;text-align:center;">REGISTER FOREST ALERT</a>
+        </div>
+
+        <div class="satellites">
+            <h3 id="sat-title">Active Satellites (6)</h3>
+            <div class="sat-item"><div class="sat-dot"></div>ESA Sentinel-2A/2B — 10m — Every 5 days</div>
+            <div class="sat-item"><div class="sat-dot"></div>NASA Landsat 8 & 9 — 30m — Since 1984</div>
+            <div class="sat-item"><div class="sat-dot"></div>ESA Sentinel-1 — Radar — Through clouds</div>
+            <div class="sat-item"><div class="sat-dot"></div>NASA MODIS Terra/Aqua — Fire detection</div>
+            <div class="sat-item"><div class="sat-dot"></div>NASA/NOAA VIIRS — Global fire alerts</div>
+            <div class="sat-item"><div class="sat-dot"></div>NASA GEDI LiDAR (ISS) — 25m→10m fusion — Canopy height</div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile bottom navigation -->
+
+
+<!-- PWA Install Banner -->
+<div class="install-banner" id="install-banner">
+    🛰️ <span id="install-text">Install CanopySat App</span>
+    <span class="install-close" id="install-close">✕</span>
+</div>
+
+<!-- SECTION 1: Real Forest Example -->
+<div style="background:#0D3B2E;padding:40px 20px;border-top:2px solid #1B6B45;">
+    <div style="max-width:900px;margin:0 auto;">
+        <p style="font-size:11px;color:#3DAA6B;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">Real analysis example</p>
+        <h2 style="font-size:22px;color:white;margin-bottom:20px;">Amazon Rainforest — September 2026</h2>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:start;flex-wrap:wrap;">
+            <div style="text-align:center;background:#1B4332;border-radius:12px;padding:20px 30px;border:1px solid #1B6B45;">
+                <div style="font-size:56px;font-weight:bold;color:#3DAA6B;">80</div>
+                <div style="font-size:11px;color:#D6EFE1;letter-spacing:1px;">FOREST INTEGRITY SCORE</div>
+                <div style="margin-top:8px;padding:4px 12px;background:#1B6B45;border-radius:8px;font-size:11px;color:#3DAA6B;font-weight:bold;">STABLE</div>
+            </div>
+            <div>
+                <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                    <tr style="border-bottom:1px solid #1B6B45;">
+                        <td style="padding:8px 0;color:#2D6A4F;">Forest cover</td>
+                        <td style="padding:8px 0;color:white;font-weight:bold;text-align:right;">98.5%</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #1B6B45;">
+                        <td style="padding:8px 0;color:#2D6A4F;">Vegetation health (NDVI)</td>
+                        <td style="padding:8px 0;color:white;font-weight:bold;text-align:right;">0.842</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #1B6B45;">
+                        <td style="padding:8px 0;color:#2D6A4F;">Canopy height (NASA GEDI LiDAR)</td>
+                        <td style="padding:8px 0;color:white;font-weight:bold;text-align:right;">9.8 m</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #1B6B45;">
+                        <td style="padding:8px 0;color:#2D6A4F;">Fire activity</td>
+                        <td style="padding:8px 0;color:#3DAA6B;font-weight:bold;text-align:right;">42 detections</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #1B6B45;">
+                        <td style="padding:8px 0;color:#2D6A4F;">Above-ground biomass</td>
+                        <td style="padding:8px 0;color:white;font-weight:bold;text-align:right;">78.4 t/ha</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 0;color:#2D6A4F;">40-year NDVI trend</td>
+                        <td style="padding:8px 0;color:#3DAA6B;font-weight:bold;text-align:right;">+0.124 (improving)</td>
+                    </tr>
+                </table>
+                <a href="/forest/amazon-brazil" style="display:inline-block;margin-top:14px;padding:8px 20px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">Explore this analysis →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 2: How it works -->
+<div style="background:#1B4332;padding:40px 20px;border-top:1px solid #1B6B45;">
+    <div style="max-width:900px;margin:0 auto;text-align:center;">
+        <p style="font-size:11px;color:#3DAA6B;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">How it works</p>
+        <h2 style="font-size:22px;color:white;margin-bottom:25px;">From satellite data to forest intelligence</h2>
+        <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:0;">
+            <div style="background:#0D3B2E;border:1px solid #1B6B45;border-radius:10px;padding:12px 18px;font-size:11px;color:#D6EFE1;text-align:center;min-width:120px;">
+                <div style="color:#3DAA6B;font-weight:bold;margin-bottom:4px;">ESA / NASA</div>
+                <div>Satellite data</div>
+            </div>
+            <div style="color:#3DAA6B;font-size:18px;padding:0 8px;">→</div>
+            <div style="background:#0D3B2E;border:1px solid #1B6B45;border-radius:10px;padding:12px 18px;font-size:11px;color:#D6EFE1;text-align:center;min-width:120px;">
+                <div style="color:#3DAA6B;font-weight:bold;margin-bottom:4px;">Google Earth Engine</div>
+                <div>Data processing</div>
+            </div>
+            <div style="color:#3DAA6B;font-size:18px;padding:0 8px;">→</div>
+            <div style="background:#0D3B2E;border:1px solid #1B6B45;border-radius:10px;padding:12px 18px;font-size:11px;color:#D6EFE1;text-align:center;min-width:120px;">
+                <div style="color:#3DAA6B;font-weight:bold;margin-bottom:4px;">CanopySat AI</div>
+                <div>Forest indicators</div>
+            </div>
+            <div style="color:#3DAA6B;font-size:18px;padding:0 8px;">→</div>
+            <div style="background:#0D3B2E;border:1px solid #1B6B45;border-radius:10px;padding:12px 18px;font-size:11px;color:#D6EFE1;text-align:center;min-width:120px;">
+                <div style="color:#3DAA6B;font-weight:bold;margin-bottom:4px;">Risk analysis</div>
+                <div>Change detection</div>
+            </div>
+            <div style="color:#3DAA6B;font-size:18px;padding:0 8px;">→</div>
+            <div style="background:#2D8A5A;border:1px solid #3DAA6B;border-radius:10px;padding:12px 18px;font-size:11px;color:white;text-align:center;min-width:120px;">
+                <div style="font-weight:bold;margin-bottom:4px;">Forest Intelligence</div>
+                <div>Score · Alert · PDF</div>
+            </div>
+        </div>
+        <p style="font-size:12px;color:#2D6A4F;margin-top:18px;">CanopySat combines optical, radar, fire and canopy-structure observations to build a multidimensional view of any forest on Earth.</p>
+        <div style="display:flex;justify-content:center;gap:15px;margin-top:18px;flex-wrap:wrap;">
+            <a href="/platform" style="padding:8px 20px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Platform →</a>
+            <a href="/science/methodology" style="padding:8px 20px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Methodology →</a>
+            <a href="/validation" style="padding:8px 20px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Validation →</a>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 3: CTA Final -->
+<div style="background:#0D3B2E;padding:50px 20px;border-top:2px solid #1B6B45;text-align:center;">
+    <div style="max-width:600px;margin:0 auto;">
+        <h2 style="font-size:26px;color:white;margin-bottom:10px;">Start with a forest.</h2>
+        <p style="font-size:13px;color:#D6EFE1;margin-bottom:25px;line-height:1.7;">Choose any location on Earth and explore what satellite data can tell you about its condition, structure and change over time.</p>
+        <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+            <a href="/#analyze" style="padding:12px 28px;background:#2D8A5A;color:white;border-radius:10px;text-decoration:none;font-size:14px;font-weight:bold;">Analyze a Forest</a>
+            <a href="/api-docs" style="padding:12px 28px;background:transparent;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:10px;text-decoration:none;font-size:14px;">Explore the API</a>
+        </div>
+        <p style="font-size:10px;color:#2D6A4F;margin-top:16px;">Free · Open source · No account required · Global coverage</p>
+    </div>
+</div>
+
+<footer>canopysat.org · Forest Intelligence Ecosystem · Global · 2026</footer>
+
+<nav class="mobile-nav">
+    <a href="/#analyze" style="background:#2D8A5A;border-color:#2D8A5A;">Analyze</a>
+    <a href="/platform">Platform</a>
+    <a href="/guardian">Guardian</a>
+    <a href="/field">Field</a>
+    <a href="/api-docs">API</a>
+    <a href="/science">Science</a>
+    <a href="/science/methodology">Methodology</a>
+    <a href="/science/forest-integrity-score">Score</a>
+    <a href="/validation">Validation</a>
+    <a href="/science/limitations">Limitations</a>
+    <a href="/explore">Explore</a>
+    <a href="/map">Map</a>
+    <a href="/forest">Forest Cases</a>
+    <a href="/library">Library</a>
+    <a href="/learn">Learn</a>
+    <a href="/academy">Academy</a>
+    <a href="/resources">Resources</a>
+    <a href="/carbon">Carbon</a>
+    <a href="/community">Community</a>
+    <a href="/about">About</a>
+    <a href="/about/team">Team</a>
+    <a href="/about/open-source">Open Source</a>
+    <a href="/contact">Contact</a>
+</nav>
+
+<script>
+var T = {
+    en: {
+        'hero-title': '🌍 Forest intelligence from space.',
+        'hero-desc': 'Analyze, monitor and understand any forest on Earth using satellite data — get forest cover, vegetation health, canopy structure, fire activity and 40-year change trends. No expertise required.',
+        'panel-title': '🛰️ Analyze a Forest',
+        'how-title': 'Start in seconds:',
+        'step1': '1. Click on the map to set coordinates',
+        'step2': '2. Or enter GPS coordinates below',
+        'step3': '3. Click Analyze Forest',
+        'step4': '4. Get your Forest Integrity Score + PDF',
+        'label-lat': 'Latitude (center)',
+        'label-lng': 'Longitude (center)',
+        'label-size': 'Zone size (km)',
+        'btn-analyze': '🔍 ANALYZE FOREST',
+        'sat-title': 'Active Satellites (6)',
+        'nav-platform': 'Platform', 'nav-about': 'About', 'nav-contact': 'Contact',
+        'm-platform': 'Platform', 'm-about': 'About', 'm-contact': 'Contact',
+        'analyzing': '⏳ Analyzing...', 'connecting': 'Connecting to Sentinel-2...',
+        'score-label': 'FOREST INTEGRITY SCORE / 100',
+        'healthy': 'Healthy Forest', 'degraded': 'Degraded Forest', 'critical': 'Critical Forest',
+        'pdf': '📄 DOWNLOAD PDF REPORT', 'pdf-loading': '⏳ Generating PDF...',
+        'no-coords': 'Please enter GPS coordinates or draw a zone on the map.',
+        'veg': '🌿 Vegetation', 'trend3': '📈 Trend 3y (Sentinel-2)',
+        'trend10': '📡 Trend 10y (Landsat)', 'trend40': '🕰️ Trend 40y (Landsat 1984)',
+        'cover': '🌳 Forest cover', 'fires': '🔥 Active fires',
+        'trendlabel': '📊 Trend', 'date': '📅 Date'
+    },
+    fr: {
+        'hero-title': '🌍 Surveillez n\'importe quelle forêt sur Terre — en quelques minutes.',
+        'hero-desc': 'Intelligence satellite réelle ESA, NASA & GEDI LiDAR. Score forestier, suitabilité climatique des espèces 2050, alertes déforestation & rapports PDF. Aucune expertise requise.',
+        'hero-badges-update': true,
+        'panel-title': '🛰️ Analyse Forestière',
+        'how-title': 'Comment utiliser CanopySat :',
+        'step1': '1. Recherchez un pays ou dessinez un rectangle',
+        'step2': '2. Ou entrez des coordonnées GPS ci-dessous',
+        'step3': '3. Cliquez sur Analyser la forêt',
+        'step4': '4. Obtenez votre Forest Integrity Score',
+        'label-lat': 'Latitude (centre)',
+        'label-lng': 'Longitude (centre)',
+        'label-size': 'Taille de la zone (km)',
+        'btn-analyze': '🔍 ANALYSER LA FORÊT',
+        'sat-title': 'Satellites Actifs (6)',
+            'species-title': 'Suitabilité Climatique des Espèces',
+            'species-desc': 'Quelles especes prosperont ou declineront sous les scenarios 2050 (SSP2-4.5) ?',
+            'species-coords-label': 'Utilise les coordonnées de votre dernière analyse',
+            'species-btn': 'ANALYSER LES ESPÈCES',
+        'nav-platform': 'Plateforme', 'nav-about': 'À propos', 'nav-contact': 'Contact',
+        'm-platform': 'Plateforme', 'm-about': 'À propos', 'm-contact': 'Contact',
+        'analyzing': '⏳ Analyse en cours...', 'connecting': 'Connexion aux satellites...',
+        'score-label': "SCORE D'INTÉGRITÉ FORESTIÈRE / 100",
+        'healthy': 'Forêt Saine', 'degraded': 'Forêt Dégradée', 'critical': 'Forêt Critique',
+        'pdf': '📄 TÉLÉCHARGER RAPPORT PDF', 'pdf-loading': '⏳ Génération PDF...',
+        'no-coords': 'Veuillez entrer des coordonnées GPS ou dessiner une zone sur la carte.',
+        'veg': '🌿 Végétation', 'trend3': '📈 Tendance 3 ans (Sentinel-2)',
+        'trend10': '📡 Tendance 10 ans (Landsat)', 'trend40': '🕰️ Tendance 40 ans (Landsat 1984)',
+        'cover': '🌳 Couverture', 'fires': '🔥 Feux actifs',
+        'trendlabel': '📊 Tendance', 'date': '📅 Date'
+    }
+};
+
+var lang = 'en';
+var lastResult = null;
+
+function t(k) { return T[lang][k] || k; }
+
+function setLang(l) {
+    lang = l;
+    document.getElementById('btn-en').classList.toggle('active', l === 'en');
+    document.getElementById('btn-fr').classList.toggle('active', l === 'fr');
+    document.documentElement.lang = l;
+    for (var k in T[l]) {
+        var el = document.getElementById(k);
+        if (el) el.textContent = T[l][k];
+    }
+}
+
+// MAP
+var map = L.map('map', { center: [10, 10], zoom: 3 });
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Esri World Imagery', maxZoom: 18
+}).addTo(map);
+L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Esri Reference', maxZoom: 18, opacity: 0.9
+}).addTo(map);
+
+L.Control.geocoder({
+    defaultMarkGeocode: true, position: 'topleft', collapsed: true,
+    geocoder: L.Control.Geocoder.nominatim({
+        serviceUrl: 'https://nominatim.openstreetmap.org/',
+        geocodingQueryParams: { limit: 5 }
+    })
+}).on('markgeocode', function(e) {
+    map.fitBounds(e.geocode.bbox);
+    document.getElementById('lat').value = e.geocode.center.lat.toFixed(4);
+    document.getElementById('lng').value = e.geocode.center.lng.toFixed(4);
+}).addTo(map);
+
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+map.addControl(new L.Control.Draw({
+    edit: { featureGroup: drawnItems },
+    draw: { rectangle: true, polygon: false, polyline: false, circle: false, circlemarker: false, marker: false }
+}));
+map.on(L.Draw.Event.CREATED, function(e) {
+    drawnItems.clearLayers();
+    drawnItems.addLayer(e.layer);
+    var c = e.layer.getBounds().getCenter();
+    document.getElementById('lat').value = c.lat.toFixed(4);
+    document.getElementById('lng').value = c.lng.toFixed(4);
+    // On mobile, scroll to panel after drawing
+    if (window.innerWidth <= 768) {
+        document.querySelector('.panel').scrollIntoView({ behavior: 'smooth' });
+    }
+});
+
+// Temporal comparison function
+async function compareForest() {
+        var lat = parseFloat(document.getElementById('lat').value);
+        var lng = parseFloat(document.getElementById('lng').value);
+        if (!lat || !lng) { alert('Please enter coordinates first'); return; }
+        
+        var btn = document.getElementById('btn-compare');
+        btn.disabled = true;
+        btn.textContent = '⏳ Comparing...';
+        
+        var result = document.getElementById('compare-result');
+        result.innerHTML = '<p style="color:#D6EFE1;font-size:11px;">⏳ Analyzing satellite data for both periods...</p>';
+        
+        var payload = {
+            lat: lat, lng: lng,
+            size: parseFloat(document.getElementById('size').value) || 10,
+            date1_start: document.getElementById('date1-start').value,
+            date1_end: document.getElementById('date1-end').value,
+            date2_start: document.getElementById('date2-start').value,
+            date2_end: document.getElementById('date2-end').value
+        };
+        
+        try {
+            var res = await fetch('/compare', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            var data = await res.json();
+            
+            if (data.error) {
+                result.innerHTML = '<p style="color:#E53935;font-size:11px;">❌ ' + data.error + '</p>';
+            } else {
+                var colorMap = {'critical':'#E53935','warning':'#F9A825','caution':'#FF8C00','stable':'#3DAA6B','positive':'#2D8A5A'};
+                var c = colorMap[data.color] || '#3DAA6B';
+                var chg = data.changes || {};
+                var p1 = data.period1 || {};
+                var p2 = data.period2 || {};
+                var sign = function(v) { return v >= 0 ? '+' : ''; };
+                
+                var mapHtml = '';
+                if (data.map_period1 || data.map_period2 || data.map_diff) {
+                    mapHtml = '<div style="margin-top:12px;">';
+                    
+                    // Legend
+                    mapHtml += '<div style="background:#0A1F15;border-radius:6px;padding:8px;margin-bottom:8px;">' +
+                        '<div style="font-size:10px;color:#3DAA6B;margin-bottom:4px;font-weight:bold;">🗺️ SATELLITE MAPS — Sentinel-2 NDVI Analysis</div>' +
+                        '<div style="display:flex;gap:4px;align-items:center;margin-bottom:4px;">' +
+                        '<div style="font-size:9px;color:#D6EFE1;">NDVI Scale:</div>' +
+                        '<div style="background:linear-gradient(to right,#ffffff,#d9ef8b,#66bd63,#006837);height:10px;width:100px;border-radius:3px;"></div>' +
+                        '<div style="font-size:9px;color:#D6EFE1;">Low → High</div></div>' +
+                        '<div style="display:flex;gap:4px;align-items:center;">' +
+                        '<div style="font-size:9px;color:#D6EFE1;">Change:</div>' +
+                        '<div style="background:linear-gradient(to right,#d73027,#fdae61,#ffffff,#a6d96a,#1a9850);height:10px;width:100px;border-radius:3px;"></div>' +
+                        '<div style="font-size:9px;color:#D6EFE1;">Loss → Stable → Gain</div></div></div>';
+                    
+                    // Period 1 map
+                    if (data.map_period1) {
+                        mapHtml += '<div style="margin-bottom:8px;">' +
+                            '<div style="font-size:10px;color:#D6EFE1;margin-bottom:3px;">📅 Period 1: ' + data.period1.start + ' → ' + data.period1.end + '</div>' +
+                            '<img src="/' + data.map_period1 + '" style="width:100%;border-radius:6px;border:1px solid #1B6B45;">' +
+                            '<a href="/' + data.map_period1 + '" download="CanopySat_Period1_NDVI.png" ' +
+                            'style="display:block;margin-top:4px;padding:5px;background:#1B6B45;color:white;text-align:center;border-radius:6px;font-size:10px;text-decoration:none;">📥 Download Period 1 Map</a></div>';
+                    }
+                    
+                    // Period 2 map
+                    if (data.map_period2) {
+                        mapHtml += '<div style="margin-bottom:8px;">' +
+                            '<div style="font-size:10px;color:#D6EFE1;margin-bottom:3px;">📅 Period 2: ' + data.period2.start + ' → ' + data.period2.end + '</div>' +
+                            '<img src="/' + data.map_period2 + '" style="width:100%;border-radius:6px;border:1px solid #1B6B45;">' +
+                            '<a href="/' + data.map_period2 + '" download="CanopySat_Period2_NDVI.png" ' +
+                            'style="display:block;margin-top:4px;padding:5px;background:#1B6B45;color:white;text-align:center;border-radius:6px;font-size:10px;text-decoration:none;">📥 Download Period 2 Map</a></div>';
+                    }
+                    
+                    // Difference map
+                    if (data.map_diff) {
+                        mapHtml += '<div style="margin-bottom:8px;">' +
+                            '<div style="font-size:10px;color:#D6EFE1;margin-bottom:3px;">🔴🟢 NDVI Difference Map — Changes between periods</div>' +
+                            '<img src="/' + data.map_diff + '" style="width:100%;border-radius:6px;border:1px solid #3DAA6B;">' +
+                            '<a href="/' + data.map_diff + '" download="CanopySat_Difference_Map.png" ' +
+                            'style="display:block;margin-top:4px;padding:5px;background:#2D8A5A;color:white;text-align:center;border-radius:6px;font-size:10px;text-decoration:none;">📥 Download Difference Map</a></div>';
+                    }
+                    
+                    mapHtml += '</div>';
+                }
+                
+                result.innerHTML = 
+                    '<div style="background:#0D3B2E;border-radius:8px;padding:12px;border-left:3px solid ' + c + ';">' +
+                    '<div style="font-size:16px;font-weight:bold;color:' + c + ';margin-bottom:8px;">' + data.status + ' · ' + data.years_between + ' years</div>' +
+                    '<table style="width:100%;font-size:11px;border-collapse:collapse;">' +
+                    '<tr style="color:#3DAA6B;"><th style="text-align:left;padding:3px;">Indicator</th><th>Period 1</th><th>Period 2</th><th>Change</th></tr>' +
+                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🌿 NDVI</td><td style="text-align:center;">' + p1.ndvi + '</td><td style="text-align:center;">' + p2.ndvi + '</td><td style="text-align:center;color:' + c + '">' + sign(chg.ndvi) + chg.ndvi + ' (' + sign(chg.ndvi_pct) + chg.ndvi_pct + '%)</td></tr>' +
+                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🍃 NDRE</td><td style="text-align:center;">' + p1.ndre + '</td><td style="text-align:center;">' + p2.ndre + '</td><td style="text-align:center;color:' + c + '">' + sign(chg.ndre) + chg.ndre + '</td></tr>' +
+                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🔥 NBR</td><td style="text-align:center;">' + p1.nbr + '</td><td style="text-align:center;">' + p2.nbr + '</td><td style="text-align:center;color:' + c + '">' + sign(chg.nbr) + chg.nbr + '</td></tr>' +
+                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🌳 Forest Cover</td><td style="text-align:center;">' + p1.forest_cover + '%</td><td style="text-align:center;">' + p2.forest_cover + '%</td><td style="text-align:center;color:' + c + '">' + sign(chg.forest_cover) + chg.forest_cover + '%</td></tr>' +
+                    (p1.sentinel1_vv ? '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>📡 Sentinel-1 VV</td><td style="text-align:center;">' + p1.sentinel1_vv + ' dB</td><td style="text-align:center;">' + p2.sentinel1_vv + ' dB</td><td style="text-align:center;color:' + c + '">' + (chg.sentinel1_vv ? sign(chg.sentinel1_vv) + chg.sentinel1_vv + ' dB' : 'N/A') + '</td></tr>' : '') +
+                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🔥 Fire Pixels</td><td style="text-align:center;">' + p1.fire_pixels + '</td><td style="text-align:center;">' + p2.fire_pixels + '</td><td style="text-align:center;color:' + (chg.fire_pixels > 0 ? '#E53935' : '#3DAA6B') + '">' + sign(chg.fire_pixels) + chg.fire_pixels + '</td></tr>' +
+                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>📉 Annual NDVI Rate</td><td colspan="3" style="text-align:center;color:' + c + '">' + sign(chg.annual_ndvi_rate) + chg.annual_ndvi_rate + ' / year</td></tr>' +
+                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🗺️ Area Change</td><td colspan="3" style="text-align:center;color:' + c + '">~' + chg.area_ha + ' ha</td></tr>' +
+                    '</table>' +
+                    mapHtml +
+                    '</div>';
+            }
+        } catch(e) {
+            result.innerHTML = '<p style="color:#E53935;font-size:11px;">❌ Connection error</p>';
+        }
+        // Now launch map generation in background
+        try {
+            var mapRes = await fetch('/compare/maps', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            var mapJob = await mapRes.json();
+            if (mapJob.job_id) {
+                var mapDiv = document.getElementById('compare-result');
+                mapDiv.innerHTML += '<div id="map-status" style="margin-top:8px;padding:8px;background:#0A1F15;border-radius:6px;font-size:11px;color:#D6EFE1;">🗺️ Generating satellite maps... This may take 2-3 minutes.</div>';
+                
+                // Poll for map completion
+                var pollInterval = setInterval(async function() {
+                    try {
+                        var statusRes = await fetch('/compare/maps/status/' + mapJob.job_id);
+                        var status = await statusRes.json();
+                        if (status.status === 'done' && status.maps) {
+                            clearInterval(pollInterval);
+                            var ms = document.getElementById('map-status');
+                            if (ms) {
+                                var mapsHtml = '<div style="margin-top:8px;">';
+                                mapsHtml += '<div style="background:#0A1F15;border-radius:6px;padding:8px;margin-bottom:8px;">' +
+                                    '<div style="font-size:10px;color:#3DAA6B;font-weight:bold;margin-bottom:4px;">🗺️ SATELLITE MAPS — Sentinel-2 NDVI</div>' +
+                                    '<div style="display:flex;gap:4px;align-items:center;margin-bottom:3px;">' +
+                                    '<span style="font-size:9px;color:#D6EFE1;">NDVI:</span>' +
+                                    '<div style="background:linear-gradient(to right,#ffffff,#d9ef8b,#66bd63,#006837);height:8px;width:80px;border-radius:3px;"></div>' +
+                                    '<span style="font-size:9px;color:#D6EFE1;">Low→High</span></div>' +
+                                    '<div style="display:flex;gap:4px;align-items:center;">' +
+                                    '<span style="font-size:9px;color:#D6EFE1;">Change:</span>' +
+                                    '<div style="background:linear-gradient(to right,#d73027,#fdae61,#ffffff,#a6d96a,#1a9850);height:8px;width:80px;border-radius:3px;"></div>' +
+                                    '<span style="font-size:9px;color:#D6EFE1;">Loss→Stable→Gain</span></div></div>';
+                                
+                                var p1s = payload.date1_start || '';
+                                var p1e = payload.date1_end || '';
+                                var p2s = payload.date2_start || '';
+                                var p2e = payload.date2_end || '';
+
+                                var sciLegendNDVI = function(period, start, end) {
+                                    return '<div style="background:#0A1F15;border:1px solid #1B6B45;border-radius:6px;padding:8px;margin-top:4px;font-size:9px;">' +
+                                        '<div style="color:#3DAA6B;font-weight:bold;margin-bottom:3px;">📊 ' + period + ' — NDVI Vegetation Map</div>' +
+                                        '<div style="color:#D6EFE1;">📅 Acquisition: ' + start + ' → ' + end + '</div>' +
+                                        '<div style="color:#D6EFE1;">🛰️ Source: ESA Sentinel-2 MSI · 10m resolution</div>' +
+                                        '<div style="color:#D6EFE1;">⚙️ Method: Surface reflectance · Cloud mask <20% · Median composite</div>' +
+                                        '<div style="color:#D6EFE1;">📐 Formula: NDVI = (NIR−Red)/(NIR+Red) · Bands B8/B4</div>' +
+                                        '<div style="display:flex;gap:4px;align-items:center;margin-top:4px;">' +
+                                        '<span style="color:#D6EFE1;">Scale:</span>' +
+                                        '<div style="background:linear-gradient(to right,#ffffff,#d9ef8b,#66bd63,#006837);height:8px;width:80px;border-radius:3px;"></div>' +
+                                        '<span style="color:#D6EFE1;">0.0 → 0.9</span></div>' +
+                                        '<div style="color:#2D6A4F;margin-top:2px;">© CanopySat · canopysat.org · AGPL-3.0</div>' +
+                                        '</div>';
+                                };
+
+                                var sciLegendDiff = function(p1s, p1e, p2s, p2e) {
+                                    return '<div style="background:#0A1F15;border:1px solid #3DAA6B;border-radius:6px;padding:8px;margin-top:4px;font-size:9px;">' +
+                                        '<div style="color:#3DAA6B;font-weight:bold;margin-bottom:3px;">📊 NDVI Change Map — ΔNDVI Analysis</div>' +
+                                        '<div style="color:#D6EFE1;">📅 Period 1: ' + p1s + ' → ' + p1e + '</div>' +
+                                        '<div style="color:#D6EFE1;">📅 Period 2: ' + p2s + ' → ' + p2e + '</div>' +
+                                        '<div style="color:#D6EFE1;">🛰️ Source: ESA Sentinel-2 MSI · 10m resolution</div>' +
+                                        '<div style="color:#D6EFE1;">📐 Formula: ΔNDVI = NDVI₂ − NDVI₁</div>' +
+                                        '<div style="color:#D6EFE1;">⚙️ Method: Surface reflectance · Cloud mask <20% · Median composite</div>' +
+                                        '<div style="display:flex;gap:4px;align-items:center;margin-top:4px;">' +
+                                        '<span style="color:#E53935;">Loss</span>' +
+                                        '<div style="background:linear-gradient(to right,#d73027,#fdae61,#ffffff,#a6d96a,#1a9850);height:8px;width:100px;border-radius:3px;"></div>' +
+                                        '<span style="color:#3DAA6B;">Gain</span></div>' +
+                                        '<div style="color:#D6EFE1;margin-top:2px;">Scale: −0.3 (Loss) → 0 (Stable) → +0.3 (Gain)</div>' +
+                                        '<div style="color:#2D6A4F;margin-top:2px;">© CanopySat · canopysat.org · AGPL-3.0</div>' +
+                                        '</div>';
+                                };
+
+                                if (status.maps.map_period1) {
+                                    mapsHtml += '<div style="margin-bottom:12px;">' +
+                                        '<img src="/' + status.maps.map_period1 + '" style="width:100%;border-radius:6px;border:1px solid #1B6B45;">' +
+                                        sciLegendNDVI('Period 1', p1s, p1e) +
+                                        '<div style="margin-top:4px;display:flex;gap:6px;">' +
+                                        '<a href="/' + status.maps.map_period1 + '" download="CanopySat_NDVI_Period1.png" style="display:inline-block;padding:5px 10px;background:#1B6B45;color:white;border-radius:6px;font-size:10px;text-decoration:none;">📥 PNG</a>' +
+                                        '<button onclick="downloadGeoTIFF(' + payload.lat + ',' + payload.lng + ',' + (payload.size||10) + ',&quot;' + p1s + '&quot;,&quot;' + p1e + '&quot;,&quot;ndvi&quot;)" style="padding:5px 10px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:6px;font-size:10px;cursor:pointer;">📐 GeoTIFF</button>' +
+                                        '</div></div>';
+                                }
+                                if (status.maps.map_period2) {
+                                    mapsHtml += '<div style="margin-bottom:12px;">' +
+                                        '<img src="/' + status.maps.map_period2 + '" style="width:100%;border-radius:6px;border:1px solid #1B6B45;">' +
+                                        sciLegendNDVI('Period 2', p2s, p2e) +
+                                        '<div style="margin-top:4px;display:flex;gap:6px;">' +
+                                        '<a href="/' + status.maps.map_period2 + '" download="CanopySat_NDVI_Period2.png" style="display:inline-block;padding:5px 10px;background:#1B6B45;color:white;border-radius:6px;font-size:10px;text-decoration:none;">📥 PNG</a>' +
+                                        '<button onclick="downloadGeoTIFF(' + payload.lat + ',' + payload.lng + ',' + (payload.size||10) + ',&quot;' + p2s + '&quot;,&quot;' + p2e + '&quot;,&quot;ndvi&quot;)" style="padding:5px 10px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:6px;font-size:10px;cursor:pointer;">📐 GeoTIFF</button>' +
+                                        '</div></div>';
+                                }
+                                if (status.maps.map_diff) {
+                                    mapsHtml += '<div style="margin-bottom:12px;">' +
+                                        '<img src="/' + status.maps.map_diff + '" style="width:100%;border-radius:6px;border:2px solid #3DAA6B;">' +
+                                        sciLegendDiff(p1s, p1e, p2s, p2e) +
+                                        '<div style="margin-top:4px;display:flex;gap:6px;">' +
+                                        '<a href="/' + status.maps.map_diff + '" download="CanopySat_NDVI_Change_Map.png" style="display:inline-block;padding:5px 10px;background:#2D8A5A;color:white;border-radius:6px;font-size:10px;text-decoration:none;">📥 PNG</a>' +
+                                        '<button onclick="downloadGeoTIFF(' + payload.lat + ',' + payload.lng + ',' + (payload.size||10) + ',&quot;' + p1s + '&quot;,&quot;' + p2e + '&quot;,&quot;diff&quot;)" style="padding:5px 10px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:6px;font-size:10px;cursor:pointer;">📐 GeoTIFF</button>' +
+                                        '</div></div>';
+                                }
+                                mapsHtml += '</div>';
+                                ms.outerHTML = mapsHtml;
+                            }
+                        } else if (status.status === 'error') {
+                            clearInterval(pollInterval);
+                            var ms = document.getElementById('map-status');
+                            if (ms) ms.innerHTML = '⚠️ Map generation failed: ' + (status.error || 'Unknown error');
+                        }
+                    } catch(e) {}
+                }, 10000); // Poll every 10 seconds
+            }
+        } catch(e) {}
+        
+        btn.disabled = false;
+        btn.textContent = 'COMPARE FOREST CHANGES';
+    }
+
+    // Alert registration function
+async function downloadGeoTIFF(lat, lng, size, date_start, date_end, map_type) {
+    try {
+        var btn = event.target;
+        btn.textContent = '⏳ Generating...';
+        btn.disabled = true;
+        
+        var res = await fetch('/geotiff', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({lat, lng, size, date_start, date_end, map_type})
+        });
+        var data = await res.json();
+        
+        if (data.url) {
+            window.open(data.url, '_blank');
+            btn.textContent = '📐 GeoTIFF';
+        } else {
+            alert('GeoTIFF error: ' + (data.error || 'Unknown error'));
+            btn.textContent = '📐 GeoTIFF';
+        }
+        btn.disabled = false;
+    } catch(e) {
+        alert('Connection error: ' + e.message);
+        event.target.textContent = '📐 GeoTIFF';
+        event.target.disabled = false;
+    }
+}
+
+async function registerAlert() {
+        var lat = parseFloat(document.getElementById('lat').value);
+        var lng = parseFloat(document.getElementById('lng').value);
+        var firstName = document.getElementById('alert-firstname').value.trim();
+        var lastName = document.getElementById('alert-lastname').value.trim();
+        var email = document.getElementById('alert-email').value.trim();
+        var country = document.getElementById('alert-country').value.trim();
+        
+        if (!lat || !lng) { alert('Please enter coordinates first'); return; }
+        if (!firstName || !lastName || !email || !country) { 
+            alert('Please fill in First Name, Last Name, Email and Country'); return; 
+        }
+        
+        var result = document.getElementById('alert-result');
+        result.innerHTML = '<p style="color:#D6EFE1;font-size:11px;">⏳ Registering your alert...</p>';
+        
+        try {
+            var res = await fetch('/alerts/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    phone: document.getElementById('alert-phone').value,
+                    country: country,
+                    lat: lat, lng: lng,
+                    size: parseFloat(document.getElementById('size').value) || 10,
+                    zone_name: document.getElementById('alert-zonename').value
+                })
+            });
+            var data = await res.json();
+            
+            if (data.success) {
+                result.innerHTML = '<div style="background:#1B6B45;border-radius:6px;padding:10px;font-size:11px;">✅ ' + data.message + '<br>Current score: ' + data.current_score + '/100</div>';
+            } else {
+                result.innerHTML = '<p style="color:#E53935;font-size:11px;">❌ ' + data.error + '</p>';
+            }
+        } catch(e) {
+            result.innerHTML = '<p style="color:#E53935;font-size:11px;">❌ Connection error</p>';
+        }
+    }
+
+// ANALYZE
+function analyzeForest() {
+    var lat = document.getElementById('lat').value;
+    var lng = document.getElementById('lng').value;
+    var size = document.getElementById('size').value;
+    if (!lat || !lng) { alert(t('no-coords')); return; }
+
+    var btn = document.getElementById('btn-analyze');
+    btn.disabled = true; btn.textContent = t('analyzing');
+    var status = document.getElementById('status');
+    status.classList.add('active');
+    document.getElementById('status-text').textContent = t('connecting');
+    document.getElementById('result-container').innerHTML = '';
+
+    fetch('/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lat: parseFloat(lat), lng: parseFloat(lng), size: parseFloat(size), lang: lang })
+    })
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(data) {
+        btn.disabled = false; btn.textContent = t('btn-analyze');
+        status.classList.remove('active');
+        if (data.success) { lastResult = data; showResult(data); }
+        else { alert('Error: ' + (data.error || 'Analysis failed')); }
+    })
+    .catch(function(err) {
+        btn.disabled = false; btn.textContent = t('btn-analyze');
+        status.classList.remove('active');
+        alert('Connection error: ' + err.message);
+    });
+}
+
+function showResult(data) {
+    var sc = data.score >= 70 ? '#3DAA6B' : data.score >= 40 ? '#F9A825' : '#E53935';
+    var ss = data.score >= 70 ? t('healthy') : data.score >= 40 ? t('degraded') : t('critical');
+    var tc = data.ndvi_change >= 0 ? '#3DAA6B' : '#E53935';
+    var fc = data.active_fires === 0 ? '#3DAA6B' : '#E53935';
+
+    var l10row = data.landsat_change_10y != null ?
+        '<div class="result-row"><span>' + t('trend10') + '</span><span class="result-val" style="color:' + (data.landsat_change_10y >= 0 ? '#3DAA6B' : '#E53935') + '">' + (data.landsat_change_10y >= 0 ? '+' : '') + data.landsat_change_10y + '</span></div>' : '';
+    var l40row = data.landsat_change_40y != null ?
+        '<div class="result-row"><span>' + t('trend40') + '</span><span class="result-val" style="color:' + (data.landsat_change_40y >= 0 ? '#3DAA6B' : '#E53935') + '">' + (data.landsat_change_40y >= 0 ? '+' : '') + data.landsat_change_40y + '</span></div>' : '';
+
+    var html = '<div class="result-box">' +
+        '<div class="score-num" style="color:' + sc + '">' + data.score + '</div>' +
+        '<div class="score-label-text">' + t('score-label') + '</div>' +
+        '<div class="score-status" style="color:' + sc + '">' + ss + '</div>' +
+        (data.ai_forest_type ? 
+            '<div style="background:#0D3B2E;border:1px solid #3DAA6B;border-radius:8px;padding:10px;margin-bottom:8px;text-align:center;">' +
+            '<div style="font-size:10px;color:#3DAA6B;letter-spacing:1px;margin-bottom:4px;">🤖 ' + (lang === "fr" ? "CLASSIFICATION IA" : "AI CLASSIFICATION") + '</div>' +
+            '<div style="font-size:15px;font-weight:bold;color:white;">' + (lang === "fr" ? data.ai_forest_type_fr : data.ai_forest_type) + '</div>' +
+            (data.leaf_type ? '<div style="font-size:11px;color:#D6EFE1;margin-top:4px;">🍃 ' + (lang === "fr" ? data.leaf_type_fr : data.leaf_type) + '</div>' : '') +
+            (data.dev_stage ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">🌱 ' + (lang === "fr" ? data.dev_stage_fr : data.dev_stage) + '</div>' : '') +
+            (data.biomass_class ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">⚖️ ' + (lang === "fr" ? data.biomass_class_fr : data.biomass_class) + (data.estimated_agb ? " (~" + data.estimated_agb + " t/ha)" : "") + '</div>' : '') +
+            (data.canopy_height ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">📏 ' + (lang === "fr" ? "Hauteur canopée (GEDI+S2 10m)" : "Canopy Height (GEDI+S2 10m)") + ': ' + data.canopy_height + 'm max / ' + (data.canopy_height_rh50 || '?') + 'm median</div>' : '') +
+            (data.ai_deforestation_risk && data.ai_deforestation_risk !== 'Unknown' ?
+                '<div style="font-size:11px;margin-top:6px;padding:8px;background:#0D3B2E;border-radius:6px;border-left:3px solid ' +
+                (data.ai_deforestation_risk === 'Low' ? '#3DAA6B' : data.ai_deforestation_risk === 'Moderate' ? '#F9A825' : '#E53935') + ';">' +
+                '<div style="font-weight:bold;color:' +
+                (data.ai_deforestation_risk === 'Low' ? '#3DAA6B' : data.ai_deforestation_risk === 'Moderate' ? '#F9A825' : '#E53935') +
+                ';margin-bottom:4px;">' + (lang === "fr" ? "Risque déforestation" : "Deforestation Risk") + ': ' + data.ai_deforestation_risk + '</div>' +
+                (data.ai_degradation_signs && data.ai_degradation_signs !== 'None detected' ? '<div style="color:#D6EFE1;font-size:10px;margin-bottom:2px;">' + (lang === "fr" ? "Dégradation" : "Degradation") + ': ' + data.ai_degradation_signs + '</div>' : '') +
+                (data.ai_recovery_signs && data.ai_recovery_signs !== 'None detected' ? '<div style="color:#3DAA6B;font-size:10px;margin-bottom:2px;">' + (lang === "fr" ? "Récupération" : "Recovery") + ': ' + data.ai_recovery_signs + '</div>' : '') +
+                (data.ai_main_cause ? '<div style="color:#D6EFE1;font-size:10px;margin-bottom:2px;">' + (lang === "fr" ? "Cause principale" : "Main cause") + ': ' + data.ai_main_cause + '</div>' : '') +
+                (data.ai_recommendation ? '<div style="color:#3DAA6B;font-size:10px;font-style:italic;">' + (lang === "fr" ? "Recommandation" : "Recommendation") + ': ' + data.ai_recommendation + '</div>' : '') +
+                '</div>' : '') +
+            (data.carbon_total_co2 ? '<div style="font-size:11px;color:#3DAA6B;margin-top:6px;padding:6px 8px;background:#1B4332;border-radius:6px;border-left:3px solid #3DAA6B;">' +
+            '<div style="font-weight:bold;margin-bottom:3px;">Carbon Assessment (IPCC)</div>' +
+            '<div>CO2 sequestered: ' + Number(data.carbon_total_co2).toLocaleString() + ' t CO2</div>' +
+            '<div>CO2 per hectare: ' + data.carbon_per_ha + ' t CO2/ha</div>' +
+            '<div>Zone area: ' + Number(data.carbon_area_ha).toLocaleString() + ' ha</div>' +
+            '<div style="color:#F9A825;font-weight:bold;">Carbon credit value: EUR ' + Number(data.carbon_value_eur).toLocaleString() + '</div>' +
+            '</div>' : '') +
+            (data.gedi_cover ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">🛰️ ' + (lang === "fr" ? "Couverture GEDI" : "GEDI Tree Cover") + ': ' + data.gedi_cover + '%</div>' : '') +
+            '</div>' : '') +
+        '<div class="result-row"><span>' + t('veg') + '</span><span class="result-val" style="color:#3DAA6B">' + data.ndvi_current + '</span></div>' +
+        '<div class="result-row"><span>' + t('trend3') + '</span><span class="result-val" style="color:' + tc + '">' + (data.ndvi_change >= 0 ? '+' : '') + data.ndvi_change + '</span></div>' +
+        l10row + l40row +
+        (data.sentinel1_vv != null ?
+            '<div class="result-row"><span>📡 Sentinel-1 Radar</span><span class="result-val" style="color:#3DAA6B">' + data.sentinel1_vv + ' dB</span></div>' +
+            '<div class="result-row"><span>🌲 Radar classification</span><span class="result-val" style="color:#3DAA6B">' + (data.sentinel1_forest || '') + '</span></div>' : '') +
+        '<div class="result-row"><span>' + t('cover') + '</span><span class="result-val" style="color:#3DAA6B">' + data.forest_cover + '%</span></div>' +
+        '<div class="result-row"><span>' + t('fires') + '</span><span class="result-val" style="color:' + fc + '">' + 
+        (data.fire_pixels || data.active_fires) + ' px' + 
+        (data.fire_events_estimated > 0 ? ' (~' + data.fire_events_estimated + ' events)' : '') + 
+        '</span></div>' +
+        '<div class="result-row"><span>' + t('trendlabel') + '</span><span class="result-val">' + data.trend + '</span></div>' +
+        (data.forest_status ? '<div class="result-row"><span>🌲 ' + (lang === "fr" ? "Statut forestier" : "Forest status") + '</span><span class="result-val" style="color:' + (data.forest_status.includes("recovery") || data.forest_status === "Stable" ? "#3DAA6B" : data.forest_status.includes("Light") ? "#F9A825" : "#E53935") + '">' + (lang === "fr" ? data.forest_status_fr : data.forest_status) + '</span></div>' : '') +
+        (data.annual_rate != null ? '<div class="result-row"><span>📉 ' + (lang === "fr" ? "Taux annuel NDVI" : "Annual NDVI rate") + '</span><span class="result-val" style="color:' + (data.annual_rate >= 0 ? "#3DAA6B" : "#E53935") + '">' + (data.annual_rate >= 0 ? "+" : "") + (data.annual_rate * 100).toFixed(3) + '% / ' + (lang === "fr" ? "an" : "year") + '</span></div>' : '') +
+        (data.deforestation_alert ?
+            '<div style="background:' + (data.deforestation_alert.includes("CRITICAL") ? "#E53935" : data.deforestation_alert.includes("WARNING") ? "#F9A825" : data.deforestation_alert.includes("CAUTION") ? "#FF8C00" : "#3DAA6B") + ';border-radius:8px;padding:10px;margin-top:6px;">' +
+            '<div style="text-align:center;font-size:12px;font-weight:bold;color:white;margin-bottom:6px;">⚠️ ' + (lang === "fr" ? data.deforestation_alert_fr : data.deforestation_alert) + '</div>' +
+            '<div style="font-size:10px;color:rgba(255,255,255,0.9);display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;">' +
+            (data.forest_change_pct != null ? '<span>📊 3y: ' + (data.forest_change_pct >= 0 ? "+" : "") + data.forest_change_pct + '%</span>' : '') +
+            (data.forest_change_ha != null ? '<span>🌳 3y: ' + (data.forest_change_ha >= 0 ? "+" : "") + data.forest_change_ha + ' ha</span>' : '') +
+            (data.annual_ha_rate != null ? '<span>📉 ' + (lang === "fr" ? "Taux/an" : "Rate/yr") + ': ' + (data.annual_ha_rate >= 0 ? "+" : "") + data.annual_ha_rate + ' ha</span>' : '') +
+            (data.forest_change_pct_10y != null ? '<span>📊 10y: ' + (data.forest_change_pct_10y >= 0 ? "+" : "") + data.forest_change_pct_10y + '%</span>' : '') +
+            (data.forest_change_ha_10y != null ? '<span>🌳 10y: ' + (data.forest_change_ha_10y >= 0 ? "+" : "") + data.forest_change_ha_10y + ' ha</span>' : '') +
+            (data.annual_ha_rate_10y != null ? '<span>📉 10y ' + (lang === "fr" ? "taux/an" : "rate/yr") + ': ' + (data.annual_ha_rate_10y >= 0 ? "+" : "") + data.annual_ha_rate_10y + ' ha</span>' : '') +
+            '</div>' +
+            '</div>' : '') +
+        '<div class="result-row"><span>' + t('date') + '</span><span class="result-val">' + data.analysis_date + '</span></div>' +
+        '<div style="margin-top:6px;font-size:9px;color:#2D6A4F;text-align:center;">🛰️ ' + data.satellites_used.join(' · ') + '</div>' +
+        '</div>' +
+        '<button class="btn-pdf" id="pdf-btn" onclick="downloadReport()">' + t('pdf') + '</button>' +
+        '<button onclick="shareReport()" style="width:100%;margin-top:4px;padding:8px;background:#2D8A5A;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-weight:bold;letter-spacing:1px;">🔗 ' + (lang === 'fr' ? 'Partager ce rapport' : 'Share this Report') + '</button>' +
+        (lastResult && lastResult.carbon_total_co2 ? '<button onclick="downloadCertificate()" style="width:100%;margin-top:4px;padding:8px;background:#1565C0;color:white;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-weight:bold;letter-spacing:1px;">' + (lang === "fr" ? "Certificat CanopySat (PDF)" : "CanopySat Certificate (PDF)") + '</button>' : '');
+
+    document.getElementById('result-container').innerHTML = html;
+
+    // On mobile scroll to results
+    if (window.innerWidth <= 768) {
+        setTimeout(function() {
+            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+    }
+}
+
+async function shareReport() {
+        if (!lastResult) return;
+        try {
+            var btn = event.target;
+            btn.textContent = '⏳ Generating...';
+            btn.disabled = true;
+            var res = await fetch('/report/create', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    lat: lastResult.lat, lng: lastResult.lng,
+                    size: lastResult.size_km, score: lastResult.score,
+                    ndvi_current: lastResult.ndvi_current,
+                    forest_cover: lastResult.forest_cover,
+                    canopy_height: lastResult.canopy_height,
+                    canopy_height_rh50: lastResult.canopy_height_rh50,
+                    gedi_cover: lastResult.gedi_cover,
+                    ai_forest_type: lastResult.ai_forest_type,
+                    ai_forest_type_fr: lastResult.ai_forest_type_fr,
+                    deforestation_alert: lastResult.deforestation_alert,
+                    deforestation_alert_fr: lastResult.deforestation_alert_fr,
+                    active_fires: lastResult.active_fires,
+                    sentinel1_vv: lastResult.sentinel1_vv,
+                    trend: lastResult.trend, lang: lang
+                })
+            });
+            var data = await res.json();
+            if (data.url) {
+                window.open('https://www.canopysat.org' + data.url, '_blank');
+                btn.textContent = '✅ Report Created!';
+            } else {
+                btn.textContent = '🔗 Share this Report';
+            }
+            btn.disabled = false;
+        } catch(e) {
+            console.error('shareReport error:', e);
+            event.target.textContent = '🔗 Share this Report';
+            event.target.disabled = false;
+        }
+    }
+
+async function analyzeSpeciesSuitability() {
+            if (!lastResult) {
+                alert('Please analyze a forest zone first.');
+                return;
+            }
+            const lang = document.getElementById('btn-en').classList.contains('active') ? 'en' : 'fr';
+            const btn = document.getElementById('species-btn');
+            const resultsDiv = document.getElementById('species-results');
+
+            btn.textContent = lang === 'fr' ? 'Analyse en cours... (1-2 min)' : 'Analyzing... (1-2 min)';
+            btn.disabled = true;
+            resultsDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/species-suitability', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({lat: lastResult.lat, lng: lastResult.lng, size: lastResult.size_km, lang: lang})
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    let html = `<div style="font-size:10px;color:#3DAA6B;margin-bottom:8px;font-weight:bold;">
+                        ${lang === 'fr' ? 'Scénario' : 'Scenario'}: ${data.scenario}</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+                        <div style="background:#0D3B2E;border-radius:6px;padding:8px;text-align:center;">
+                            <div style="font-size:14px;font-weight:bold;color:#3DAA6B;">${data.temp_current}°C</div>
+                            <div style="font-size:9px;color:#2D6A4F;">${lang === 'fr' ? 'Actuel' : 'Current'}</div>
+                        </div>
+                        <div style="background:#0D3B2E;border-radius:6px;padding:8px;text-align:center;">
+                            <div style="font-size:14px;font-weight:bold;color:#F9A825;">${data.temp_2050}°C</div>
+                            <div style="font-size:9px;color:#2D6A4F;">2050 (+${data.temp_change}°C)</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+                        <span style="background:#1B6B45;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:bold;">${data.suitable} ${lang === 'fr' ? 'Favorable' : 'Suitable'}</span>
+                        <span style="background:#F9A825;color:#0D3B2E;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:bold;">${data.moderate} ${lang === 'fr' ? 'Risque modéré' : 'Moderate risk'}</span>
+                        <span style="background:#E53935;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:bold;">${data.at_risk} ${lang === 'fr' ? 'A risque' : 'At risk'}</span>
+                    </div>`;
+
+                    data.species.forEach(sp => {
+                        const barColor = sp.score >= 0.7 ? '#3DAA6B' : (sp.score >= 0.4 ? '#F9A825' : '#E53935');
+                        const barWidth = Math.round(sp.score * 100);
+                        html += `<div style="margin-bottom:6px;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+                                <span style="font-size:10px;color:#D6EFE1;font-style:italic;">${sp.species}</span>
+                                <span style="font-size:10px;color:${barColor};font-weight:bold;">${sp.score}</span>
+                            </div>
+                            <div style="background:#0D3B2E;border-radius:4px;height:5px;">
+                                ${barWidth > 0 ? `<div style="background:${barColor};width:${barWidth}%;height:5px;border-radius:4px;"></div>` : `<div style="color:#E53935;font-size:9px;padding-top:2px;">No suitability in 2050</div>`}
+                            </div>
+                            <div style="font-size:9px;color:#2D6A4F;margin-top:1px;">${lang === 'fr' ? sp.status_fr : sp.status} · ${sp.family}</div>
+                        </div>`;
+                    });
+
+                    html += `<div style="font-size:9px;color:#2D6A4F;margin-top:8px;border-top:1px solid #1B6B45;padding-top:6px;">
+                        Source: GBIF · WorldClim · NASA GDDP-CMIP6 · SSP2-4.5</div>`;
+
+                    resultsDiv.innerHTML = html;
+                    resultsDiv.style.display = 'block';
+                    // Store species results in lastResult for PDF inclusion
+                    if (lastResult) lastResult.species_suitability = data;
+                } else {
+                    resultsDiv.innerHTML = `<div style="color:#E53935;font-size:11px;">Error: ${data.error}</div>`;
+                    resultsDiv.style.display = 'block';
+                }
+            } catch(e) {
+                resultsDiv.innerHTML = `<div style="color:#E53935;font-size:11px;">Error: ${e.message}</div>`;
+                resultsDiv.style.display = 'block';
+            }
+            btn.textContent = lang === 'fr' ? 'ANALYSER LES ESPECES' : 'ANALYZE SPECIES SUITABILITY';
+            btn.disabled = false;
+        }
+
+        async function downloadCertificate() {
+            if (!lastResult) return;
+            const lang = document.getElementById('btn-en').classList.contains('active') ? 'en' : 'fr';
+            const btns = document.querySelectorAll('button');
+            let btn = null;
+            btns.forEach(b => { if (b.textContent.includes('Certificate') || b.textContent.includes('Certificat')) btn = b; });
+            if (btn) { btn.textContent = lang === 'fr' ? 'Generation...' : 'Generating...'; btn.disabled = true; }
+            try {
+                const response = await fetch('/certificate', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({...lastResult, lang: lang})
+                });
+                if (!response.ok) throw new Error('Server error');
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'CanopySat_Certificate.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch(e) {
+                alert('Error: ' + e.message);
+            }
+            if (btn) { btn.textContent = lang === 'fr' ? 'Certificat CanopySat (PDF)' : 'CanopySat Certificate (PDF)'; btn.disabled = false; }
+        }
+
+function downloadReport() {
+    if (!lastResult) return;
+    var btn = document.getElementById('pdf-btn');
+    if (btn) { btn.textContent = t('pdf-loading'); btn.disabled = true; }
+    var payload = JSON.parse(JSON.stringify(lastResult));
+    payload.lang = lang;
+    fetch('/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(function(r) { if (!r.ok) throw new Error('Server error ' + r.status); return r.blob(); })
+    .then(function(blob) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = 'CanopySat_Report.pdf';
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a); URL.revokeObjectURL(url);
+        if (btn) { btn.textContent = t('pdf'); btn.disabled = false; }
+    })
+    .catch(function(err) {
+        alert('PDF error: ' + err.message);
+        if (btn) { btn.textContent = t('pdf'); btn.disabled = false; }
+    });
+}
+</script>
+<script>
+// PWA Install prompt
+var deferredPrompt = null;
+var installBanner = document.getElementById('install-banner');
+var installClose = document.getElementById('install-close');
+
+window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show banner after 3 seconds
+    setTimeout(function() {
+        installBanner.style.display = 'block';
+    }, 3000);
+});
+
+installBanner.addEventListener('click', function(e) {
+    if (e.target === installClose) {
+        installBanner.style.display = 'none';
+        return;
+    }
+    installBanner.style.display = 'none';
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function(result) {
+            deferredPrompt = null;
+        });
+    }
+});
+
+// Update install text based on language
+function updateInstallText() {
+    var el = document.getElementById('install-text');
+    if (el) el.textContent = lang === 'fr' ? 'Installer CanopySat' : 'Install CanopySat App';
+}
+
+// App installed
+window.addEventListener('appinstalled', function() {
+    installBanner.style.display = 'none';
+    deferredPrompt = null;
+});
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(reg) { console.log('SW registered:', reg.scope); })
+            .catch(function(err) { console.log('SW error:', err); });
+    });
+}
+</script>
+</body>
+</html>

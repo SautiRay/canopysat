@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Learn</title>
+    <meta name="description" content="Learn forest satellite monitoring with CanopySat — Academy tutorials, resources and documentation.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .nav-link:hover { background:#1B6B45; }
+        .container { max-width:960px; margin:0 auto; padding:40px 20px; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:28px; color:white; margin-bottom:8px; }
+        .subtitle { font-size:14px; color:#D6EFE1; margin-bottom:40px; line-height:1.7; max-width:650px; }
+        .section-title { font-size:13px; color:#3DAA6B; text-transform:uppercase; letter-spacing:2px; margin-bottom:20px; }
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:40px; }
+        .card { background:#1B4332; border-radius:12px; padding:24px; border:1px solid #1B6B45; text-decoration:none; color:white; display:block; transition:border-color 0.3s; }
+        .card:hover { border-color:#3DAA6B; }
+        .card-icon { font-size:32px; margin-bottom:12px; }
+        .card-title { font-size:17px; font-weight:bold; color:#3DAA6B; margin-bottom:6px; }
+        .card-desc { font-size:12px; color:#D6EFE1; line-height:1.7; margin-bottom:15px; }
+        .card-topics { list-style:none; margin-bottom:16px; }
+        .card-topics li { font-size:11px; color:#2D6A4F; padding:3px 0; }
+        .card-topics li::before { content:"→ "; color:#3DAA6B; }
+        .card-link { display:inline-block; padding:8px 18px; background:#2D8A5A; color:white; border-radius:8px; font-size:12px; font-weight:bold; text-decoration:none; }
+        .sdk-box { background:#1B4332; border-radius:12px; padding:24px; border:1px solid #1B6B45; margin-bottom:30px; }
+        .sdk-box h2 { font-size:16px; color:#3DAA6B; margin-bottom:12px; }
+        .code-block { background:#0D3B2E; border-radius:8px; padding:14px; font-family:monospace; font-size:12px; color:#3DAA6B; margin:10px 0; border:1px solid #1B6B45; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;align-items:center;">
+        <a href="/learn?lang=en" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="/learn?lang=fr" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+        <a href="/#analyze" class="nav-link">Analyze a Forest</a>
+        <a href="/" class="nav-link">← Home</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="badge">LEARN</div>
+    <h1>{% if lang == 'fr' %}Apprendre avec CanopySat{% else %}Learn with CanopySat{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}Tutoriels, ressources et documentation pour maîtriser la surveillance forestière par satellite — du débutant à l'expert.{% else %}Tutorials, resources and documentation to master satellite forest monitoring — from beginner to expert.{% endif %}</p>
+
+    <div class="section-title">{% if lang == 'fr' %}Ressources d'apprentissage{% else %}Learning resources{% endif %}</div>
+    <div class="cards-grid">
+
+        <!-- Academy -->
+        <a href="/academy" class="card">
+            <div class="card-icon">🎓</div>
+            <div class="card-title">Academy</div>
+            <div class="card-desc">{% if lang == 'fr' %}Tutoriels pas à pas pour apprendre à utiliser CanopySat — de l'analyse basique aux intégrations avancées.{% else %}Step-by-step tutorials to learn how to use CanopySat — from basic analysis to advanced integrations.{% endif %}</div>
+            <ul class="card-topics">
+                <li>{% if lang == 'fr' %}Comment analyser votre première forêt{% else %}How to analyze your first forest{% endif %}</li>
+                <li>{% if lang == 'fr' %}Interpréter le Forest Integrity Score{% else %}Interpreting the Forest Integrity Score{% endif %}</li>
+                <li>{% if lang == 'fr' %}Utiliser Forest Guardian{% else %}Using Forest Guardian{% endif %}</li>
+                <li>{% if lang == 'fr' %}Intégrer l'API dans vos projets{% else %}Integrating the API into your projects{% endif %}</li>
+            </ul>
+            <span class="card-link">{% if lang == 'fr' %}Aller à l'Academy →{% else %}Go to Academy →{% endif %}</span>
+        </a>
+
+        <!-- Resources -->
+        <a href="/resources" class="card">
+            <div class="card-icon">📚</div>
+            <div class="card-title">{% if lang == 'fr' %}Ressources{% else %}Resources{% endif %}</div>
+            <div class="card-desc">{% if lang == 'fr' %}Guides, références et liens utiles sur la surveillance forestière par satellite, les données ESA/NASA et la déforestation.{% else %}Guides, references and useful links on satellite forest monitoring, ESA/NASA data and deforestation.{% endif %}</div>
+            <ul class="card-topics">
+                <li>{% if lang == 'fr' %}Guides d'utilisation{% else %}Usage guides{% endif %}</li>
+                <li>{% if lang == 'fr' %}Références scientifiques{% else %}Scientific references{% endif %}</li>
+                <li>{% if lang == 'fr' %}Liens ESA / NASA / FAO{% else %}ESA / NASA / FAO links{% endif %}</li>
+                <li>{% if lang == 'fr' %}Glossaire forestier{% else %}Forest glossary{% endif %}</li>
+            </ul>
+            <span class="card-link">{% if lang == 'fr' %}Voir les ressources →{% else %}View Resources →{% endif %}</span>
+        </a>
+
+    </div>
+
+    <!-- Python SDK -->
+    <div class="sdk-box">
+        <h2>Python SDK — pip install canopysat</h2>
+        <p style="font-size:12px;color:#D6EFE1;margin-bottom:12px;">{% if lang == 'fr' %}Intégrez CanopySat directement dans vos scripts Python en une ligne.{% else %}Integrate CanopySat directly into your Python scripts in one line.{% endif %}</p>
+        <div class="code-block">pip install canopysat</div>
+        <div class="code-block">from canopysat import analyze<br>result = analyze(lat=-3.4653, lng=-62.2159, size=10)<br>print(result['score'])  # 80</div>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+            <a href="/api-docs" style="padding:8px 18px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">{% if lang == 'fr' %}Documentation API →{% else %}API Documentation →{% endif %}</a>
+            <a href="https://pypi.org/project/canopysat" target="_blank" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">PyPI →</a>
+            <a href="https://github.com/SautiRay/canopysat" target="_blank" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">GitHub →</a>
+        </div>
+    </div>
+
+</div>
+
+<footer>CanopySat Learn · canopysat.org · contact@canopysat.org · 2026</footer>
+</body>
+</html>

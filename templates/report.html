@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat Forest Report — {{ report.ai_forest_type or 'Forest Analysis' }} · Score {{ report.score }}/100</title>
+    
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="Forest Intelligence Report · Score {{ report.score }}/100 · CanopySat">
+    <meta property="og:description" content="{{ report.ai_forest_type }} at {{ report.lat }}, {{ report.lng }} — Forest cover: {{ report.forest_cover }}% · NDVI: {{ report.ndvi }} · {{ report.deforestation_alert }}">
+    <meta property="og:url" content="https://www.canopysat.org/report/{{ report.slug }}">
+    <meta property="og:image" content="https://www.canopysat.org/static/og-image.png">
+    <meta property="og:type" content="article">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Forest Score {{ report.score }}/100 · CanopySat">
+    <meta name="twitter:description" content="{{ report.ai_forest_type }} · {{ report.deforestation_alert }}">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; min-height: 100vh; }
+        header { background: #0D3B2E; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #1B6B45; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-emoji { font-size: 24px; }
+        .logo-text h1 { font-size: 16px; letter-spacing: 2px; color: white; }
+        .logo-text p { font-size: 8px; color: #3DAA6B; }
+        .container { max-width: 700px; margin: 0 auto; padding: 30px 20px; }
+        .report-header { text-align: center; padding: 20px; background: #1B4332; border-radius: 12px; margin-bottom: 20px; border: 1px solid #1B6B45; }
+        .score-circle { width: 100px; height: 100px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: bold; border: 4px solid; }
+        .score-num { font-size: 32px; }
+        .score-label { font-size: 9px; letter-spacing: 1px; }
+        .forest-type { font-size: 20px; font-weight: bold; color: white; margin-bottom: 5px; }
+        .coords { font-size: 12px; color: #3DAA6B; margin-bottom: 5px; }
+        .alert-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-top: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0; }
+        .stat-box { background: #1B4332; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #1B6B45; }
+        .stat-val { font-size: 22px; font-weight: bold; color: #3DAA6B; }
+        .stat-label { font-size: 10px; color: #D6EFE1; margin-top: 4px; }
+        .satellites { background: #1B4332; border-radius: 8px; padding: 15px; margin: 15px 0; }
+        .satellites h3 { font-size: 13px; color: #3DAA6B; margin-bottom: 8px; }
+        .sat-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .sat-badge { background: #0D3B2E; border: 1px solid #1B6B45; border-radius: 10px; padding: 3px 10px; font-size: 10px; color: #D6EFE1; }
+        .cta { background: #1B4332; border-radius: 12px; padding: 25px; text-align: center; margin: 20px 0; border: 2px solid #3DAA6B; }
+        .cta h3 { color: #3DAA6B; margin-bottom: 10px; font-size: 18px; }
+        .cta p { color: #D6EFE1; font-size: 13px; margin-bottom: 15px; }
+        .cta-btn { display: inline-block; padding: 12px 30px; background: #2D8A5A; color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; margin: 5px; }
+        .share-btn { display: inline-block; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: bold; text-decoration: none; margin: 4px; cursor: pointer; border: none; }
+        .share-twitter { background: #1DA1F2; color: white; }
+        .share-linkedin { background: #0077B5; color: white; }
+        .share-whatsapp { background: #25D366; color: white; }
+        .share-copy { background: #1B6B45; color: white; }
+        .meta { font-size: 10px; color: #2D6A4F; text-align: center; margin-top: 15px; }
+        footer { text-align: center; padding: 15px; font-size: 11px; color: #2D6A4F; border-top: 1px solid #1B6B45; margin-top: 30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">
+        <span class="logo-emoji">🛰️</span>
+        <div class="logo-text">
+            <h1>CANOPYSAT</h1>
+            <p>FOREST INTELLIGENCE ECOSYSTEM</p>
+        </div>
+    </a>
+    <a href="/" style="padding:6px 14px;background:#2D8A5A;color:white;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;">🌿 Analyze Your Forest</a>
+</header>
+
+<div class="container">
+    {% set score = report.score or 0 %}
+    {% if score >= 80 %}
+        {% set color = '#3DAA6B' %}{% set status = 'Healthy Forest' %}
+    {% elif score >= 60 %}
+        {% set color = '#F9A825' %}{% set status = 'Moderate Forest' %}
+    {% elif score >= 40 %}
+        {% set color = '#FF7043' %}{% set status = 'Degraded Forest' %}
+    {% else %}
+        {% set color = '#E53935' %}{% set status = 'Critical Forest' %}
+    {% endif %}
+
+    <div class="report-header">
+        <div class="score-circle" style="background:#0D3B2E;border-color:{{ color }};">
+            <div class="score-num" style="color:{{ color }};">{{ score }}</div>
+            <div class="score-label" style="color:{{ color }};">/ 100</div>
+        </div>
+        <div class="forest-type">{{ report.ai_forest_type or 'Forest Zone' }}</div>
+        <div class="coords">📍 {{ report.lat }}° · {{ report.lng }}° · Zone {{ report.size }}km</div>
+        {% if report.country %}<div style="font-size:11px;color:#D6EFE1;">{{ report.country }}</div>{% endif %}
+        <span class="alert-badge" style="background:{% if 'STABLE' in (report.deforestation_alert or '') %}#1B6B45{% elif 'CRITICAL' in (report.deforestation_alert or '') %}#E53935{% else %}#F9A825{% endif %};">
+            {{ report.deforestation_alert or 'STABLE' }}
+        </span>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-val">{{ report.ndvi or 'N/A' }}</div>
+            <div class="stat-label">🌿 NDVI</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val">{{ report.forest_cover or 'N/A' }}%</div>
+            <div class="stat-label">🌳 Forest Cover</div>
+        </div>
+        {% if report.canopy_height %}
+        <div class="stat-box">
+            <div class="stat-val">{{ report.canopy_height }}m</div>
+            <div class="stat-label">📏 Canopy Height (GEDI)</div>
+        </div>
+        {% endif %}
+        {% if report.gedi_cover %}
+        <div class="stat-box">
+            <div class="stat-val">{{ report.gedi_cover }}%</div>
+            <div class="stat-label">🛰️ GEDI Tree Cover</div>
+        </div>
+        {% endif %}
+        {% if report.sentinel1_vv %}
+        <div class="stat-box">
+            <div class="stat-val">{{ report.sentinel1_vv }} dB</div>
+            <div class="stat-label">📡 Sentinel-1 Radar</div>
+        </div>
+        {% endif %}
+        <div class="stat-box">
+            <div class="stat-val">{{ report.active_fires or 0 }}</div>
+            <div class="stat-label">🔥 Fire Pixels</div>
+        </div>
+    </div>
+
+    <div class="satellites">
+        <h3>🛰️ Satellites Used</h3>
+        <div class="sat-list">
+            <span class="sat-badge">ESA Sentinel-2 · 10m</span>
+            <span class="sat-badge">ESA Sentinel-1 · Radar</span>
+            <span class="sat-badge">NASA Landsat 8/9 · 30m</span>
+            <span class="sat-badge">NASA Landsat 4/5 · 1984</span>
+            <span class="sat-badge">NASA FIRMS · Fires</span>
+            <span class="sat-badge">NASA GEDI · LiDAR</span>
+        </div>
+    </div>
+
+    <div style="text-align:center;margin:15px 0;">
+        <p style="font-size:11px;color:#3DAA6B;margin-bottom:8px;">📤 Share this Forest Report</p>
+        <button class="share-btn share-twitter" onclick="shareTwitter()">🐦 Twitter</button>
+        <button class="share-btn share-linkedin" onclick="shareLinkedIn()">💼 LinkedIn</button>
+        <button class="share-btn share-whatsapp" onclick="shareWhatsApp()">📱 WhatsApp</button>
+        <button class="share-btn share-copy" onclick="copyLink()">🔗 Copy Link</button>
+    </div>
+
+    <div class="cta">
+        <h3>🌍 Monitor Any Forest on Earth</h3>
+        <p>Analyze forest health, detect deforestation and receive satellite alerts — free, in minutes.</p>
+        <a href="/" class="cta-btn">🌿 Analyze Your Forest — Free</a>
+        <a href="/api-docs" class="cta-btn" style="background:#1B4332;border:1px solid #3DAA6B;">🛰️ API Access</a>
+    </div>
+
+    <div class="meta">
+        Generated by CanopySat Forest Intelligence · {{ report.created_at[:10] if report.created_at else '' }} · canopysat.org · AGPL-3.0
+    </div>
+</div>
+
+<footer>canopysat.org · Forest Intelligence Ecosystem · Free & Open Source · contact@canopysat.org</footer>
+
+<script>
+const url = 'https://www.canopysat.org/report/{{ report.slug }}';
+const text = 'Forest Intelligence Report — {{ report.ai_forest_type or "Forest" }} · Score {{ report.score }}/100 · {{ report.deforestation_alert }} · Analyzed by CanopySat satellite AI';
+
+function shareTwitter() {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+}
+function shareLinkedIn() {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+}
+function shareWhatsApp() {
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+}
+function copyLink() {
+    navigator.clipboard.writeText(url).then(() => {
+        alert('Link copied to clipboard!');
+    });
+}
+</script>
+</body>
+</html>

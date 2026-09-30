@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YN97S75KQF"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YN97S75KQF');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ forest.name }} Forest Monitoring — Satellite Analysis · CanopySat</title>
+    <meta name="description" content="Real satellite monitoring of {{ forest.name }} — Forest Integrity Score {{ forest.score }}/100, NDVI {{ forest.ndvi }}, {{ forest.cover }}% forest cover. Updated {{ forest.date }}. Free analysis by CanopySat.">
+    <meta name="keywords" content="{{ forest.name }} forest monitoring, {{ forest.country }} deforestation, satellite forest analysis, {{ forest.name }} NDVI, forest health {{ forest.country }}">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ forest.name }} Forest · Score {{ forest.score }}/100 · CanopySat">
+    <meta property="og:description" content="Real satellite monitoring — NDVI {{ forest.ndvi }} · {{ forest.cover }}% forest cover · {{ forest.alert }}">
+    <meta property="og:url" content="https://www.canopysat.org/forest/{{ forest.slug }}">
+    <meta property="og:type" content="article">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; }
+        header { background: #0D3B2E; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #1B6B45; flex-wrap: wrap; gap: 8px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-emoji { font-size: 24px; }
+        .logo-text h1 { font-size: 16px; letter-spacing: 2px; color: white; }
+        .logo-text p { font-size: 8px; color: #3DAA6B; }
+        .container { max-width: 860px; margin: 0 auto; padding: 30px 20px; }
+        h1 { font-size: 28px; color: #3DAA6B; margin-bottom: 8px; }
+        h2 { font-size: 18px; color: #3DAA6B; margin: 25px 0 10px; border-bottom: 1px solid #1B6B45; padding-bottom: 6px; }
+        p { color: #D6EFE1; line-height: 1.8; font-size: 14px; margin-bottom: 10px; }
+        .breadcrumb { font-size: 11px; color: #2D6A4F; margin-bottom: 20px; }
+        .breadcrumb a { color: #3DAA6B; text-decoration: none; }
+        .hero-box { background: #1B4332; border-radius: 12px; padding: 25px; margin: 20px 0; border: 1px solid #1B6B45; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        .score-circle { width: 90px; height: 90px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: bold; border: 4px solid; flex-shrink: 0; }
+        .score-num { font-size: 28px; }
+        .score-sub { font-size: 9px; }
+        .hero-info h2 { border: none; margin: 0 0 5px; font-size: 20px; }
+        .hero-info p { margin: 0; font-size: 13px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 20px 0; }
+        .stat { background: #1B4332; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #1B6B45; }
+        .stat-val { font-size: 22px; font-weight: bold; color: #3DAA6B; }
+        .stat-label { font-size: 10px; color: #D6EFE1; margin-top: 4px; }
+        .alert-box { border-radius: 8px; padding: 12px 16px; margin: 15px 0; font-size: 13px; font-weight: bold; }
+        .timeline { background: #1B4332; border-radius: 8px; padding: 15px; margin: 15px 0; }
+        .timeline-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #0D3B2E; font-size: 12px; }
+        .timeline-row:last-child { border-bottom: none; }
+        .cta { background: #1B4332; border-radius: 12px; padding: 25px; text-align: center; margin: 25px 0; border: 2px solid #3DAA6B; }
+        .cta-btn { display: inline-block; padding: 12px 28px; background: #2D8A5A; color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; margin: 5px; }
+        .related { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 15px 0; }
+        .related-card { background: #1B4332; border-radius: 8px; padding: 15px; border: 1px solid #1B6B45; text-decoration: none; display: block; transition: border-color 0.3s; }
+        .related-card:hover { border-color: #3DAA6B; }
+        .related-name { font-size: 14px; font-weight: bold; color: #3DAA6B; }
+        .related-info { font-size: 11px; color: #D6EFE1; margin-top: 4px; }
+        footer { text-align: center; padding: 15px; font-size: 11px; color: #2D6A4F; border-top: 1px solid #1B6B45; margin-top: 30px; }
+        @media (max-width: 768px) { h1 { font-size: 22px; } }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">
+        <span class="logo-emoji">🛰️</span>
+        <div class="logo-text">
+            <h1>CANOPYSAT</h1>
+            <p>FOREST INTELLIGENCE ECOSYSTEM</p>
+        </div>
+    </a>
+    <div style="display:flex;gap:8px;align-items:center;">
+        <a href="?lang=en" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="?lang=fr" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+        <a href="/map?lang={{ lang }}" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;">🗺️ Map</a>
+        <a href="/" style="padding:6px 14px;background:#2D8A5A;color:white;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;">🌿 {% if lang == 'fr' %}Analyser{% else %}Analyze Your Forest{% endif %}</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="breadcrumb">
+        <a href="/">CanopySat</a> → <a href="/forest">Forest Cases</a> → {{ forest.name }}
+    </div>
+
+    <h1>🌿 {{ forest.name }} — Satellite Forest Monitoring</h1>
+    <p style="font-size:12px;color:#2D6A4F;">📍 {{ forest.country }} · {{ forest.lat }}°, {{ forest.lng }}° · Zone {{ forest.size }}km · Last updated: {{ forest.date }}</p>
+
+    {% set score = forest.score %}
+    {% if score >= 80 %}{% set color = '#3DAA6B' %}{% set status = 'Healthy Forest' %}
+    {% elif score >= 60 %}{% set color = '#F9A825' %}{% set status = 'Moderate Forest' %}
+    {% elif score >= 40 %}{% set color = '#FF7043' %}{% set status = 'Degraded Forest' %}
+    {% else %}{% set color = '#E53935' %}{% set status = 'Critical Forest' %}{% endif %}
+
+    <div class="hero-box">
+        <div class="score-circle" style="background:#0D3B2E;border-color:{{ color }};">
+            <div class="score-num" style="color:{{ color }};">{{ score }}</div>
+            <div class="score-sub" style="color:{{ color }};">/ 100</div>
+        </div>
+        <div class="hero-info">
+            <h2 style="color:{{ color }};">{{ status }}</h2>
+            <p>{{ forest.ai_type }} · {{ forest.cover }}% forest cover</p>
+            <p style="margin-top:4px;font-size:12px;">🛰️ Analyzed by ESA Sentinel-2, NASA Landsat, NASA GEDI LiDAR & NASA FIRMS</p>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-val">{{ forest.ndvi }}</div><div class="stat-label">🌿 NDVI</div></div>
+        <div class="stat"><div class="stat-val">{{ forest.cover }}%</div><div class="stat-label">🌳 {% if lang == "fr" %}Couverture{% else %}Forest Cover{% endif %}</div></div>
+        <div class="stat"><div class="stat-val">{{ forest.height }}m</div><div class="stat-label">📏 {% if lang == "fr" %}Hauteur Canopée (GEDI){% else %}Canopy Height (GEDI){% endif %}</div></div>
+        <div class="stat"><div class="stat-val">{{ forest.fires }}</div><div class="stat-label">🔥 {% if lang == "fr" %}Pixels Feux/an{% else %}Fire Pixels/year{% endif %}</div></div>
+        <div class="stat"><div class="stat-val">{{ forest.trend_10y }}</div><div class="stat-label">📈 {% if lang == "fr" %}Tendance NDVI 10 ans{% else %}NDVI Trend 10y{% endif %}</div></div>
+        <div class="stat"><div class="stat-val">{{ forest.trend_40y }}</div><div class="stat-label">🕰️ {% if lang == "fr" %}Tendance NDVI 40 ans{% else %}NDVI Trend 40y{% endif %}</div></div>
+        {% if forest.agb %}<div class="stat"><div class="stat-val">{{ forest.agb }} t/ha</div><div class="stat-label">⚖️ {% if lang == "fr" %}Biomasse Aérienne{% else %}Above-ground Biomass{% endif %}</div></div>{% endif %}
+        {% if forest.stage %}<div class="stat"><div class="stat-val" style="font-size:13px;">{{ forest.stage }}</div><div class="stat-label">🌱 {% if lang == "fr" %}Stade de Développement{% else %}Development Stage{% endif %}</div></div>{% endif %}
+    </div>
+
+    <div class="alert-box" style="background:{% if 'STABLE' in forest.alert %}#1B4332;border:1px solid #3DAA6B;color:#3DAA6B;{% elif 'CRITICAL' in forest.alert %}#3B1B1B;border:1px solid #E53935;color:#E53935;{% else %}#3B2D1B;border:1px solid #F9A825;color:#F9A825;{% endif %}">
+        ⚠️ {{ forest.alert }}
+    </div>
+
+    <h2>📊 {% if lang == "fr" %}Analyse Historique{% else %}Historical Analysis{% endif %}</h2>
+    <div class="timeline">
+        <div class="timeline-row"><span>🌿 {% if lang == "fr" %}Tendance NDVI 3 ans (Sentinel-2){% else %}NDVI Trend 3 years (Sentinel-2){% endif %}</span><span style="color:#3DAA6B;">{{ forest.trend_3y }}</span></div>
+        <div class="timeline-row"><span>📡 {% if lang == "fr" %}Tendance NDVI 10 ans (Landsat 8/9){% else %}NDVI Trend 10 years (Landsat 8/9){% endif %}</span><span style="color:#3DAA6B;">{{ forest.trend_10y }}</span></div>
+        <div class="timeline-row"><span>🕰️ {% if lang == "fr" %}Tendance NDVI 40 ans (Landsat 1984){% else %}NDVI Trend 40 years (Landsat 1984){% endif %}</span><span style="color:#3DAA6B;">{{ forest.trend_40y }}</span></div>
+        <div class="timeline-row"><span>📡 Sentinel-1 Radar (VV)</span><span style="color:#3DAA6B;">{{ forest.s1 }} dB</span></div>
+        <div class="timeline-row"><span>🔥 {% if lang == "fr" %}Activité Feux (NASA FIRMS){% else %}Fire Activity (NASA FIRMS){% endif %}</span><span style="color:{% if forest.fires > 100 %}#E53935{% else %}#3DAA6B{% endif %};">{{ forest.fires }} pixels/year</span></div>
+    </div>
+
+    <h2>🛰️ {% if lang == "fr" %}Méthodologie{% else %}Methodology{% endif %}</h2>
+    <p>{% if lang == "fr" %}Cette analyse utilise des données satellites réelles de 6 sources traitées par CanopySat Forest Intelligence :{% else %}This analysis uses real satellite data from 6 sources processed by CanopySat Forest Intelligence:{% endif %}</p>
+    <p>• <strong>ESA Sentinel-2</strong> (10m) — NDVI, NDRE, NBR vegetation indices and forest cover classification</p>
+    <p>• <strong>ESA Sentinel-1</strong> (10m) — SAR radar backscatter for forest structure assessment</p>
+    <p>• <strong>NASA Landsat 8/9</strong> (30m) — 10-year historical vegetation trend analysis</p>
+    <p>• <strong>NASA Landsat 4/5</strong> (30m) — 40-year historical trend since 1984</p>
+    <p>• <strong>NASA FIRMS/VIIRS</strong> (375m) — Active fire detection and annual fire pixel count</p>
+    <p>• <strong>NASA GEDI LiDAR</strong> (25m) — Canopy height measured by laser from the International Space Station</p>
+    <p style="font-size:11px;color:#2D6A4F;margin-top:8px;">{% if lang == "fr" %}Toutes les données traitées via Google Earth Engine. Date d'analyse : {{ forest.date }}.{% else %}All data processed via Google Earth Engine. Analysis date: {{ forest.date }}.{% endif %}</p>
+
+    <h2>🌍 {% if lang == 'fr' %}À propos de{% else %}About{% endif %} {{ forest.name }}</h2>
+    <p>{{ forest.description }}</p>
+    
+    <div style="background:#1B4332;border:1px solid #1B6B45;border-radius:8px;padding:12px;margin-top:12px;font-size:12px;">
+        <p style="color:#F9A825;margin-bottom:6px;">📍 <strong>{% if lang == 'fr' %}Note méthodologique{% else %}Methodological Note{% endif %}</strong></p>
+        <p style="color:#D6EFE1;margin-bottom:8px;">{% if lang == 'fr' %}Cette analyse couvre une zone échantillon de {{ forest.size }}km représentative de cette région forestière — pas la forêt entière. Les données proviennent de satellites réels (ESA Sentinel-2, NASA Landsat, NASA GEDI LiDAR) et sont mises à jour périodiquement.{% else %}This analysis covers a {{ forest.size }}km sample zone representative of this forest region — not the entire forest. Data comes from real satellites (ESA Sentinel-2, NASA Landsat, NASA GEDI LiDAR) and is updated periodically.{% endif %}</p>
+        <a href="/" style="display:inline-block;padding:6px 14px;background:#2D8A5A;color:white;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;">🌍 {% if lang == 'fr' %}Analysez votre zone spécifique →{% else %}Analyze your specific zone →{% endif %}</a>
+    </div>
+
+    <div class="cta">
+        <h2 style="border:none;margin:0 0 8px;color:#3DAA6B;">🌿 {% if lang == "fr" %}Analysez n'importe quelle forêt sur Terre{% else %}Analyze Any Forest on Earth{% endif %}</h2>
+        <p>{% if lang == "fr" %}Utilisez CanopySat pour surveiller votre propre zone forestière — analyse satellite gratuite en quelques minutes.{% else %}Use CanopySat to monitor your own forest zone — free satellite analysis in minutes.{% endif %}</p>
+        <a href="/" class="cta-btn">🌍 {% if lang == "fr" %}Commencer — Gratuit{% else %}Start Free Analysis{% endif %}</a>
+        <a href="/api-docs" class="cta-btn" style="background:#1B4332;border:1px solid #3DAA6B;">🛰️ API Access</a>
+    </div>
+
+    <h2>🌲 {% if lang == "fr" %}Autres Forêts{% else %}Related Forest Cases{% endif %}</h2>
+    <div class="related">
+        {% for r in related %}
+        <a href="/forest/{{ r.slug }}" class="related-card">
+            <div class="related-name">{{ r.name }}</div>
+            <div class="related-info">{{ r.country }} · Score {{ r.score }}/100 · {{ r.cover }}% {% if lang == "fr" %}couverture{% else %}cover{% endif %}</div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<footer>canopysat.org · Real Satellite Forest Monitoring · Data: ESA, NASA · {{ forest.date }} · contact@canopysat.org</footer>
+</body>
+</html>

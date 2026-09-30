@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ds.title }} — CanopySat Open Library</title>
+    <meta name="description" content="{{ ds.description[:160] }}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; }
+        header { background: #0D3B2E; padding: 12px 20px; border-bottom: 2px solid #1B6B45; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .logo { color: white; text-decoration: none; font-size: 18px; font-weight: bold; letter-spacing: 2px; }
+        .nav-link { color: #3DAA6B; text-decoration: none; font-size: 12px; }
+        .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
+        .breadcrumb { font-size: 12px; color: #2D6A4F; margin-bottom: 15px; }
+        .breadcrumb a { color: #3DAA6B; text-decoration: none; }
+        .badge { display: inline-block; background: #1565C0; color: white; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-bottom: 10px; }
+        h1 { font-size: 22px; color: white; margin-bottom: 8px; line-height: 1.4; }
+        .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 15px 0; }
+        .meta-box { background: #1B4332; border-radius: 8px; padding: 12px; border: 1px solid #1B6B45; }
+        .meta-label { font-size: 10px; color: #3DAA6B; margin-bottom: 4px; font-weight: bold; }
+        .meta-value { font-size: 12px; color: #D6EFE1; }
+        .section { background: #1B4332; border-radius: 10px; padding: 20px; margin: 15px 0; border: 1px solid #1B6B45; }
+        .section h2 { font-size: 15px; color: #3DAA6B; margin-bottom: 10px; }
+        .section p { font-size: 13px; color: #D6EFE1; line-height: 1.7; }
+        .keywords { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .keyword { background: #0D3B2E; color: #3DAA6B; padding: 3px 10px; border-radius: 10px; font-size: 11px; border: 1px solid #1B6B45; }
+        .download-box { background: #1B4332; border-radius: 10px; padding: 20px; margin: 15px 0; border: 2px solid #3DAA6B; }
+        .download-box h2 { font-size: 15px; color: #3DAA6B; margin-bottom: 12px; }
+        .btn-download { display: inline-block; padding: 10px 20px; background: #2D8A5A; color: white; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; margin-right: 8px; margin-bottom: 8px; }
+        .btn-download:hover { background: #3DAA6B; }
+        .btn-view { display: inline-block; padding: 10px 20px; background: #1B4332; color: #3DAA6B; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: 1px solid #3DAA6B; margin-right: 8px; margin-bottom: 8px; }
+        .license-box { background: #0D3B2E; border-radius: 6px; padding: 10px; margin-top: 10px; font-size: 11px; color: #2D6A4F; }
+        .lang-btns { display: flex; gap: 6px; }
+        .lang-btn { padding: 3px 10px; border: 1px solid #3DAA6B; border-radius: 10px; color: #D6EFE1; text-decoration: none; font-size: 11px; }
+        .lang-btn.active { background: #1B6B45; }
+        footer { text-align: center; padding: 15px; font-size: 11px; color: #2D6A4F; border-top: 1px solid #1B6B45; margin-top: 30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;align-items:center;">
+        <a href="/dataset/{{ ds.id }}?lang=en" class="lang-btn {% if lang == 'en' %}active{% endif %}">EN</a>
+        <a href="/dataset/{{ ds.id }}?lang=fr" class="lang-btn {% if lang == 'fr' %}active{% endif %}">FR</a>
+        <a href="/map" class="nav-link">🗺️ Map</a>
+        <a href="/library" class="nav-link">← {% if lang == 'fr' %}Bibliothèque{% else %}Library{% endif %}</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="breadcrumb">
+        <a href="/">CanopySat</a> → <a href="/library">{% if lang == 'fr' %}Bibliothèque Ouverte{% else %}Open Library{% endif %}</a> → {% if lang == 'fr' %}Jeu de Données{% else %}Dataset{% endif %}
+    </div>
+
+    <div class="badge">DATASET</div>
+    <h1>{{ ds.title }}</h1>
+
+    <div class="meta-grid">
+        <div class="meta-box">
+            <div class="meta-label">{% if lang == 'fr' %}AUTEUR{% else %}AUTHOR{% endif %}</div>
+            <div class="meta-value">{{ ds.authors }}</div>
+        </div>
+        <div class="meta-box">
+            <div class="meta-label">INSTITUTION</div>
+            <div class="meta-value">{{ ds.organization }}</div>
+        </div>
+        <div class="meta-box">
+            <div class="meta-label">{% if lang == 'fr' %}PUBLIÉ{% else %}PUBLISHED{% endif %}</div>
+            <div class="meta-value">{{ ds.created_at[:10] }}</div>
+        </div>
+        <div class="meta-box">
+            <div class="meta-label">FORMAT</div>
+            <div class="meta-value">{{ ds.format }}</div>
+        </div>
+        <div class="meta-box">
+            <div class="meta-label">{% if lang == 'fr' %}TAILLE{% else %}SIZE{% endif %}</div>
+            <div class="meta-value">{{ ds.size_info }}</div>
+        </div>
+        <div class="meta-box">
+            <div class="meta-label">LICENSE</div>
+            <div class="meta-value">CC BY 4.0 — Open Access</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>{% if lang == 'fr' %}Description{% else %}Description{% endif %}</h2>
+        <p>{{ ds.description }}</p>
+        <div class="keywords">
+            {% for kw in ds.keywords.split(',') %}
+            <span class="keyword">{{ kw.strip() }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="download-box">
+        <h2>{% if lang == 'fr' %}Télécharger{% else %}Download{% endif %}</h2>
+        {% if 'CSV' in ds.format %}
+        <a href="/{{ ds.file_path }}" download class="btn-download">
+            📥 Download CSV
+        </a>
+        <a href="/{{ ds.file_path.replace('.csv', '.json') }}" download class="btn-download" style="background:#1565C0;">
+            📥 Download JSON
+        </a>
+        {% else %}
+        <a href="/{{ ds.file_path }}" download class="btn-download">
+            📥 Download {{ ds.format }}
+        </a>
+        {% endif %}
+        <a href="/library" class="btn-view">
+            👁️ {% if lang == 'fr' %}Retour Library{% else %}Back to Library{% endif %}
+        </a>
+        <div class="license-box">
+            {% if lang == 'fr' %}Ce jeu de données est publié sous licence{% else %}This dataset is published under{% endif %} 
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#3DAA6B;">CC BY 4.0</a> — 
+            {% if lang == 'fr' %}Libre d'utilisation avec attribution.{% else %}Free to use with attribution.{% endif %}
+            {% if lang == 'fr' %}Citation suggérée :{% else %}Suggested citation:{% endif %}
+            <br><em>{{ ds.authors }} ({{ ds.created_at[:4] }}). {{ ds.title }}. CanopySat. canopysat.org</em>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🛰️ {% if lang == 'fr' %}Sources Satellites{% else %}Satellite Sources{% endif %}</h2>
+        <p>{% if lang == 'fr' %}Toutes les données sont traitées via Google Earth Engine avec un compte de service ESA/Google dédié.{% else %}All data processed via Google Earth Engine with a dedicated ESA/Google service account.{% endif %}</p>
+        <div class="keywords" style="margin-top:10px;">
+            <span class="keyword">ESA Sentinel-2 (10m)</span>
+            <span class="keyword">ESA Sentinel-1 (10m)</span>
+            <span class="keyword">NASA Landsat 8/9 (30m)</span>
+            <span class="keyword">NASA Landsat 4/5 (30m)</span>
+            <span class="keyword">NASA FIRMS/VIIRS (375m)</span>
+            <span class="keyword">NASA GEDI LiDAR (25m→10m fusion)</span>
+        </div>
+    </div>
+</div>
+
+<footer>
+    CanopySat Open Library · canopysat.org · contact@canopysat.org · CC BY 4.0
+</footer>
+</body>
+</html>

@@ -1,0 +1,6 @@
+zone,biome,lat,lng,temp_current_c,temp_2050_c,temp_change_c,precip_current_mm,precip_2050_mm,precip_change_pct,species_analyzed,suitable,moderate_risk,at_risk,scenario,maxent_consistent
+Amazon Rainforest,Tropical,-3.4653,-62.2159,26.6,29.2,2.5,2612,2108,-19.3,15,9,6,0,SSP2-4.5 (2050) — 5-model ensemble,Yes
+Congo Basin,Tropical,0.5,24.0,24.7,27.3,2.6,1885,1751,-7.1,15,14,1,0,SSP2-4.5 (2050) — 5-model ensemble,Yes
+Black Forest,Temperate,48.0,8.0,8.4,9.1,0.7,1039,1024,-1.4,15,10,4,1,SSP2-4.5 (2050) — 5-model ensemble,Yes
+Borneo,Tropical SE Asia,1.0,114.0,21.9,24.8,2.9,3639,4169,14.6,11,11,0,0,SSP2-4.5 (2050) — 5-model ensemble,Yes
+Boreal Canada,Boreal,55.0,-100.0,-1.7,1.5,3.2,485,456,-6.1,15,14,1,0,SSP2-4.5 (2050) — 5-model ensemble,Yes

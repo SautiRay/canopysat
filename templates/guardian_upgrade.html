@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Guardian — {% if lang == 'fr' %}Choisir un Plan{% else %}Choose a Plan{% endif %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; min-height: 100vh; }
+        header { background: #0D3B2E; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #1B6B45; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-emoji { font-size: 24px; }
+        .logo-text h1 { font-size: 16px; letter-spacing: 2px; color: white; }
+        .logo-text p { font-size: 8px; color: #3DAA6B; }
+        .container { max-width: 860px; margin: 0 auto; padding: 40px 20px; }
+        h1 { font-size: 26px; color: #3DAA6B; text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #D6EFE1; font-size: 14px; margin-bottom: 30px; }
+        .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin: 20px 0; }
+        .plan { background: #1B4332; border-radius: 12px; padding: 25px; border: 1px solid #1B6B45; position: relative; }
+        .plan.featured { border-color: #3DAA6B; border-width: 2px; }
+        .plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #3DAA6B; color: white; padding: 3px 14px; border-radius: 10px; font-size: 11px; font-weight: bold; white-space: nowrap; }
+        .plan-icon { font-size: 32px; text-align: center; margin-bottom: 10px; }
+        .plan-name { font-size: 20px; font-weight: bold; color: white; text-align: center; margin-bottom: 5px; }
+        .plan-price { font-size: 32px; font-weight: bold; color: #3DAA6B; text-align: center; margin-bottom: 15px; }
+        .plan-price span { font-size: 13px; color: #D6EFE1; }
+        .plan-features { list-style: none; font-size: 13px; color: #D6EFE1; line-height: 2.2; margin-bottom: 20px; }
+        .plan-features li::before { content: "✅ "; }
+        .plan-btn { display: block; width: 100%; padding: 12px; background: #2D8A5A; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.3s; }
+        .plan-btn:hover { background: #3DAA6B; }
+        .plan-btn.current { background: #1B4332; color: #2D6A4F; border: 1px solid #1B6B45; cursor: default; }
+        .faq { background: #1B4332; border-radius: 10px; padding: 20px; margin-top: 30px; }
+        .faq h3 { color: #3DAA6B; font-size: 16px; margin-bottom: 15px; }
+        .faq-item { margin-bottom: 12px; }
+        .faq-q { color: white; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+        .faq-a { color: #D6EFE1; font-size: 12px; line-height: 1.6; }
+        .lang-btns { display: flex; gap: 6px; }
+        .lang-btn { padding: 4px 10px; border: 1px solid #3DAA6B; border-radius: 10px; color: #D6EFE1; text-decoration: none; font-size: 11px; }
+        .lang-btn.active { background: #1B6B45; }
+        footer { text-align: center; padding: 15px; font-size: 11px; color: #2D6A4F; border-top: 1px solid #1B6B45; margin-top: 30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/guardian" class="logo">
+        <span class="logo-emoji">🛰️</span>
+        <div class="logo-text">
+            <h1>FOREST GUARDIAN</h1>
+            <p>CANOPYSAT · SATELLITE MONITORING</p>
+        </div>
+    </a>
+    <div class="lang-btns">
+        <a href="/guardian/upgrade?lang=en" class="lang-btn {% if lang == 'en' %}active{% endif %}">EN</a>
+        <a href="/guardian/upgrade?lang=fr" class="lang-btn {% if lang == 'fr' %}active{% endif %}">FR</a>
+    </div>
+</header>
+
+<div class="container">
+    <h1>{% if lang == 'fr' %}Choisir votre Plan{% else %}Choose Your Plan{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}Surveillez vos forêts avec l'intelligence satellite réelle — ESA, NASA & GEDI LiDAR{% else %}Monitor your forests with real satellite intelligence — ESA, NASA & GEDI LiDAR{% endif %}</p>
+
+    <div class="plans">
+        <!-- Free Plan -->
+        <div class="plan">
+            <div class="plan-icon"></div>
+            <div class="plan-name">Free</div>
+            <div class="plan-price">0€ <span>/ {% if lang == 'fr' %}mois{% else %}month{% endif %}</span></div>
+            <ul class="plan-features">
+                <li>1 {% if lang == 'fr' %}zone forestière{% else %}forest zone{% endif %}</li>
+                <li>{% if lang == 'fr' %}Analyse mensuelle{% else %}Monthly analysis{% endif %}</li>
+                <li>{% if lang == 'fr' %}Alertes email critiques{% else %}Critical email alerts{% endif %}</li>
+                <li>NASA GEDI LiDAR</li>
+                <li>{% if lang == 'fr' %}Score d'intégrité{% else %}Forest integrity score{% endif %}</li>
+            </ul>
+            <span class="plan-btn current">{% if lang == 'fr' %}Plan actuel{% else %}Current Plan{% endif %}</span>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="plan featured">
+            <div class="plan-badge">{% if lang == 'fr' %}RECOMMANDÉ{% else %}RECOMMENDED{% endif %}</div>
+            <div class="plan-icon"></div>
+            <div class="plan-name">Pro</div>
+            <div class="plan-price">9€ <span>/ {% if lang == 'fr' %}mois{% else %}month{% endif %}</span></div>
+            <ul class="plan-features">
+                <li>5 {% if lang == 'fr' %}zones forestières{% else %}forest zones{% endif %}</li>
+                <li>{% if lang == 'fr' %}Analyse mensuelle automatique{% else %}Automatic monthly analysis{% endif %}</li>
+                <li>{% if lang == 'fr' %}Rapport PDF mensuel{% else %}Monthly PDF report{% endif %}</li>
+                <li>{% if lang == 'fr' %}Alertes email complètes{% else %}Full email alerts{% endif %}</li>
+                <li>NASA GEDI LiDAR</li>
+                <li>{% if lang == 'fr' %}Historique 12 mois{% else %}12-month history{% endif %}</li>
+                <li>{% if lang == 'fr' %}Support email{% else %}Email support{% endif %}</li>
+            </ul>
+            <a href="/contact?plan=pro&lang={{ lang }}" class="plan-btn">{% if lang == 'fr' %}S'abonner — 9€/mois{% else %}Subscribe — 9€/month{% endif %}</a>
+        </div>
+
+        <!-- Business Plan -->
+        <div class="plan">
+            <div class="plan-icon"></div>
+            <div class="plan-name">Business</div>
+            <div class="plan-price">49€ <span>/ {% if lang == 'fr' %}mois{% else %}month{% endif %}</span></div>
+            <ul class="plan-features">
+                <li>20 {% if lang == 'fr' %}zones forestières{% else %}forest zones{% endif %}</li>
+                <li>{% if lang == 'fr' %}Analyse hebdomadaire automatique{% else %}Automatic weekly analysis{% endif %}</li>
+                <li>{% if lang == 'fr' %}Rapport PDF hebdomadaire{% else %}Weekly PDF report{% endif %}</li>
+                <li>{% if lang == 'fr' %}Alertes email prioritaires{% else %}Priority email alerts{% endif %}</li>
+                <li>NASA GEDI LiDAR</li>
+                <li>{% if lang == 'fr' %}Accès API complet{% else %}Full API access{% endif %}</li>
+                <li>{% if lang == 'fr' %}Historique illimité{% else %}Unlimited history{% endif %}</li>
+                <li>{% if lang == 'fr' %}Support prioritaire{% else %}Priority support{% endif %}</li>
+            </ul>
+            <a href="/contact?plan=business&lang={{ lang }}" class="plan-btn">{% if lang == 'fr' %}S'abonner — 49€/mois{% else %}Subscribe — 49€/month{% endif %}</a>
+        </div>
+    </div>
+
+    <div class="faq">
+        <h3>{% if lang == 'fr' %}Questions fréquentes{% else %}Frequently Asked Questions{% endif %}</h3>
+        <div class="faq-item">
+            <div class="faq-q">{% if lang == 'fr' %}Comment fonctionne le paiement ?{% else %}How does payment work?{% endif %}</div>
+            <div class="faq-a">{% if lang == 'fr' %}Contactez-nous via le bouton S'abonner — nous configurons votre compte manuellement et vous envoyons une facture. Stripe automatique bientôt disponible.{% else %}Contact us via the Subscribe button — we set up your account manually and send you an invoice. Automatic Stripe payment coming soon.{% endif %}</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-q">{% if lang == 'fr' %}Puis-je annuler à tout moment ?{% else %}Can I cancel anytime?{% endif %}</div>
+            <div class="faq-a">{% if lang == 'fr' %}Oui — envoyez-nous un email à contact@canopysat.org pour annuler votre abonnement à tout moment.{% else %}Yes — send us an email at contact@canopysat.org to cancel your subscription at any time.{% endif %}</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-q">{% if lang == 'fr' %}Quels satellites sont utilisés ?{% else %}Which satellites are used?{% endif %}</div>
+            <div class="faq-a">{% if lang == 'fr' %}ESA Sentinel-2 (10m), ESA Sentinel-1 (radar), NASA Landsat 8/9, NASA Landsat 4/5 (depuis 1984), NASA FIRMS (feux) et NASA GEDI LiDAR (hauteur de canopée depuis l'ISS).{% else %}ESA Sentinel-2 (10m), ESA Sentinel-1 (radar), NASA Landsat 8/9, NASA Landsat 4/5 (since 1984), NASA FIRMS (fires) and NASA GEDI LiDAR (canopy height from ISS).{% endif %}</div>
+        </div>
+    </div>
+</div>
+
+<footer>canopysat.org · Forest Guardian · contact@canopysat.org</footer>
+</body>
+</html>

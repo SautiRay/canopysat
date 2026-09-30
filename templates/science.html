@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Science</title>
+    <meta name="description" content="CanopySat scientific framework — methodology, Forest Integrity Score, data accuracy and validation against Hansen/UMD, FAO and ESA WorldCover.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; display:flex; align-items:center; gap:8px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .nav-link:hover { background:#1B6B45; }
+        .container { max-width:960px; margin:0 auto; padding:40px 20px; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:28px; color:white; margin-bottom:8px; }
+        .subtitle { font-size:14px; color:#D6EFE1; margin-bottom:40px; line-height:1.7; max-width:650px; }
+        .section-title { font-size:13px; color:#3DAA6B; text-transform:uppercase; letter-spacing:2px; margin-bottom:20px; }
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:50px; }
+        .card { background:#1B4332; border-radius:12px; padding:24px; border:1px solid #1B6B45; text-decoration:none; color:white; display:block; transition:border-color 0.3s; }
+        .card:hover { border-color:#3DAA6B; }
+        .card-icon { font-size:28px; margin-bottom:10px; }
+        .card-title { font-size:15px; font-weight:bold; color:#3DAA6B; margin-bottom:6px; }
+        .card-desc { font-size:12px; color:#D6EFE1; line-height:1.6; margin-bottom:12px; }
+        .card-link { font-size:11px; color:#3DAA6B; font-weight:bold; }
+        .validation-box { background:#1B4332; border-radius:12px; padding:24px; border:1px solid #1B6B45; margin-bottom:30px; }
+        .validation-box h2 { font-size:16px; color:#3DAA6B; margin-bottom:12px; }
+        .validation-box p { font-size:12px; color:#D6EFE1; line-height:1.7; margin-bottom:10px; }
+        .stat-row { display:flex; gap:20px; flex-wrap:wrap; margin:15px 0; }
+        .stat-box { background:#0D3B2E; border-radius:8px; padding:12px 16px; text-align:center; flex:1; min-width:120px; }
+        .stat-val { font-size:22px; font-weight:bold; color:#3DAA6B; }
+        .stat-label { font-size:10px; color:#2D6A4F; margin-top:3px; }
+        .cite { background:#0D3B2E; border-left:3px solid #3DAA6B; padding:8px 12px; font-size:11px; color:#2D6A4F; border-radius:0 4px 4px 0; margin-top:10px; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;align-items:center;">
+        <a href="/science?lang=en" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="/science?lang=fr" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+        <a href="/validation" class="nav-link">Validation Report</a>
+        <a href="/" class="nav-link">← Home</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="badge">SCIENCE</div>
+    <h1>{% if lang == 'fr' %}Cadre Scientifique{% else %}Scientific Framework{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}CanopySat repose sur une méthodologie scientifique rigoureuse — combinant 6 sources satellites, des algorithmes validés et une comparaison indépendante contre 3 datasets de référence mondiaux.{% else %}CanopySat is built on a rigorous scientific methodology — combining 6 satellite sources, validated algorithms and independent comparison against 3 global reference datasets.{% endif %}</p>
+
+    <div class="section-title">{% if lang == 'fr' %}Nos pages scientifiques{% else %}Scientific pages{% endif %}</div>
+    <div class="cards-grid">
+        <a href="/science/methodology" class="card">
+            <div class="card-icon">🛰️</div>
+            <div class="card-title">{% if lang == 'fr' %}Méthodologie{% else %}Methodology{% endif %}</div>
+            <div class="card-desc">{% if lang == 'fr' %}Comment CanopySat traite les données satellites — pipeline GEE, indices de végétation, fusion multi-sources.{% else %}How CanopySat processes satellite data — GEE pipeline, vegetation indices, multi-source fusion.{% endif %}</div>
+            <span class="card-link">{% if lang == 'fr' %}Lire →{% else %}Read →{% endif %}</span>
+        </a>
+        <a href="/science/forest-integrity-score" class="card">
+            <div class="card-icon">📊</div>
+            <div class="card-title">Forest Integrity Score</div>
+            <div class="card-desc">{% if lang == 'fr' %}Comment le score 0-100 est calculé — pondération des indicateurs, algorithme de classification et interprétation.{% else %}How the 0-100 score is calculated — indicator weighting, classification algorithm and interpretation.{% endif %}</div>
+            <span class="card-link">{% if lang == 'fr' %}Lire →{% else %}Read →{% endif %}</span>
+        </a>
+        <a href="/validation" class="card">
+            <div class="card-icon">✅</div>
+            <div class="card-title">{% if lang == 'fr' %}Validation{% else %}Validation{% endif %}</div>
+            <div class="card-desc">{% if lang == 'fr' %}Comparaison indépendante contre Hansen/UMD GFW 2025, FAO FRA 2020 et ESA WorldCover 2021. Publié sur Zenodo.{% else %}Independent comparison against Hansen/UMD GFW 2025, FAO FRA 2020 and ESA WorldCover 2021. Published on Zenodo.{% endif %}</div>
+            <span class="card-link">{% if lang == 'fr' %}Voir le rapport →{% else %}View report →{% endif %}</span>
+        </a>
+        <a href="/science/limitations" class="card">
+            <div class="card-icon">⚠️</div>
+            <div class="card-title">{% if lang == 'fr' %}Limitations{% else %}Limitations{% endif %}</div>
+            <div class="card-desc">{% if lang == 'fr' %}Ce que CanopySat ne peut pas faire — zones nuageuses, résolution, biais de détection et recommandations d'usage.{% else %}What CanopySat cannot do — cloudy areas, resolution limits, detection bias and usage recommendations.{% endif %}</div>
+            <span class="card-link">{% if lang == 'fr' %}Lire →{% else %}Read →{% endif %}</span>
+        </a>
+    </div>
+
+    <!-- Validation summary -->
+    <div class="validation-box">
+        <h2>{% if lang == 'fr' %}Validation scientifique — résumé{% else %}Scientific Validation — Summary{% endif %}</h2>
+        <p>{% if lang == 'fr' %}Les résultats de CanopySat ont été comparés contre 3 datasets de référence mondiaux sur 10 zones forestières sur 4 continents.{% else %}CanopySat results have been compared against 3 global reference datasets across 10 forest zones on 4 continents.{% endif %}</p>
+        <div class="stat-row">
+            <div class="stat-box">
+                <div class="stat-val">+0.1%</div>
+                <div class="stat-label">Amazon vs ESA WorldCover</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">0.0%</div>
+                <div class="stat-label">Amazon vs Hansen/UMD</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">3</div>
+                <div class="stat-label">{% if lang == 'fr' %}Datasets de référence{% else %}Reference datasets{% endif %}</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">10</div>
+                <div class="stat-label">{% if lang == 'fr' %}Zones analysées{% else %}Zones analyzed{% endif %}</div>
+            </div>
+        </div>
+        <div class="cite">
+            DOI: 10.5281/zenodo.22872779 · {% if lang == 'fr' %}Publié sur Zenodo · Licence CC BY 4.0{% else %}Published on Zenodo · CC BY 4.0{% endif %}
+        </div>
+        <div style="margin-top:14px;">
+            <a href="/validation" style="padding:8px 18px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">{% if lang == 'fr' %}Voir le rapport complet →{% else %}View full validation report →{% endif %}</a>
+            <a href="https://zenodo.org/records/22872779" target="_blank" style="margin-left:10px;padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Zenodo DOI →</a>
+        </div>
+    </div>
+
+    <!-- Satellites used -->
+    <div class="section-title">{% if lang == 'fr' %}Sources de données{% else %}Data sources{% endif %}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;">
+        {% for sat in [
+            ('ESA Sentinel-2', '10m', 'NDVI, forest cover, vegetation indices'),
+            ('ESA Sentinel-1', '10m', 'SAR radar — forest structure'),
+            ('NASA Landsat 8/9', '30m', '10-year historical trend'),
+            ('NASA Landsat 4/5', '30m', '40-year trend since 1984'),
+            ('NASA FIRMS/VIIRS', '375m', 'Active fire detection'),
+            ('NASA GEDI LiDAR', '25m', 'Canopy height from ISS'),
+        ] %}
+        <div style="background:#1B4332;border-radius:8px;padding:12px 16px;border:1px solid #1B6B45;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+                <div style="font-size:12px;font-weight:bold;color:white;">{{ sat[0] }}</div>
+                <div style="font-size:11px;color:#2D6A4F;margin-top:2px;">{{ sat[2] }}</div>
+            </div>
+            <span style="background:#0D3B2E;color:#3DAA6B;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:bold;">{{ sat[1] }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<footer>CanopySat Science · canopysat.org · contact@canopysat.org · 2026</footer>
+</body>
+</html>

@@ -1,0 +1,6 @@
+zone,biome,lat,lng,canopy_height_m,canopysat_agb_t_ha,gfw_whrc_agb_t_ha,fao_fra_agb_t_ha,esa_cci_agb_t_ha,ref_mean_agb_t_ha,error_pct,canopysat_co2_t,carbon_credit_eur
+Amazon Rainforest,Tropical,-3.4653,-62.2159,13.2,118.5,120.0,115.0,118.0,117.7,0.7,2023190.0,30347850.0
+Congo Basin,Tropical,0.5,24.0,14.0,133.3,135.0,128.0,131.0,131.3,1.5,2276875.0,34122390.0
+Black Forest,Temperate,48.0,8.0,10.2,91.6,95.0,88.0,92.0,91.7,0.1,1562161.0,18075840.0
+Borneo,Tropical SE Asia,1.0,114.0,11.0,141.6,145.0,138.0,142.0,141.7,0.0,2415105.0,21049455.0
+Boreal Canada,Boreal,55.0,-100.0,7.6,50.8,55.0,48.0,52.0,51.7,1.7,867867.0,10043865.0

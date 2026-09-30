@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Forest Integrity Score</title>
+    <meta name="description" content="How the CanopySat Forest Integrity Score (0-100) is calculated — indicator weighting, algorithm and interpretation guide.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .container { max-width:860px; margin:0 auto; padding:40px 20px; }
+        .breadcrumb { font-size:11px; color:#2D6A4F; margin-bottom:15px; }
+        .breadcrumb a { color:#3DAA6B; text-decoration:none; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:26px; color:white; margin-bottom:8px; }
+        .subtitle { font-size:13px; color:#D6EFE1; margin-bottom:30px; line-height:1.7; }
+        h2 { font-size:16px; color:#3DAA6B; margin:25px 0 10px; }
+        p { font-size:12px; color:#D6EFE1; line-height:1.8; margin-bottom:10px; }
+        .score-display { text-align:center; background:#1B4332; border-radius:12px; padding:25px; margin:20px 0; border:1px solid #1B6B45; }
+        .score-big { font-size:64px; font-weight:bold; color:#3DAA6B; }
+        .score-label { font-size:12px; color:#D6EFE1; letter-spacing:2px; }
+        .indicator-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #1B4332; }
+        .indicator-name { font-size:12px; color:#D6EFE1; }
+        .indicator-weight { font-size:12px; color:#3DAA6B; font-weight:bold; }
+        .indicator-bar { height:6px; background:#1B4332; border-radius:3px; margin-top:4px; }
+        .indicator-fill { height:6px; background:#3DAA6B; border-radius:3px; }
+        .scale-box { background:#1B4332; border-radius:10px; padding:20px; margin:20px 0; }
+        .scale-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #0D3B2E; }
+        .scale-range { font-size:13px; font-weight:bold; min-width:60px; }
+        .scale-label { font-size:12px; color:#D6EFE1; }
+        .scale-badge { padding:3px 10px; border-radius:6px; font-size:10px; font-weight:bold; min-width:80px; text-align:center; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;">
+        <a href="/science" class="nav-link">← Science</a>
+        <a href="/science/methodology" class="nav-link">Methodology</a>
+        <a href="/" class="nav-link">Home</a>
+    </div>
+</header>
+<div class="container">
+    <div class="breadcrumb"><a href="/">Home</a> → <a href="/science">Science</a> → Forest Integrity Score</div>
+    <div class="badge">SCIENCE · FOREST INTEGRITY SCORE</div>
+    <h1>Forest Integrity Score</h1>
+    <p class="subtitle">{% if lang == 'fr' %}Le Forest Integrity Score est un indicateur composite 0-100 qui résume la santé forestière d'une zone en combinant plusieurs signaux satellites.{% else %}The Forest Integrity Score is a composite 0-100 indicator that summarizes the forest health of a zone by combining multiple satellite signals.{% endif %}</p>
+
+    <div class="score-display">
+        <div class="score-big">80</div>
+        <div class="score-label">FOREST INTEGRITY SCORE · AMAZON RAINFOREST EXAMPLE</div>
+    </div>
+
+    <h2>{% if lang == 'fr' %}Comment le score est calculé{% else %}How the score is calculated{% endif %}</h2>
+    <p>{% if lang == 'fr' %}Le score est calculé en combinant 5 indicateurs satellites pondérés, chacun normalisé sur une échelle 0-100 avant d'être agrégé.{% else %}The score is calculated by combining 5 weighted satellite indicators, each normalized on a 0-100 scale before aggregation.{% endif %}</p>
+
+    <div style="background:#1B4332;border-radius:10px;padding:20px;margin:15px 0;">
+        {% for ind in [
+            ('NDVI (Sentinel-2)', 35, 'Vegetation health and density'),
+            ('Forest Cover %', 25, 'Percentage of forested pixels'),
+            ('NDVI Trend (10yr)', 20, 'Forest change direction'),
+            ('Fire Activity (inverse)', 10, 'Lower fires = higher score'),
+            ('SAR Backscatter (Sentinel-1)', 10, 'Forest structure via radar'),
+        ] %}
+        <div class="indicator-row">
+            <div style="flex:1;">
+                <div class="indicator-name">{{ ind[0] }}</div>
+                <div style="font-size:10px;color:#2D6A4F;">{{ ind[2] }}</div>
+                <div class="indicator-bar" style="width:{{ ind[1]*2 }}px;margin-top:5px;">
+                    <div class="indicator-fill" style="width:100%;"></div>
+                </div>
+            </div>
+            <div class="indicator-weight">{{ ind[1] }}%</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2>{% if lang == 'fr' %}Interprétation du score{% else %}Score interpretation{% endif %}</h2>
+    <div class="scale-box">
+        {% for row in [
+            ('80-100', 'STABLE', '#1B6B45', '#3DAA6B', 'Healthy, dense forest. Minimal deforestation risk.'),
+            ('65-79', 'POSITIVE', '#1565C0', '#90CAF9', 'Good forest health. Positive trend detected.'),
+            ('50-64', 'CAUTION', '#E65100', '#FFCC02', 'Moderate forest health. Some degradation signals.'),
+            ('30-49', 'WARNING', '#B71C1C', '#EF5350', 'Significant forest degradation detected.'),
+            ('0-29', 'CRITICAL', '#7B1FA2', '#CE93D8', 'Severe deforestation or forest loss detected.'),
+        ] %}
+        <div class="scale-row">
+            <div class="scale-range" style="color:{{ row[3] }};">{{ row[0] }}</div>
+            <span class="scale-badge" style="background:{{ row[2] }};color:{{ row[3] }};">{{ row[1] }}</span>
+            <div class="scale-label">{{ row[4] }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2>{% if lang == 'fr' %}Limites du score{% else %}Score limitations{% endif %}</h2>
+    <p>{% if lang == 'fr' %}Le score représente une zone d'analyse de 1-100km de rayon — pas la forêt entière. Des zones mixtes (agriculture + forêt) peuvent produire des scores intermédiaires qui reflètent la réalité du paysage analysé. Voir la page Limitations pour plus de détails.{% else %}The score represents an analysis zone of 1-100km radius — not the entire forest. Mixed zones (agriculture + forest) may produce intermediate scores that reflect the reality of the analyzed landscape. See the Limitations page for more details.{% endif %}</p>
+
+    <div style="margin-top:25px;display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="/#analyze" style="padding:8px 18px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">{% if lang == 'fr' %}Calculer un score →{% else %}Calculate a score →{% endif %}</a>
+        <a href="/science/methodology" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Methodology →</a>
+        <a href="/science/limitations" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Limitations →</a>
+    </div>
+</div>
+<footer>CanopySat Science · Forest Integrity Score · canopysat.org · 2026</footer>
+</body>
+</html>

@@ -1,0 +1,139 @@
+{
+  "name": "CanopySat Forest Validation Dataset v1.0",
+  "description": "Systematic comparison of CanopySat forest cover results against 3 global reference datasets across 10 forest zones on 4 continents",
+  "version": "1.0",
+  "date": "2026-09-21",
+  "license": "CC BY 4.0",
+  "author": "Raymond Sauti \u2014 Forest Engineer & GeoSpatial Software Engineer",
+  "organization": "CanopySat \u2014 Forest Intelligence Ecosystem",
+  "doi": "10.5281/zenodo.22872779",
+  "reference_datasets": [
+    "Hansen/UMD Global Forest Change 2025 v1.13",
+    "FAO Forest Resources Assessment 2020",
+    "ESA WorldCover 2021 v200"
+  ],
+  "zones_hansen": [
+    {
+      "name": "Amazon Rainforest",
+      "lat": -3.4653,
+      "lng": -62.2159,
+      "hansen_cover_2000": 98.5,
+      "hansen_loss_pct": 1.54,
+      "canopysat_cover": 98.5,
+      "canopysat_ndvi": 0.842,
+      "canopysat_score": 80,
+      "canopysat_alert": "STABLE",
+      "cover_diff": 0.0
+    },
+    {
+      "name": "Congo Basin",
+      "lat": -0.7893,
+      "lng": 23.6568,
+      "hansen_cover_2000": 99.4,
+      "hansen_loss_pct": 13.19,
+      "canopysat_cover": 100.0,
+      "canopysat_ndvi": 0.773,
+      "canopysat_score": 73,
+      "canopysat_alert": "STABLE",
+      "cover_diff": 0.6
+    },
+    {
+      "name": "Borneo Rainforest",
+      "lat": -0.5,
+      "lng": 114.0,
+      "hansen_cover_2000": 94.5,
+      "hansen_loss_pct": 9.42,
+      "canopysat_cover": 72.9,
+      "canopysat_ndvi": 0.613,
+      "canopysat_score": 51,
+      "canopysat_alert": "CRITICAL",
+      "cover_diff": -21.6
+    },
+    {
+      "name": "Black Forest",
+      "lat": 48.3614,
+      "lng": 8.145,
+      "hansen_cover_2000": 58.7,
+      "hansen_loss_pct": 3.58,
+      "canopysat_cover": 95.8,
+      "canopysat_ndvi": 0.729,
+      "canopysat_score": 68,
+      "canopysat_alert": "STABLE",
+      "cover_diff": 37.1
+    },
+    {
+      "name": "Rwanda Highland",
+      "lat": -1.9403,
+      "lng": 29.8739,
+      "hansen_cover_2000": 15.9,
+      "hansen_loss_pct": 1.69,
+      "canopysat_cover": 71.1,
+      "canopysat_ndvi": 0.455,
+      "canopysat_score": 52,
+      "canopysat_alert": "CRITICAL",
+      "cover_diff": 55.2
+    }
+  ],
+  "zones_esa": [
+    {
+      "name": "Amazon Rainforest",
+      "country": "Brazil",
+      "lat": -3.4653,
+      "lng": -62.2159,
+      "esa_worldcover_2021": 98.4,
+      "hansen_cover_2000": 98.5,
+      "canopysat_cover": 98.5,
+      "canopysat_score": 80,
+      "canopysat_alert": "STABLE",
+      "canopysat_ndvi": 0.842
+    },
+    {
+      "name": "Black Forest",
+      "country": "Germany",
+      "lat": 48.3614,
+      "lng": 8.145,
+      "esa_worldcover_2021": 72.5,
+      "hansen_cover_2000": 58.7,
+      "canopysat_cover": 95.8,
+      "canopysat_score": 68,
+      "canopysat_alert": "STABLE",
+      "canopysat_ndvi": 0.729
+    },
+    {
+      "name": "Uluda\u011f NP Turkey",
+      "country": "Turkey",
+      "lat": 40.1,
+      "lng": 29.1,
+      "esa_worldcover_2021": 65.7,
+      "hansen_cover_2000": 36.0,
+      "canopysat_cover": 81.1,
+      "canopysat_score": 68,
+      "canopysat_alert": "STABLE",
+      "canopysat_ndvi": 0.601
+    },
+    {
+      "name": "Belgian Ardennes",
+      "country": "Belgium",
+      "lat": 50.5039,
+      "lng": 5.5,
+      "esa_worldcover_2021": 44.3,
+      "hansen_cover_2000": 28.0,
+      "canopysat_cover": 90.1,
+      "canopysat_score": 68,
+      "canopysat_alert": "POSITIVE",
+      "canopysat_ndvi": 0.629
+    },
+    {
+      "name": "Daintree Rainforest",
+      "country": "Australia",
+      "lat": -16.1,
+      "lng": 145.4,
+      "esa_worldcover_2021": 56.4,
+      "hansen_cover_2000": 52.2,
+      "canopysat_cover": 59.7,
+      "canopysat_score": 36,
+      "canopysat_alert": "WARNING",
+      "canopysat_ndvi": 0.455
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat Guardian — Reset Password</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: #1B4332; border-radius: 12px; padding: 35px; width: 100%; max-width: 400px; border: 1px solid #1B6B45; margin: 20px; }
+        .logo { text-align: center; margin-bottom: 25px; }
+        .logo-emoji { font-size: 40px; }
+        .logo h1 { font-size: 18px; letter-spacing: 2px; color: white; margin-top: 8px; }
+        .logo p { font-size: 10px; color: #3DAA6B; }
+        h2 { font-size: 18px; color: #3DAA6B; margin-bottom: 8px; text-align: center; }
+        .subtitle { font-size: 12px; color: #D6EFE1; text-align: center; margin-bottom: 20px; }
+        label { font-size: 11px; color: #3DAA6B; display: block; margin-bottom: 4px; }
+        input { width: 100%; padding: 10px 12px; background: #0D3B2E; border: 1px solid #1B6B45; border-radius: 6px; color: white; font-size: 13px; margin-bottom: 14px; }
+        .btn { width: 100%; padding: 12px; background: #2D8A5A; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 12px; display: none; }
+        .msg-ok { background: #1B4332; color: #3DAA6B; border: 1px solid #3DAA6B; }
+        .msg-err { background: #3B1B1B; color: #E53935; border: 1px solid #E53935; }
+        .link { text-align: center; margin-top: 15px; font-size: 12px; color: #D6EFE1; }
+        .link a { color: #3DAA6B; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="logo">
+        <div class="logo-emoji">🛡️</div>
+        <h1>CANOPYSAT</h1>
+        <p>FOREST GUARDIAN</p>
+    </div>
+    <h2>Reset Password</h2>
+    <p class="subtitle">Enter your email — we'll send you a reset link</p>
+    <div class="msg msg-ok" id="msg-ok"></div>
+    <div class="msg msg-err" id="msg-err"></div>
+    <label>Email</label>
+    <input type="email" id="email" placeholder="your@email.com">
+    <button class="btn" onclick="forgot()">📧 Send Reset Link</button>
+    <div class="link" style="margin-top:12px;"><a href="/guardian/login">← Back to Login</a></div>
+</div>
+<script>
+async function forgot() {
+    const email = document.getElementById('email').value;
+    if (!email) return;
+    const res = await fetch('/guardian/forgot', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email})
+    });
+    const data = await res.json();
+    if (data.success) {
+        document.getElementById('msg-ok').textContent = 'Reset link sent! Check your email.';
+        document.getElementById('msg-ok').style.display = 'block';
+    } else {
+        document.getElementById('msg-err').textContent = data.error || 'Error';
+        document.getElementById('msg-err').style.display = 'block';
+    }
+}
+</script>
+</body>
+</html>

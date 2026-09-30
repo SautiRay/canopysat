@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Carbon Market & REDD+</title>
+    <meta name="description" content="CanopySat for carbon markets — independent satellite-based forest monitoring for REDD+ carbon credit verification, ESG compliance and voluntary carbon markets.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .nav-link:hover { background:#1B6B45; }
+        .container { max-width:960px; margin:0 auto; padding:40px 20px; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:28px; color:white; margin-bottom:8px; }
+        h2 { font-size:18px; color:#3DAA6B; margin:30px 0 12px; }
+        h3 { font-size:14px; color:#3DAA6B; margin:15px 0 8px; }
+        .subtitle { font-size:14px; color:#D6EFE1; margin-bottom:40px; line-height:1.7; max-width:700px; }
+        p { font-size:12px; color:#D6EFE1; line-height:1.8; margin-bottom:10px; }
+        .section-title { font-size:11px; color:#3DAA6B; text-transform:uppercase; letter-spacing:2px; margin-bottom:16px; }
+        .card { background:#1B4332; border-radius:12px; padding:24px; border:1px solid #1B6B45; margin-bottom:20px; }
+        .card-green { border-left:3px solid #3DAA6B; }
+        .card-yellow { border-left:3px solid #F9A825; }
+        .workflow { display:flex; align-items:center; flex-wrap:wrap; gap:0; margin:20px 0; }
+        .workflow-step { background:#1B4332; border-radius:10px; padding:14px 18px; font-size:11px; color:#D6EFE1; text-align:center; min-width:130px; border:1px solid #1B6B45; }
+        .workflow-step strong { display:block; color:#3DAA6B; font-size:12px; margin-bottom:4px; }
+        .workflow-arrow { color:#3DAA6B; font-size:18px; padding:0 8px; }
+        .formula-box { background:#0D3B2E; border-radius:8px; padding:16px; border:1px solid #1B6B45; margin:12px 0; font-family:monospace; font-size:12px; color:#3DAA6B; line-height:2; }
+        .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin:20px 0; }
+        .stat-box { background:#0D3B2E; border-radius:8px; padding:14px; text-align:center; border:1px solid #1B6B45; }
+        .stat-val { font-size:22px; font-weight:bold; color:#3DAA6B; }
+        .stat-label { font-size:10px; color:#2D6A4F; margin-top:4px; }
+        .use-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:20px 0; }
+        .use-card { background:#1B4332; border-radius:10px; padding:18px; border:1px solid #1B6B45; }
+        .use-title { font-size:13px; font-weight:bold; color:white; margin-bottom:6px; }
+        .use-desc { font-size:11px; color:#D6EFE1; line-height:1.7; }
+        .cta-box { background:#1B4332; border-radius:12px; padding:28px; border:2px solid #3DAA6B; text-align:center; margin:30px 0; }
+        .btn-primary { display:inline-block; padding:12px 28px; background:#2D8A5A; color:white; border-radius:10px; text-decoration:none; font-size:14px; font-weight:bold; margin:6px; }
+        .btn-primary:hover { background:#3DAA6B; }
+        .btn-secondary { display:inline-block; padding:12px 28px; background:transparent; color:#3DAA6B; border:1px solid #3DAA6B; border-radius:10px; text-decoration:none; font-size:14px; margin:6px; }
+        table { width:100%; border-collapse:collapse; font-size:12px; margin:15px 0; }
+        th { background:#1B4332; color:#3DAA6B; padding:10px 12px; text-align:left; border-bottom:2px solid #1B6B45; }
+        td { padding:9px 12px; border-bottom:1px solid #1B4332; color:#D6EFE1; }
+        tr:hover { background:#1B4332; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;align-items:center;">
+        <a href="/carbon?lang=en" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="/carbon?lang=fr" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+        <a href="/#analyze" class="nav-link">{% if lang == 'fr' %}Analyser une forêt{% else %}Analyze a Forest{% endif %}</a>
+        <a href="/" class="nav-link">← Home</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="badge">CARBON MARKET</div>
+    <h1>{% if lang == 'fr' %}CanopySat pour le Marché Carbone{% else %}CanopySat for the Carbon Market{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}Une vérification satellite indépendante de la préservation forestière pour les crédits carbone REDD+, la conformité ESG et les marchés carbone volontaires.{% else %}Independent satellite-based verification of forest preservation for REDD+ carbon credits, ESG compliance and voluntary carbon markets.{% endif %}</p>
+
+    <!-- Market stats -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-val">$2B</div>
+            <div class="stat-label">{% if lang == 'fr' %}Marché carbone volontaire 2024{% else %}Voluntary carbon market 2024{% endif %}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val">$50B</div>
+            <div class="stat-label">{% if lang == 'fr' %}Projection 2030 (McKinsey){% else %}2030 projection (McKinsey){% endif %}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val">$15</div>
+            <div class="stat-label">{% if lang == 'fr' %}Prix moyen tonne CO2 (2024){% else %}Average price/tonne CO2 (2024){% endif %}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val">EUDR</div>
+            <div class="stat-label">{% if lang == 'fr' %}Règlement UE déforestation 2025{% else %}EU Deforestation Regulation 2025{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- How to use -->
+    <h2>{% if lang == 'fr' %}Comment utiliser CanopySat pour les crédits carbone{% else %}How to use CanopySat for carbon credits{% endif %}</h2>
+
+    <div class="workflow">
+        <div class="workflow-step">
+            <strong>{% if lang == 'fr' %}1. Zone forestière{% else %}1. Forest zone{% endif %}</strong>
+            {% if lang == 'fr' %}Définissez votre zone GPS{% else %}Define your GPS zone{% endif %}
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+            <strong>{% if lang == 'fr' %}2. Baseline{% else %}2. Baseline{% endif %}</strong>
+            {% if lang == 'fr' %}Analyse initiale CanopySat{% else %}Initial CanopySat analysis{% endif %}
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+            <strong>{% if lang == 'fr' %}3. Monitoring{% else %}3. Monitoring{% endif %}</strong>
+            {% if lang == 'fr' %}Forest Guardian mensuel{% else %}Monthly Forest Guardian{% endif %}
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+            <strong>{% if lang == 'fr' %}4. Rapport PDF{% else %}4. PDF Report{% endif %}</strong>
+            {% if lang == 'fr' %}Avec bilan carbone IPCC{% else %}With IPCC carbon assessment{% endif %}
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step" style="border-color:#F9A825;">
+            <strong style="color:#F9A825;">{% if lang == 'fr' %}5. Crédits carbone{% else %}5. Carbon credits{% endif %}</strong>
+            {% if lang == 'fr' %}Vérification indépendante{% else %}Independent verification{% endif %}
+        </div>
+    </div>
+
+    <!-- Carbon formula -->
+    <div class="card card-green">
+        <h3>{% if lang == 'fr' %}Calcul CO2 — Méthodologie IPCC{% else %}CO2 Calculation — IPCC Methodology{% endif %}</h3>
+        <p>{% if lang == 'fr' %}CanopySat calcule automatiquement le CO2 séquestré pour chaque zone analysée en utilisant la méthodologie standard IPCC.{% else %}CanopySat automatically calculates the CO2 sequestered for each analyzed zone using the standard IPCC methodology.{% endif %}</p>
+        <div class="formula-box">
+AGB (Above-Ground Biomass) → measured via NASA GEDI LiDAR + Sentinel-2
+BGB (Below-Ground Biomass) = AGB × 0.26  (IPCC root-to-shoot ratio)
+Total Biomass = AGB + BGB
+Carbon (t C/ha) = Total Biomass × 0.47  (carbon fraction)
+CO2 (t CO2/ha) = Carbon × 3.67  (molecular weight CO2/C)
+Total CO2 (t) = CO2/ha × Zone area (ha)
+Carbon credit value (EUR) = Total CO2 × 15 EUR/tonne</div>
+        <p style="font-size:11px;color:#2D6A4F;">{% if lang == 'fr' %}Source: IPCC Guidelines for National Greenhouse Gas Inventories (2006, 2019 refinement). Prix carbone: marché volontaire 2024.{% else %}Source: IPCC Guidelines for National Greenhouse Gas Inventories (2006, 2019 refinement). Carbon price: voluntary market 2024.{% endif %}</p>
+    </div>
+
+    <!-- Use cases -->
+    <h2>{% if lang == 'fr' %}Cas d'usage{% else %}Use cases{% endif %}</h2>
+    <div class="use-grid">
+        <div class="use-card">
+            <div class="use-title">{% if lang == 'fr' %}Propriétaires forestiers{% else %}Forest owners{% endif %}</div>
+            <div class="use-desc">{% if lang == 'fr' %}Évaluez le potentiel carbone de votre forêt et générez des rapports mensuels pour vendre des crédits carbone sur les marchés volontaires.{% else %}Assess your forest's carbon potential and generate monthly reports to sell carbon credits on voluntary markets.{% endif %}</div>
+        </div>
+        <div class="use-card">
+            <div class="use-title">{% if lang == 'fr' %}Développeurs de projets REDD+{% else %}REDD+ project developers{% endif %}</div>
+            <div class="use-desc">{% if lang == 'fr' %}Monitoring continu indépendant de vos zones de conservation avec historique 40 ans et alertes déforestation automatiques.{% else %}Independent continuous monitoring of your conservation zones with 40-year history and automatic deforestation alerts.{% endif %}</div>
+        </div>
+        <div class="use-card">
+            <div class="use-title">{% if lang == 'fr' %}Entreprises (ESG/CSRD){% else %}Companies (ESG/CSRD){% endif %}</div>
+            <div class="use-desc">{% if lang == 'fr' %}Vérifiez que vos forêts compensées sont réellement préservées. Rapports PDF mensuels pour vos obligations CSRD et EU Taxonomy.{% else %}Verify that your offset forests are genuinely preserved. Monthly PDF reports for your CSRD and EU Taxonomy obligations.{% endif %}</div>
+        </div>
+        <div class="use-card">
+            <div class="use-title">{% if lang == 'fr' %}Vérificateurs indépendants{% else %}Independent verifiers{% endif %}</div>
+            <div class="use-desc">{% if lang == 'fr' %}Accédez à notre API pour intégrer les données CanopySat dans vos pipelines de vérification VCS/Gold Standard.{% else %}Access our API to integrate CanopySat data into your VCS/Gold Standard verification pipelines.{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- Example -->
+    <h2>{% if lang == 'fr' %}Exemple — Amazonie (zone 10km){% else %}Example — Amazon Rainforest (10km zone){% endif %}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>{% if lang == 'fr' %}Indicateur{% else %}Indicator{% endif %}</th>
+                <th>{% if lang == 'fr' %}Valeur{% else %}Value{% endif %}</th>
+                <th>Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Above-ground biomass (AGB)</td><td>78.4 t/ha</td><td>NASA GEDI LiDAR + Sentinel-2</td></tr>
+            <tr><td>Below-ground biomass (BGB)</td><td>20.4 t/ha</td><td>IPCC × 0.26</td></tr>
+            <tr><td>Total biomass</td><td>98.8 t/ha</td><td>AGB + BGB</td></tr>
+            <tr><td>Carbon content</td><td>46.4 t C/ha</td><td>× 0.47 (IPCC)</td></tr>
+            <tr><td>CO2 equivalent</td><td>170.3 t CO2/ha</td><td>× 3.67 (molecular weight)</td></tr>
+            <tr><td>Zone area</td><td>7,854 ha</td><td>10km radius circle</td></tr>
+            <tr><td style="color:#3DAA6B;font-weight:bold;">Total CO2 sequestered</td><td style="color:#3DAA6B;font-weight:bold;">1,337,536 t CO2</td><td>IPCC standard</td></tr>
+            <tr><td style="color:#F9A825;font-weight:bold;">Carbon credit value</td><td style="color:#F9A825;font-weight:bold;">EUR 20,063,040</td><td>@ EUR 15/tonne CO2</td></tr>
+        </tbody>
+    </table>
+
+    <!-- Limitations -->
+    <div class="card card-yellow">
+        <h3>{% if lang == 'fr' %}Avertissement important{% else %}Important disclaimer{% endif %}</h3>
+        <p>{% if lang == 'fr' %}Le calcul CO2 de CanopySat est basé sur la méthodologie IPCC et les données NASA GEDI LiDAR. Il fournit une estimation scientifiquement fondée du potentiel carbone d'une zone forestière. Cependant, pour l'émission officielle de crédits carbone certifiés (VCS, Gold Standard, Plan Vivo), une vérification par un auditeur accrédité tiers est requise. CanopySat fournit la couche de monitoring satellite indépendante et continue qui supporte ce processus.{% else %}CanopySat's CO2 calculation is based on the IPCC methodology and NASA GEDI LiDAR data. It provides a scientifically grounded estimate of a forest zone's carbon potential. However, for the official issuance of certified carbon credits (VCS, Gold Standard, Plan Vivo), verification by an accredited third-party auditor is required. CanopySat provides the independent, continuous satellite monitoring layer that supports this process.{% endif %}</p>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-box">
+        <h2 style="margin:0 0 8px;color:white;">{% if lang == 'fr' %}Commencer votre évaluation carbone{% else %}Start your carbon assessment{% endif %}</h2>
+        <p style="margin-bottom:20px;">{% if lang == 'fr' %}Analysez n'importe quelle zone forestière et obtenez instantanément votre bilan carbone complet avec rapport PDF.{% else %}Analyze any forest zone and instantly get your complete carbon assessment with PDF report.{% endif %}</p>
+        <a href="/#analyze" class="btn-primary">{% if lang == 'fr' %}Analyser une forêt →{% else %}Analyze a Forest →{% endif %}</a>
+        <a href="/guardian" class="btn-secondary">{% if lang == 'fr' %}Monitoring mensuel (Guardian){% else %}Monthly Monitoring (Guardian){% endif %}</a>
+        <a href="/api-docs" class="btn-secondary">API</a>
+        <div style="margin-top:16px;font-size:11px;color:#2D6A4F;">{% if lang == 'fr' %}Gratuit · Aucune expertise requise · Rapport PDF inclus · Données validées Zenodo{% else %}Free · No expertise required · PDF report included · Zenodo-validated data{% endif %}</div>
+    </div>
+</div>
+
+<footer>CanopySat Carbon Market · canopysat.org · contact@canopysat.org · 2026</footer>
+</body>
+</html>

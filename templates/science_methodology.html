@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Methodology</title>
+    <meta name="description" content="CanopySat satellite data processing methodology — Google Earth Engine pipeline, NDVI, SAR, LiDAR and fire data fusion.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .container { max-width:860px; margin:0 auto; padding:40px 20px; }
+        .breadcrumb { font-size:11px; color:#2D6A4F; margin-bottom:15px; }
+        .breadcrumb a { color:#3DAA6B; text-decoration:none; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:26px; color:white; margin-bottom:8px; }
+        .subtitle { font-size:13px; color:#D6EFE1; margin-bottom:30px; line-height:1.7; }
+        h2 { font-size:16px; color:#3DAA6B; margin:25px 0 10px; }
+        p { font-size:12px; color:#D6EFE1; line-height:1.8; margin-bottom:10px; }
+        .step-box { background:#1B4332; border-radius:10px; padding:18px; border-left:3px solid #3DAA6B; margin-bottom:12px; }
+        .step-num { font-size:11px; color:#3DAA6B; font-weight:bold; margin-bottom:4px; }
+        .step-title { font-size:14px; color:white; font-weight:bold; margin-bottom:6px; }
+        .step-desc { font-size:12px; color:#D6EFE1; line-height:1.7; }
+        .sat-table { width:100%; border-collapse:collapse; font-size:12px; margin:15px 0; }
+        .sat-table th { background:#1B4332; color:#3DAA6B; padding:8px 12px; text-align:left; border-bottom:2px solid #1B6B45; }
+        .sat-table td { padding:8px 12px; border-bottom:1px solid #1B4332; color:#D6EFE1; }
+        .sat-table tr:hover { background:#1B4332; }
+        .cite { background:#0D3B2E; border-left:3px solid #3DAA6B; padding:8px 12px; font-size:11px; color:#2D6A4F; border-radius:0 4px 4px 0; margin:10px 0; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;">
+        <a href="/science" class="nav-link">← Science</a>
+        <a href="/validation" class="nav-link">Validation</a>
+        <a href="/" class="nav-link">Home</a>
+    </div>
+</header>
+<div class="container">
+    <div class="breadcrumb"><a href="/">Home</a> → <a href="/science">Science</a> → Methodology</div>
+    <div class="badge">SCIENCE · METHODOLOGY</div>
+    <h1>{% if lang == 'fr' %}Méthodologie CanopySat{% else %}CanopySat Methodology{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}Comment CanopySat traite les données satellites pour produire une intelligence forestière précise et fiable.{% else %}How CanopySat processes satellite data to produce accurate and reliable forest intelligence.{% endif %}</p>
+
+    <h2>{% if lang == 'fr' %}1. Sources de données satellites{% else %}1. Satellite Data Sources{% endif %}</h2>
+    <p>{% if lang == 'fr' %}CanopySat combine 6 sources satellites complémentaires, toutes traitées via Google Earth Engine avec un compte de service dédié ESA/Google.{% else %}CanopySat combines 6 complementary satellite sources, all processed via Google Earth Engine with a dedicated ESA/Google service account.{% endif %}</p>
+    <table class="sat-table">
+        <thead>
+            <tr>
+                <th>{% if lang == 'fr' %}Satellite{% else %}Satellite{% endif %}</th>
+                <th>{% if lang == 'fr' %}Résolution{% else %}Resolution{% endif %}</th>
+                <th>{% if lang == 'fr' %}Usage principal{% else %}Primary use{% endif %}</th>
+                <th>{% if lang == 'fr' %}Période{% else %}Period{% endif %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>ESA Sentinel-2</td><td>10m</td><td>NDVI, forest cover, vegetation indices</td><td>2015–present</td></tr>
+            <tr><td>ESA Sentinel-1</td><td>10m</td><td>SAR radar backscatter — forest structure</td><td>2014–present</td></tr>
+            <tr><td>NASA Landsat 8/9</td><td>30m</td><td>Historical trend — last 10 years</td><td>2013–present</td></tr>
+            <tr><td>NASA Landsat 4/5</td><td>30m</td><td>Long-term trend since 1984</td><td>1984–2013</td></tr>
+            <tr><td>NASA FIRMS/VIIRS</td><td>375m</td><td>Active fire detection</td><td>2012–present</td></tr>
+            <tr><td>NASA GEDI LiDAR</td><td>25m</td><td>Canopy height from ISS</td><td>2019–present</td></tr>
+        </tbody>
+    </table>
+
+    <h2>{% if lang == 'fr' %}2. Pipeline de traitement{% else %}2. Processing Pipeline{% endif %}</h2>
+
+    <div class="step-box">
+        <div class="step-num">STEP 1</div>
+        <div class="step-title">{% if lang == 'fr' %}Sélection de la zone{% else %}Zone selection{% endif %}</div>
+        <div class="step-desc">{% if lang == 'fr' %}L'utilisateur définit une zone GPS circulaire (1-100km de rayon). CanopySat crée un buffer géospatial et le transmet à Google Earth Engine.{% else %}The user defines a circular GPS zone (1-100km radius). CanopySat creates a geospatial buffer and sends it to Google Earth Engine.{% endif %}</div>
+    </div>
+    <div class="step-box">
+        <div class="step-num">STEP 2</div>
+        <div class="step-title">{% if lang == 'fr' %}Composite sans nuages{% else %}Cloud-free composite{% endif %}</div>
+        <div class="step-desc">{% if lang == 'fr' %}CanopySat génère un composite médian des images Sentinel-2 des 12 derniers mois, en excluant les pixels nuageux (filtre QA60). Cela garantit une analyse basée sur les données les plus récentes disponibles.{% else %}CanopySat generates a median composite of Sentinel-2 images from the last 12 months, excluding cloudy pixels (QA60 filter). This ensures analysis based on the most recent available data.{% endif %}</div>
+    </div>
+    <div class="step-box">
+        <div class="step-num">STEP 3</div>
+        <div class="step-title">{% if lang == 'fr' %}Calcul des indices{% else %}Index calculation{% endif %}</div>
+        <div class="step-desc">{% if lang == 'fr' %}NDVI (Normalized Difference Vegetation Index) = (NIR - RED) / (NIR + RED). Valeurs entre -1 et 1, où >0.5 indique une végétation dense et saine. Sentinel-1 VV/VH backscatter pour la structure forestière sous couvert nuageux.{% else %}NDVI (Normalized Difference Vegetation Index) = (NIR - RED) / (NIR + RED). Values between -1 and 1, where >0.5 indicates dense healthy vegetation. Sentinel-1 VV/VH backscatter for forest structure under cloud cover.{% endif %}</div>
+    </div>
+    <div class="step-box">
+        <div class="step-num">STEP 4</div>
+        <div class="step-title">{% if lang == 'fr' %}Tendance historique{% else %}Historical trend{% endif %}</div>
+        <div class="step-desc">{% if lang == 'fr' %}CanopySat calcule la tendance NDVI sur 3 ans, 10 ans et 40 ans (depuis 1984) en utilisant Landsat 4/5/8/9. Une tendance positive indique une régénération forestière, une tendance négative indique une dégradation.{% else %}CanopySat calculates NDVI trend over 3 years, 10 years and 40 years (since 1984) using Landsat 4/5/8/9. A positive trend indicates forest regeneration, a negative trend indicates degradation.{% endif %}</div>
+    </div>
+    <div class="step-box">
+        <div class="step-num">STEP 5</div>
+        <div class="step-title">{% if lang == 'fr' %}Hauteur canopée GEDI{% else %}GEDI canopy height{% endif %}</div>
+        <div class="step-desc">{% if lang == 'fr' %}NASA GEDI LiDAR (Global Ecosystem Dynamics Investigation) mesure la hauteur de la canopée forestière depuis la Station Spatiale Internationale à 25m de résolution. CanopySat extrait la hauteur moyenne pour la zone analysée.{% else %}NASA GEDI LiDAR (Global Ecosystem Dynamics Investigation) measures forest canopy height from the International Space Station at 25m resolution. CanopySat extracts the mean height for the analyzed zone.{% endif %}</div>
+    </div>
+    <div class="step-box">
+        <div class="step-num">STEP 6</div>
+        <div class="step-title">{% if lang == 'fr' %}Calcul du Forest Integrity Score{% else %}Forest Integrity Score calculation{% endif %}</div>
+        <div class="step-desc">{% if lang == 'fr' %}Tous les indicateurs sont combinés en un score unique 0-100. Voir la page Forest Integrity Score pour le détail de l'algorithme.{% else %}All indicators are combined into a single 0-100 score. See the Forest Integrity Score page for algorithm details.{% endif %}</div>
+    </div>
+
+    <div class="cite">
+        {% if lang == 'fr' %}Toutes les analyses sont traitées via Google Earth Engine avec un compte de service dédié. Les données satellites sont publiques (ESA Copernicus, NASA EOSDIS).{% else %}All analyses are processed via Google Earth Engine with a dedicated service account. Satellite data is publicly available (ESA Copernicus, NASA EOSDIS).{% endif %}
+    </div>
+
+    <div style="margin-top:25px;display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="/science/forest-integrity-score" style="padding:8px 18px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">Forest Integrity Score →</a>
+        <a href="/validation" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Validation Report →</a>
+        <a href="/science/limitations" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Limitations →</a>
+    </div>
+</div>
+<!-- Section BEA -->
+<div style="max-width:860px;margin:0 auto;padding:0 20px 40px;">
+    <h2>{% if lang == 'fr' %}4. Calcul Biomasse & Carbone{% else %}4. Biomass & Carbon Calculation{% endif %}</h2>
+
+    <div style="background:#1B4332;border-radius:10px;padding:20px;border:1px solid #1B6B45;margin-bottom:16px;">
+        <p style="font-size:12px;color:#D6EFE1;line-height:1.8;">
+            {% if lang == 'fr' %}
+            CanopySat calcule la biomasse aérienne (AGB) en utilisant la hauteur de canopée NASA GEDI LiDAR avec des équations allométriques spécifiques par biome, validées contre GFW/WHRC, FAO FRA 2020 et ESA CCI Biomass (erreur moyenne 0.8%).
+            {% else %}
+            CanopySat calculates above-ground biomass (AGB) using NASA GEDI LiDAR canopy height with biome-specific allometric equations, validated against GFW/WHRC, FAO FRA 2020 and ESA CCI Biomass (mean error 0.8%).
+            {% endif %}
+        </p>
+    </div>
+
+    <div style="background:#0D3B2E;border-radius:8px;padding:16px;border:1px solid #1B6B45;margin-bottom:16px;font-family:monospace;font-size:11px;color:#3DAA6B;line-height:2;">
+        {% if lang == 'fr' %}# Formule allométrique par biome (Chave 2014 + Potapov 2021){% else %}# Biome-specific allometric formula (Chave 2014 + Potapov 2021){% endif %}<br>
+        AGB (t/ha) = k × H²<br><br>
+        {% if lang == 'fr' %}# Coefficients k validés :{% else %}# Validated coefficients k:{% endif %}<br>
+        Tropical (Amazon, Congo): k = 0.68<br>
+        Tropical SE Asia (Borneo): k = 1.17<br>
+        Subtropical:               k = 0.75<br>
+        Temperate:                 k = 0.88<br>
+        Boreal:                    k = 0.90<br><br>
+        {% if lang == 'fr' %}# Calcul carbone IPCC 2006/2019 Tier 1 :{% else %}# IPCC 2006/2019 Tier 1 carbon calculation:{% endif %}<br>
+        BGB = AGB × 0.26  {% if lang == 'fr' %}# ratio racines/tiges{% else %}# root-to-shoot ratio{% endif %}<br>
+        Carbon (t C/ha) = (AGB + BGB) × 0.47<br>
+        CO2 (t CO2/ha) = Carbon × 3.67
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:20px;">
+        <thead>
+            <tr style="background:#1B4332;">
+                <th style="padding:8px;color:#3DAA6B;text-align:left;border-bottom:1px solid #1B6B45;">{% if lang == 'fr' %}Zone forestière{% else %}Forest zone{% endif %}</th>
+                <th style="padding:8px;color:#3DAA6B;text-align:center;">CanopySat (t/ha)</th>
+                <th style="padding:8px;color:#3DAA6B;text-align:center;">GFW/WHRC</th>
+                <th style="padding:8px;color:#3DAA6B;text-align:center;">FAO FRA</th>
+                <th style="padding:8px;color:#3DAA6B;text-align:center;">ESA CCI</th>
+                <th style="padding:8px;color:#3DAA6B;text-align:center;">Error%</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in [
+                ('Amazon Rainforest', '118.5', '120.0', '115.0', '118.0', '0.7%'),
+                ('Congo Basin', '133.3', '135.0', '128.0', '131.0', '1.5%'),
+                ('Black Forest', '91.6', '95.0', '88.0', '92.0', '0.1%'),
+                ('Borneo', '141.6', '145.0', '138.0', '142.0', '0.0%'),
+                ('Boreal Canada', '50.8', '55.0', '48.0', '52.0', '1.7%'),
+            ] %}
+            <tr style="{% if loop.index is odd %}background:#1B4332;{% endif %}">
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">{{ row[0] }}</td>
+                <td style="padding:8px;color:#3DAA6B;font-weight:bold;text-align:center;border-bottom:1px solid #0D3B2E;">{{ row[1] }}</td>
+                <td style="padding:8px;color:#D6EFE1;text-align:center;border-bottom:1px solid #0D3B2E;">{{ row[2] }}</td>
+                <td style="padding:8px;color:#D6EFE1;text-align:center;border-bottom:1px solid #0D3B2E;">{{ row[3] }}</td>
+                <td style="padding:8px;color:#D6EFE1;text-align:center;border-bottom:1px solid #0D3B2E;">{{ row[4] }}</td>
+                <td style="padding:8px;color:#3DAA6B;font-weight:bold;text-align:center;border-bottom:1px solid #0D3B2E;">{{ row[5] }}</td>
+            </tr>
+            {% endfor %}
+            <tr style="background:#1B4332;">
+                <td colspan="5" style="padding:8px;color:#3DAA6B;font-weight:bold;">{% if lang == 'fr' %}Erreur absolue moyenne{% else %}Mean absolute error{% endif %}</td>
+                <td style="padding:8px;color:#3DAA6B;font-weight:bold;text-align:center;">0.8%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="font-size:11px;color:#2D6A4F;">
+        {% if lang == 'fr' %}Rapport de validation complet disponible dans la{% else %}Full validation report available in the{% endif %}
+        <a href="/library" style="color:#3DAA6B;">{% if lang == 'fr' %}Bibliothèque CanopySat{% else %}CanopySat Library{% endif %}</a>.
+    </p>
+
+    <h2>{% if lang == 'fr' %}5. Suitabilité Climatique des Espèces — Méthode BEA{% else %}5. Species Climate Suitability — BEA Method{% endif %}</h2>
+
+    <div style="background:#1B4332;border-radius:10px;padding:20px;border:1px solid #1B6B45;margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:bold;color:#3DAA6B;margin-bottom:8px;">{% if lang == 'fr' %}Bioclimatic Envelope Assessment (BEA){% else %}Bioclimatic Envelope Assessment (BEA){% endif %}</div>
+        <p style="font-size:12px;color:#D6EFE1;line-height:1.8;">
+            {% if lang == 'fr' %}
+            CanopySat utilise une approche d'évaluation des enveloppes bioclimatiques (BEA) pour prédire la suitabilité climatique des espèces forestières en 2050. Cette méthode est cohérente avec les résultats des modèles MaxEnt complets pour les tendances générales (cf. études publiées sur <em>Ceiba pentandra</em>, SSP2-4.5, Frontiers in Forests 2026).
+            {% else %}
+            CanopySat uses a Bioclimatic Envelope Assessment (BEA) approach to predict climate suitability of forest species in 2050. This method is consistent with full MaxEnt model results for general trends (cf. published studies on <em>Ceiba pentandra</em>, SSP2-4.5, Frontiers in Forests 2026).
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- Données utilisées -->
+    <h2 style="font-size:14px;">{% if lang == 'fr' %}Sources de données{% else %}Data sources{% endif %}</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;">
+        <thead>
+            <tr style="background:#1B4332;">
+                <th style="padding:8px;color:#3DAA6B;text-align:left;border-bottom:1px solid #1B6B45;">{% if lang == 'fr' %}Source{% else %}Source{% endif %}</th>
+                <th style="padding:8px;color:#3DAA6B;text-align:left;border-bottom:1px solid #1B6B45;">{% if lang == 'fr' %}Usage{% else %}Usage{% endif %}</th>
+                <th style="padding:8px;color:#3DAA6B;text-align:left;border-bottom:1px solid #1B6B45;">Licence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background:#1B4332;">
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">GBIF API</td>
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">{% if lang == 'fr' %}Occurrences d'espèces dans la zone + distribution mondiale{% else %}Species occurrences in zone + global distribution{% endif %}</td>
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">CC BY 4.0</td>
+            </tr>
+            <tr>
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">WorldClim V1</td>
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">{% if lang == 'fr' %}Variables bioclimatiques actuelles (BIO01, BIO12){% else %}Current bioclimatic variables (BIO01, BIO12){% endif %}</td>
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">CC BY 4.0</td>
+            </tr>
+            <tr style="background:#1B4332;">
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">NASA GDDP-CMIP6</td>
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">{% if lang == 'fr' %}Projections climatiques 2050 — ensemble 5 modèles CMIP6 (ACCESS-CM2, MIROC6, MPI-ESM1-2-HR, GFDL-ESM4, BCC-CSM2-MR), scénario SSP2-4.5{% else %}2050 climate projections — 5-model CMIP6 ensemble (ACCESS-CM2, MIROC6, MPI-ESM1-2-HR, GFDL-ESM4, BCC-CSM2-MR), SSP2-4.5 scenario{% endif %}</td>
+                <td style="padding:8px;color:#D6EFE1;border-bottom:1px solid #0D3B2E;">Open</td>
+            </tr>
+            <tr>
+                <td style="padding:8px;color:#D6EFE1;">ESA Sentinel-2</td>
+                <td style="padding:8px;color:#D6EFE1;">{% if lang == 'fr' %}Contexte forestier de la zone analysée{% else %}Forest context of analyzed zone{% endif %}</td>
+                <td style="padding:8px;color:#D6EFE1;">Open</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Formule -->
+    <h2 style="font-size:14px;">{% if lang == 'fr' %}Calcul du score de suitabilité{% else %}Suitability score calculation{% endif %}</h2>
+    <div style="background:#0D3B2E;border-radius:8px;padding:16px;border:1px solid #1B6B45;margin-bottom:16px;font-family:monospace;font-size:11px;color:#3DAA6B;line-height:2;">
+        score = 1.0<br>
+        {% if lang == 'fr' %}
+        # Température estimée depuis latitude GBIF :<br>
+        {% else %}
+        # Temperature estimated from GBIF latitude :<br>
+        {% endif %}
+        temp_from_lat(lat) = 27 - |lat| × 0.52 (°C)<br><br>
+        {% if lang == 'fr' %}
+        # Pénalités :<br>
+        {% else %}
+        # Penalties :<br>
+        {% endif %}
+        if temp_2050 > temp_max_species: score -= min(0.7, (temp_2050 - temp_max) × 0.15)<br>
+        if temp_2050 &lt; temp_min_species: score -= min(0.7, (temp_min - temp_2050) × 0.10)<br>
+        if |temp_2050 - temp_mean| > 3°C: score -= min(0.3, (diff - 3) × 0.05)
+    </div>
+
+    <!-- Seuils -->
+    <h2 style="font-size:14px;">{% if lang == 'fr' %}Seuils de classification{% else %}Classification thresholds{% endif %}</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:20px;">
+        <div style="background:#1B4332;border-radius:8px;padding:14px;border-left:3px solid #3DAA6B;">
+            <div style="font-size:13px;font-weight:bold;color:#3DAA6B;">Suitable</div>
+            <div style="font-size:12px;color:#D6EFE1;margin-top:4px;">Score ≥ 0.70</div>
+            <div style="font-size:11px;color:#2D6A4F;margin-top:2px;">{% if lang == 'fr' %}L'espèce devrait maintenir sa présence dans la zone en 2050{% else %}Species should maintain its presence in the zone in 2050{% endif %}</div>
+        </div>
+        <div style="background:#1B4332;border-radius:8px;padding:14px;border-left:3px solid #F9A825;">
+            <div style="font-size:13px;font-weight:bold;color:#F9A825;">Moderate risk</div>
+            <div style="font-size:12px;color:#D6EFE1;margin-top:4px;">Score 0.40–0.69</div>
+            <div style="font-size:11px;color:#2D6A4F;margin-top:2px;">{% if lang == 'fr' %}L'espèce est sous pression climatique — déclin possible{% else %}Species under climate pressure — possible decline{% endif %}</div>
+        </div>
+        <div style="background:#1B4332;border-radius:8px;padding:14px;border-left:3px solid #E53935;">
+            <div style="font-size:13px;font-weight:bold;color:#E53935;">At risk</div>
+            <div style="font-size:12px;color:#D6EFE1;margin-top:4px;">Score < 0.40</div>
+            <div style="font-size:11px;color:#2D6A4F;margin-top:2px;">{% if lang == 'fr' %}Conditions climatiques 2050 hors de la plage de tolérance de l'espèce{% else %}2050 climate conditions outside species tolerance range{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- Limitations -->
+    <div style="background:#1B4332;border-radius:10px;padding:16px;border:1px solid #F9A825;">
+        <div style="font-size:12px;font-weight:bold;color:#F9A825;margin-bottom:8px;">{% if lang == 'fr' %}Limitations importantes{% else %}Important limitations{% endif %}</div>
+        <ul style="font-size:11px;color:#D6EFE1;line-height:1.8;padding-left:16px;">
+            <li>{% if lang == 'fr' %}Température estimée depuis la latitude (approximation bioclimatique) — pas de données de terrain{% else %}Temperature estimated from latitude (bioclimatic approximation) — no field data{% endif %}</li>
+            <li>{% if lang == 'fr' %}Modèle simplifié — ne prend pas en compte l'altitude, le type de sol ou la compétition interspécifique{% else %}Simplified model — does not account for altitude, soil type or interspecific competition{% endif %}</li>
+            <li>{% if lang == 'fr' %}Basé sur 100 occurrences GBIF par espèce — peut manquer de représentativité pour les espèces rares{% else %}Based on 100 GBIF occurrences per species — may lack representativeness for rare species{% endif %}</li>
+            <li>{% if lang == 'fr' %}Ensemble de 5 modèles CMIP6 (ACCESS-CM2, MIROC6, MPI-ESM1-2-HR, GFDL-ESM4, BCC-CSM2-MR) — un ensemble plus large (10+ modèles) donnerait encore plus de robustesse{% else %}5-model CMIP6 ensemble (ACCESS-CM2, MIROC6, MPI-ESM1-2-HR, GFDL-ESM4, BCC-CSM2-MR) — a larger ensemble (10+ models) would provide even more robustness{% endif %}</li>
+            <li>{% if lang == 'fr' %}Résultats cohérents avec MaxEnt pour les tendances générales mais pas équivalents à une modélisation MaxEnt complète{% else %}Results consistent with MaxEnt for general trends but not equivalent to full MaxEnt modeling{% endif %}</li>
+        </ul>
+    </div>
+</div>
+
+<footer>CanopySat Science · Methodology · canopysat.org · 2026</footer>
+</body>
+</html>

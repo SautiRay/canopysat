@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat Field — {% if lang == 'fr' %}Application Mobile Forestière{% else %}Mobile Forest Intelligence App{% endif %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; }
+        header { background: #0D3B2E; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #1B6B45; flex-wrap: wrap; gap: 8px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-emoji { font-size: 28px; }
+        .logo-text h1 { font-size: 18px; letter-spacing: 2px; color: white; }
+        .logo-text p { font-size: 9px; color: #3DAA6B; letter-spacing: 1px; }
+        .nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .nav a { color: #D6EFE1; text-decoration: none; font-size: 12px; padding: 5px 12px; border: 1px solid #1B6B45; border-radius: 20px; transition: all 0.3s; }
+        .nav a:hover, .nav a.active { background: #1B6B45; }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .hero { text-align: center; padding: 40px 20px; }
+        .hero-icon { font-size: 60px; margin-bottom: 15px; }
+        .hero h2 { font-size: 32px; color: #3DAA6B; margin-bottom: 10px; }
+        .hero p { color: #D6EFE1; font-size: 15px; line-height: 1.8; max-width: 600px; margin: 0 auto 30px; }
+        .download-btn { display: inline-block; padding: 16px 40px; background: #2D8A5A; color: white; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: bold; letter-spacing: 1px; transition: background 0.3s; margin: 8px; }
+        .download-btn:hover { background: #3DAA6B; }
+        .download-btn-secondary { background: #1B6B45; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+        .feature { background: #1B4332; border-radius: 10px; padding: 20px; text-align: center; border: 1px solid #1B6B45; }
+        .feature-icon { font-size: 32px; margin-bottom: 10px; }
+        .feature-title { font-size: 13px; font-weight: bold; color: white; margin-bottom: 6px; }
+        .feature-desc { font-size: 11px; color: #D6EFE1; line-height: 1.5; }
+        .install-steps { background: #1B4332; border-radius: 10px; padding: 25px; margin: 20px 0; }
+        .step { display: flex; gap: 12px; margin-bottom: 15px; align-items: flex-start; }
+        .step-num { background: #3DAA6B; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; }
+        .step-text { color: #D6EFE1; font-size: 13px; line-height: 1.6; }
+        .step-text strong { color: white; }
+        .warning-box { background: #1B3320; border: 1px solid #F9A825; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .warning-box p { color: #F9A825; font-size: 12px; }
+        .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .spec { background: #0D3B2E; border-radius: 6px; padding: 10px; }
+        .spec-label { font-size: 10px; color: #2D6A4F; }
+        .spec-value { font-size: 13px; color: white; font-weight: bold; }
+        h3 { font-size: 18px; color: #3DAA6B; margin: 30px 0 12px; border-bottom: 1px solid #1B6B45; padding-bottom: 8px; }
+        p { color: #D6EFE1; font-size: 13px; line-height: 1.8; margin-bottom: 10px; }
+        footer { text-align: center; padding: 15px; font-size: 11px; color: #2D6A4F; border-top: 1px solid #1B6B45; margin-top: 40px; }
+        @media (max-width: 768px) { .nav a { font-size: 10px; padding: 4px 8px; } .specs { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">
+        <span class="logo-emoji">🛰️</span>
+        <div class="logo-text">
+            <h1>CANOPYSAT</h1>
+            <p>FOREST INTELLIGENCE ECOSYSTEM</p>
+        </div>
+    </a>
+    <nav class="nav">
+        <a href="/">{% if lang == 'fr' %}Plateforme{% else %}Platform{% endif %}</a>
+        <a href="/about">{% if lang == 'fr' %}À propos{% else %}About{% endif %}</a>
+        <a href="/api-docs">API</a>
+        <a href="/academy">Academy</a>
+        <a href="/community">Community</a>
+        <a href="/resources">Resources</a>
+        <a href="/library">Library</a>
+        <a href="/field" class="active">Field App</a>
+        <a href="/guardian" style="background:#2D8A5A;border-color:#2D8A5A;">🛡️ Guardian</a>
+        <a href="/contact">Contact</a>
+        <a href="/field?lang=en" style="border-color:#3DAA6B;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="/field?lang=fr" style="border-color:#3DAA6B;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="hero">
+        
+        <h2>CanopySat Field</h2>
+        <p>{% if lang == 'fr' %}L'application mobile pour les forestiers terrain — analysez les forêts avec de vraies données satellites, collectez l'inventaire terrain, prenez des photos géolocalisées et surveillez les forêts partout sur Terre.{% else %}The mobile app for field foresters — analyze forests with real satellite data, collect terrain inventory, take geolocated photos and monitor forests anywhere on Earth.{% endif %}</p>
+        <a href="/static/canopysat-field.apk" class="download-btn">📥 {% if lang == 'fr' %}Télécharger pour Android{% else %}Download for Android{% endif %}</a>
+        <a href="/contact" class="download-btn download-btn-secondary">iOS — {% if lang == 'fr' %}Bientôt disponible{% else %}Coming Soon{% endif %}</a>
+    </div>
+
+    <h3>{% if lang == 'fr' %}Fonctionnalités{% else %}Features{% endif %}</h3>
+    <div class="features">
+        <div class="feature">
+            
+            <div class="feature-title">{% if lang == 'fr' %}Analyse Satellite{% else %}Satellite Analysis{% endif %}</div>
+            <div class="feature-desc">{% if lang == 'fr' %}Analyse satellite complète avec GPS — NDVI, Sentinel-1, Landsat 40 ans, alertes déforestation{% else %}Full satellite analysis with GPS — NDVI, Sentinel-1, Landsat 40 years, deforestation alerts{% endif %}</div>
+        </div>
+        <div class="feature">
+            
+            <div class="feature-title">GEDI+S2 10m Canopy Height</div>
+            <div class="feature-desc">{% if lang == 'fr' %}Hauteur de canopée NASA GEDI LiDAR (ISS) fusionnée avec Sentinel-2 à 10m de résolution — la précision satellite la plus avancée disponible gratuitement{% else %}NASA GEDI LiDAR canopy height (ISS) fused with Sentinel-2 at 10m resolution — the most advanced satellite precision available for free{% endif %}</div>
+        </div>
+        <div class="feature">
+            
+            <div class="feature-title">{% if lang == 'fr' %}Carte Satellite{% else %}Satellite Map{% endif %}</div>
+            <div class="feature-desc">{% if lang == 'fr' %}Carte satellite Esri interactive avec recherche, position GPS et marqueurs d'analyse{% else %}Interactive Esri satellite map with search, GPS location and analysis markers{% endif %}</div>
+        </div>
+        <div class="feature">
+            
+            <div class="feature-title">{% if lang == 'fr' %}Photos Terrain{% else %}Field Photos{% endif %}</div>
+            <div class="feature-desc">{% if lang == 'fr' %}Prenez des photos géolocalisées sur le terrain — automatiquement taguées avec les coordonnées GPS{% else %}Take geolocated photos on terrain — automatically tagged with GPS coordinates{% endif %}</div>
+        </div>
+        <div class="feature">
+            
+            <div class="feature-title">{% if lang == 'fr' %}Inventaire Forestier{% else %}Forest Inventory{% endif %}</div>
+            <div class="feature-desc">{% if lang == 'fr' %}Enregistrez les arbres — espèce, DHP, hauteur, santé, biomasse (équation Chave 2014){% else %}Record trees — species, DBH, height, health, biomass (Chave 2014 equation){% endif %}</div>
+        </div>
+        <div class="feature">
+            
+            <div class="feature-title">{% if lang == 'fr' %}Rapports PDF{% else %}PDF Reports{% endif %}</div>
+            <div class="feature-desc">{% if lang == 'fr' %}Téléchargez des rapports PDF professionnels avec toutes les données satellites{% else %}Download professional PDF reports with all satellite data and analysis{% endif %}</div>
+        </div>
+        <div class="feature">
+            
+            <div class="feature-title">{% if lang == 'fr' %}Partage & Export{% else %}Share & Export{% endif %}</div>
+            <div class="feature-desc">{% if lang == 'fr' %}Partagez les résultats via WhatsApp, email ou toute application. Exportez l'inventaire en CSV.{% else %}Share results via WhatsApp, email or any app. Export inventory as CSV.{% endif %}</div>
+        </div>
+        <div class="feature">
+            
+            <div class="feature-title">{% if lang == 'fr' %}Cache Hors-ligne{% else %}Offline Cache{% endif %}</div>
+            <div class="feature-desc">{% if lang == 'fr' %}Dernière analyse mise en cache — accessible en Amazonie, Congo ou Sibérie sans internet{% else %}Last analysis cached offline — accessible in Amazon, Congo or Siberia without internet{% endif %}</div>
+        </div>
+    </div>
+
+    <h3>{% if lang == 'fr' %}Spécifications{% else %}App Specifications{% endif %}</h3>
+    <div class="specs">
+        <div class="spec"><div class="spec-label">{% if lang == 'fr' %}Plateforme{% else %}Platform{% endif %}</div><div class="spec-value">Android 6.0+</div></div>
+        <div class="spec"><div class="spec-label">{% if lang == 'fr' %}Taille{% else %}Size{% endif %}</div><div class="spec-value">116 MB</div></div>
+        <div class="spec"><div class="spec-label">{% if lang == 'fr' %}Version{% else %}Version{% endif %}</div><div class="spec-value">1.0.0</div></div>
+        <div class="spec"><div class="spec-label">{% if lang == 'fr' %}Langue{% else %}Language{% endif %}</div><div class="spec-value">English / Français</div></div>
+        <div class="spec"><div class="spec-label">{% if lang == 'fr' %}Mises à jour{% else %}Updates{% endif %}</div><div class="spec-value">{% if lang == 'fr' %}Automatiques (OTA){% else %}Automatic (OTA){% endif %}</div></div>
+        <div class="spec"><div class="spec-label">{% if lang == 'fr' %}Licence{% else %}License{% endif %}</div><div class="spec-value">Free · AGPL-3.0</div></div>
+    </div>
+
+    <h3>📥 {% if lang == 'fr' %}Comment Installer{% else %}How to Install{% endif %}</h3>
+    <div class="install-steps">
+        <div class="warning-box">
+            <p>⚠️ {% if lang == 'fr' %}CanopySat Field n'est pas encore sur Google Play Store. Vous devez autoriser l'installation depuis des sources inconnues pour installer cet APK directement.{% else %}CanopySat Field is not yet on Google Play Store. You need to allow installation from unknown sources to install this APK directly.{% endif %}</p>
+        </div>
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text"><strong>{% if lang == 'fr' %}Téléchargez l'APK{% else %}Download the APK{% endif %}</strong> — {% if lang == 'fr' %}Cliquez sur le bouton "Télécharger pour Android" ci-dessus.{% else %}Click the "Download for Android" button above.{% endif %}</div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text"><strong>{% if lang == 'fr' %}Autorisez les sources inconnues{% else %}Allow unknown sources{% endif %}</strong> — {% if lang == 'fr' %}Allez dans Paramètres → Sécurité → Installer des applications inconnues.{% else %}Go to Settings → Security → Install unknown apps and enable it.{% endif %}</div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text"><strong>{% if lang == 'fr' %}Ouvrez le fichier APK{% else %}Open the APK file{% endif %}</strong> — {% if lang == 'fr' %}Trouvez le fichier dans votre dossier Téléchargements et appuyez pour installer.{% else %}Find the downloaded file in your Downloads folder and tap to install.{% endif %}</div>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-text"><strong>{% if lang == 'fr' %}Accordez les permissions{% else %}Grant permissions{% endif %}</strong> — {% if lang == 'fr' %}Autorisez la localisation GPS, la caméra et le stockage.{% else %}Allow GPS location, camera and storage permissions when prompted.{% endif %}</div>
+        </div>
+        <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-text"><strong>{% if lang == 'fr' %}Commencez l'analyse !{% else %}Start analyzing!{% endif %}</strong> — {% if lang == 'fr' %}Ouvrez CanopySat Field, attendez le GPS et appuyez sur ANALYSER LA FORÊT.{% else %}Open CanopySat Field, let GPS connect and tap ANALYZE FOREST.{% endif %}</div>
+        </div>
+    </div>
+
+    <h3>{% if lang == 'fr' %}Mises à jour automatiques{% else %}Automatic Updates{% endif %}</h3>
+    <p>{% if lang == 'fr' %}CanopySat Field se met à jour automatiquement en arrière-plan — vous n'avez jamais besoin de réinstaller l'application. Les nouvelles fonctionnalités sont livrées automatiquement via EAS Update.{% else %}CanopySat Field updates automatically in the background — you never need to reinstall the app. New features and improvements are delivered automatically via EAS Update (Over The Air).{% endif %}</p>
+
+    <h3>{% if lang == 'fr' %}Disponible Mondialement{% else %}Available Worldwide{% endif %}</h3>
+    <p>{% if lang == 'fr' %}CanopySat Field fonctionne partout sur Terre — Amazonie, Bassin du Congo, Asie du Sud-Est, Sibérie, Europe. Les données GPS et satellites sont disponibles mondialement. Une connexion internet est nécessaire pour l'analyse satellite.{% else %}CanopySat Field works anywhere on Earth — Amazon, Congo Basin, Southeast Asia, Siberia, Europe. GPS and satellite data are available globally. An internet connection is required for satellite analysis.{% endif %}</p>
+</div>
+
+<footer>canopysat.org · CanopySat Field · Android App · Free · AGPL-3.0 · contact@canopysat.org</footer>
+</body>
+</html>

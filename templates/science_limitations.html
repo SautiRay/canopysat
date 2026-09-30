@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Limitations</title>
+    <meta name="description" content="CanopySat limitations — what satellite forest monitoring cannot detect, resolution limits and usage recommendations.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .container { max-width:860px; margin:0 auto; padding:40px 20px; }
+        .breadcrumb { font-size:11px; color:#2D6A4F; margin-bottom:15px; }
+        .breadcrumb a { color:#3DAA6B; text-decoration:none; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:26px; color:white; margin-bottom:8px; }
+        .subtitle { font-size:13px; color:#D6EFE1; margin-bottom:30px; line-height:1.7; }
+        h2 { font-size:16px; color:#3DAA6B; margin:25px 0 10px; }
+        p { font-size:12px; color:#D6EFE1; line-height:1.8; margin-bottom:10px; }
+        .limit-box { background:#1B4332; border-radius:10px; padding:18px; border-left:3px solid #E53935; margin-bottom:12px; }
+        .limit-box.ok { border-left-color:#3DAA6B; }
+        .limit-title { font-size:13px; font-weight:bold; color:white; margin-bottom:6px; }
+        .limit-desc { font-size:12px; color:#D6EFE1; line-height:1.7; }
+        .rec-box { background:#0D3B2E; border-radius:10px; padding:18px; border:1px solid #1B6B45; margin:20px 0; }
+        .rec-box h3 { font-size:13px; color:#3DAA6B; margin-bottom:10px; }
+        .rec-box ul { list-style:none; }
+        .rec-box li { font-size:12px; color:#D6EFE1; padding:4px 0; }
+        .rec-box li::before { content:"✅ "; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;">
+        <a href="/science" class="nav-link">← Science</a>
+        <a href="/science/methodology" class="nav-link">Methodology</a>
+        <a href="/" class="nav-link">Home</a>
+    </div>
+</header>
+<div class="container">
+    <div class="breadcrumb"><a href="/">Home</a> → <a href="/science">Science</a> → Limitations</div>
+    <div class="badge">SCIENCE · LIMITATIONS</div>
+    <h1>{% if lang == 'fr' %}Limitations{% else %}Limitations{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}La transparence scientifique est essentielle. Voici ce que CanopySat ne peut pas faire — et ce qu'il peut faire.{% else %}Scientific transparency is essential. Here is what CanopySat cannot do — and what it can do.{% endif %}</p>
+
+    <h2>{% if lang == 'fr' %}Limitations connues{% else %}Known limitations{% endif %}</h2>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}Couverture nuageuse persistante{% else %}Persistent cloud cover{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}Dans les zones tropicales avec une couverture nuageuse permanente (ex: certaines zones de l'Amazonie occidentale), le composite Sentinel-2 peut manquer de données récentes. CanopySat utilise un composite 12 mois pour minimiser ce problème, mais des zones très nuageuses peuvent avoir des données moins récentes.{% else %}In tropical zones with permanent cloud cover (e.g. some areas of the western Amazon), the Sentinel-2 composite may lack recent data. CanopySat uses a 12-month composite to minimize this issue, but heavily cloudy zones may have less recent data.{% endif %}</div>
+    </div>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}Résolution spatiale{% else %}Spatial resolution{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}La résolution minimale est 10m (Sentinel-2). Des perturbations forestières inférieures à 10m × 10m peuvent ne pas être détectées. Pour des zones très petites, les résultats peuvent être moins précis.{% else %}The minimum resolution is 10m (Sentinel-2). Forest disturbances smaller than 10m × 10m may not be detected. For very small zones, results may be less precise.{% endif %}</div>
+    </div>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}Zone d'analyse vs forêt entière{% else %}Analysis zone vs entire forest{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}CanopySat analyse une zone GPS spécifique — pas la forêt entière. Un score de 50km de rayon dans l'Amazonie représente 7,854 km² — une fraction de l'Amazonie totale (5.5M km²). Utiliser des zones bien ciblées pour des résultats pertinents.{% else %}CanopySat analyzes a specific GPS zone — not the entire forest. A 50km radius score in the Amazon represents 7,854 km² — a fraction of the total Amazon (5.5M km²). Use well-targeted zones for relevant results.{% endif %}</div>
+    </div>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}GEDI LiDAR — couverture partielle{% else %}GEDI LiDAR — partial coverage{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}NASA GEDI LiDAR couvre les latitudes entre 51.6°S et 51.6°N — les forêts boréales nordiques (Canada >51.6°N, Sibérie >51.6°N) n'ont pas de données GEDI. Dans ces zones, la hauteur de canopée est estimée par d'autres méthodes.{% else %}NASA GEDI LiDAR covers latitudes between 51.6°S and 51.6°N — northern boreal forests (Canada >51.6°N, Siberia >51.6°N) have no GEDI data. In these zones, canopy height is estimated by other methods.{% endif %}</div>
+    </div>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}Délai de mise à jour{% else %}Update delay{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}CanopySat utilise les données Sentinel-2 des 12 derniers mois. Des événements très récents (moins de 2 semaines) peuvent ne pas encore être intégrés dans l'analyse.{% else %}CanopySat uses Sentinel-2 data from the last 12 months. Very recent events (less than 2 weeks) may not yet be integrated into the analysis.{% endif %}</div>
+    </div>
+
+    <h2>{% if lang == 'fr' %}Limitations — Suitabilité Climatique des Espèces (BEA){% else %}Limitations — Species Climate Suitability (BEA){% endif %}</h2>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}Modèle simplifié — pas MaxEnt complet{% else %}Simplified model — not full MaxEnt{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}CanopySat utilise une approche d'enveloppes bioclimatiques (BEA) basée sur la distribution GBIF des espèces. Cette méthode est cohérente avec MaxEnt pour les tendances générales mais n'est pas équivalente à un modèle MaxEnt complet qui intègre toutes les variables environnementales.{% else %}CanopySat uses a Bioclimatic Envelope Assessment (BEA) approach based on GBIF species distribution. This method is consistent with MaxEnt for general trends but is not equivalent to a full MaxEnt model integrating all environmental variables.{% endif %}</div>
+    </div>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}Température estimée depuis la latitude{% else %}Temperature estimated from latitude{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}La tolérance thermique des espèces est estimée depuis la latitude de leurs occurrences GBIF via la formule : T = 27 - |lat| × 0.52°C. Cette approximation ne prend pas en compte l'altitude, les microclimats ou les adaptations locales.{% else %}Species thermal tolerance is estimated from the latitude of their GBIF occurrences via the formula: T = 27 - |lat| × 0.52°C. This approximation does not account for altitude, microclimates or local adaptations.{% endif %}</div>
+    </div>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}Variables non prises en compte{% else %}Variables not accounted for{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}Le modèle BEA actuel ne prend pas en compte : l'altitude, le type de sol, la compétition interspécifique, la dispersion des espèces, ni les événements extrêmes (sécheresses, incendies). Ces facteurs peuvent influencer significativement la suitabilité réelle.{% else %}The current BEA model does not account for: altitude, soil type, interspecific competition, species dispersal, or extreme events (droughts, fires). These factors can significantly influence actual suitability.{% endif %}</div>
+    </div>
+
+    <div class="limit-box">
+        <div class="limit-title">{% if lang == 'fr' %}Un seul modèle climatique{% else %}Single climate model{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}Les projections 2050 utilisent un ensemble de 5 modèles CMIP6 (ACCESS-CM2, MIROC6, MPI-ESM1-2-HR, GFDL-ESM4, BCC-CSM2-MR) sous le scénario SSP2-4.5. La moyenne de l'ensemble réduit l'incertitude par rapport à un modèle unique.{% else %}2050 projections use a 5-model CMIP6 ensemble (ACCESS-CM2, MIROC6, MPI-ESM1-2-HR, GFDL-ESM4, BCC-CSM2-MR) under the SSP2-4.5 scenario. The ensemble mean reduces uncertainty compared to a single model.{% endif %}</div>
+    </div>
+
+    <div class="limit-box ok">
+        <div class="limit-title">{% if lang == 'fr' %}Cohérence avec MaxEnt confirmée{% else %}Consistency with MaxEnt confirmed{% endif %}</div>
+        <div class="limit-desc">{% if lang == 'fr' %}Des comparaisons avec des études MaxEnt publiées (ex: Ceiba pentandra, Frontiers in Forests 2026) montrent que la méthode BEA de CanopySat produit des tendances générales cohérentes. Elle est adaptée à une évaluation rapide à l'échelle mondiale.{% else %}Comparisons with published MaxEnt studies (e.g. Ceiba pentandra, Frontiers in Forests 2026) show that CanopySat's BEA method produces consistent general trends. It is suitable for rapid global-scale assessment.{% endif %}</div>
+    </div>
+
+    <h2>{% if lang == 'fr' %}Ce que CanopySat fait bien{% else %}What CanopySat does well{% endif %}</h2>
+
+    <div class="rec-box">
+        <h3>{% if lang == 'fr' %}Usage recommandé{% else %}Recommended use{% endif %}</h3>
+        <ul>
+            <li>{% if lang == 'fr' %}Surveillance mensuelle de zones forestières spécifiques{% else %}Monthly monitoring of specific forest zones{% endif %}</li>
+            <li>{% if lang == 'fr' %}Détection de tendances à long terme (3, 10, 40 ans){% else %}Long-term trend detection (3, 10, 40 years){% endif %}</li>
+            <li>{% if lang == 'fr' %}Alertes précoces de dégradation forestière{% else %}Early warning of forest degradation{% endif %}</li>
+            <li>{% if lang == 'fr' %}Comparaison de zones forestières dans le monde{% else %}Comparison of forest zones worldwide{% endif %}</li>
+            <li>{% if lang == 'fr' %}Génération de rapports PDF pour parties prenantes{% else %}PDF report generation for stakeholders{% endif %}</li>
+            <li>{% if lang == 'fr' %}Vérification de crédits carbone REDD+{% else %}REDD+ carbon credit verification{% endif %}</li>
+        </ul>
+    </div>
+
+    <div style="margin-top:25px;display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="/science/methodology" style="padding:8px 18px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">Methodology →</a>
+        <a href="/validation" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Validation Report →</a>
+    </div>
+</div>
+<footer>CanopySat Science · Limitations · canopysat.org · 2026</footer>
+</body>
+</html>

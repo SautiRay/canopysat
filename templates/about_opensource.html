@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Open Source</title>
+    <meta name="description" content="CanopySat is open-source under AGPL-3.0 — free for universities, researchers and NGOs. Python SDK on PyPI, source code on GitHub.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .nav-link:hover { background:#1B6B45; }
+        .container { max-width:860px; margin:0 auto; padding:40px 20px; }
+        .breadcrumb { font-size:11px; color:#2D6A4F; margin-bottom:15px; }
+        .breadcrumb a { color:#3DAA6B; text-decoration:none; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:28px; color:white; margin-bottom:8px; }
+        .subtitle { font-size:14px; color:#D6EFE1; margin-bottom:40px; line-height:1.7; }
+        h2 { font-size:16px; color:#3DAA6B; margin:25px 0 10px; }
+        p { font-size:12px; color:#D6EFE1; line-height:1.8; margin-bottom:10px; }
+        .info-box { background:#1B4332; border-radius:10px; padding:20px; border:1px solid #1B6B45; margin-bottom:20px; }
+        .info-box h3 { font-size:14px; color:#3DAA6B; margin-bottom:8px; }
+        .code-block { background:#0D3B2E; border-radius:8px; padding:14px; font-family:monospace; font-size:12px; color:#3DAA6B; margin:10px 0; border:1px solid #1B6B45; }
+        .links-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin:20px 0; }
+        .link-card { background:#1B4332; border-radius:10px; padding:16px; border:1px solid #1B6B45; border-top:3px solid #3DAA6B; text-decoration:none; color:white; text-align:left; transition:border-color 0.3s; display:block; }
+        .link-card:hover { border-color:#3DAA6B; }
+        .link-card-title { font-size:13px; font-weight:bold; color:#3DAA6B; margin-bottom:4px; }
+        .link-card-desc { font-size:11px; color:#D6EFE1; margin-top:4px; }
+        .license-box { background:#0D3B2E; border-radius:10px; padding:20px; border:1px solid #1B6B45; margin:20px 0; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;">
+        <a href="/about/open-source?lang=en" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="/about/open-source?lang=fr" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+        <a href="/about" class="nav-link">← About</a>
+        <a href="/" class="nav-link">Home</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="breadcrumb"><a href="/">Home</a> → <a href="/about">About</a> → Open Source</div>
+    <div class="badge">ABOUT · OPEN SOURCE</div>
+    <h1>{% if lang == 'fr' %}CanopySat — Open Source{% else %}CanopySat — Open Source{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}CanopySat est entièrement open-source sous licence AGPL-3.0 — gratuit pour les universités, chercheurs et ONG. Contribuez, forkez, utilisez.{% else %}CanopySat is fully open-source under AGPL-3.0 license — free for universities, researchers and NGOs. Contribute, fork, use.{% endif %}</p>
+
+    <h2>{% if lang == 'fr' %}Licence{% else %}License{% endif %}</h2>
+    <div class="license-box">
+        <div style="font-size:16px;font-weight:bold;color:#3DAA6B;margin-bottom:8px;">GNU Affero General Public License v3.0 (AGPL-3.0)</div>
+        <p>{% if lang == 'fr' %}La licence AGPL-3.0 est la licence open-source la plus protectrice pour les projets web. Elle garantit que toute utilisation commerciale du code CanopySat doit également être open-source — protégeant ainsi la communauté scientifique et les ONG.{% else %}The AGPL-3.0 license is the most protective open-source license for web projects. It ensures that any commercial use of CanopySat code must also be open-source — protecting the scientific community and NGOs.{% endif %}</p>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="background:#1B6B45;color:#3DAA6B;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:bold;">Free to use</span>
+            <span style="background:#1B6B45;color:#3DAA6B;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:bold;">Free to modify</span>
+            <span style="background:#1B6B45;color:#3DAA6B;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:bold;">Free to distribute</span>
+            <span style="background:#1B4332;color:#F9A825;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:bold;">Commercial use must be open-source</span>
+        </div>
+    </div>
+
+    <h2>{% if lang == 'fr' %}Ressources{% else %}Resources{% endif %}</h2>
+    <div class="links-grid">
+        <a href="https://github.com/SautiRay/canopysat" target="_blank" class="link-card">
+            
+            <div class="link-card-title">GitHub Repository</div>
+            <div class="link-card-desc">github.com/SautiRay/canopysat</div>
+        </a>
+        <a href="https://pypi.org/project/canopysat" target="_blank" class="link-card">
+            
+            <div class="link-card-title">Python SDK — PyPI</div>
+            <div class="link-card-desc">pip install canopysat</div>
+        </a>
+        <div class="link-card" style="cursor:default;">
+            <div style="font-size:9px;color:#3DAA6B;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Scientific Publications — Zenodo</div>
+            <div class="link-card-title" style="margin-bottom:8px;">3 Technical Reports</div>
+            <a href="https://zenodo.org/records/22872779" target="_blank" style="display:block;font-size:10px;color:#D6EFE1;margin-bottom:4px;text-decoration:none;">&#8594; Methodology &amp; Validation v1.0<br><span style="color:#2D6A4F;">doi:10.5281/zenodo.22872779</span></a>
+            <a href="https://zenodo.org/records/23055522" target="_blank" style="display:block;font-size:10px;color:#D6EFE1;margin-bottom:4px;text-decoration:none;">&#8594; CO2 Validation Report<br><span style="color:#2D6A4F;">doi:10.5281/zenodo.23055522</span></a>
+            <a href="https://zenodo.org/records/23056446" target="_blank" style="display:block;font-size:10px;color:#D6EFE1;text-decoration:none;">&#8594; BEA Species Validation Report<br><span style="color:#2D6A4F;">doi:10.5281/zenodo.23056446</span></a>
+        </div>
+        <a href="/library" class="link-card">
+            
+            <div class="link-card-title">Open Datasets</div>
+            <div class="link-card-desc">CC BY 4.0 — Free to use</div>
+        </a>
+    </div>
+
+    <h2>{% if lang == 'fr' %}Installer le SDK Python{% else %}Install the Python SDK{% endif %}</h2>
+    <div class="info-box">
+        <div class="code-block">pip install canopysat</div>
+        <div class="code-block">from canopysat import analyze<br><br>result = analyze(<br>    lat=-3.4653,<br>    lng=-62.2159,<br>    size=10<br>)<br><br>print(result['score'])   # 80<br>print(result['alert'])   # STABLE<br>print(result['ndvi'])    # 0.842</div>
+        <a href="/api-docs" style="display:inline-block;margin-top:10px;padding:8px 18px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">{% if lang == 'fr' %}Documentation complète →{% else %}Full documentation →{% endif %}</a>
+    </div>
+
+    <h2>{% if lang == 'fr' %}Contribuer{% else %}Contribute{% endif %}</h2>
+    <p>{% if lang == 'fr' %}CanopySat est ouvert aux contributions — corrections de bugs, nouvelles fonctionnalités, documentation, traductions. Toute contribution est la bienvenue.{% else %}CanopySat is open to contributions — bug fixes, new features, documentation, translations. All contributions are welcome.{% endif %}</p>
+    <div class="info-box">
+        <h3>{% if lang == 'fr' %}Comment contribuer{% else %}How to contribute{% endif %}</h3>
+        <div class="code-block">git clone https://github.com/SautiRay/canopysat.git<br>cd canopysat<br>pip install -r requirements.txt</div>
+        <a href="https://github.com/SautiRay/canopysat" target="_blank" style="display:inline-block;margin-top:10px;padding:8px 18px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">{% if lang == 'fr' %}Voir sur GitHub →{% else %}View on GitHub →{% endif %}</a>
+    </div>
+</div>
+
+<footer>CanopySat Open Source · AGPL-3.0 · canopysat.org · contact@canopysat.org · 2026</footer>
+</body>
+</html>

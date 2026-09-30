@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Explore</title>
+    <meta name="description" content="Explore global forests with CanopySat — interactive map, 26 forest case studies and open datasets.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .nav-link:hover { background:#1B6B45; }
+        .container { max-width:960px; margin:0 auto; padding:40px 20px; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:28px; color:white; margin-bottom:8px; }
+        .subtitle { font-size:14px; color:#D6EFE1; margin-bottom:40px; line-height:1.7; max-width:650px; }
+        .section-title { font-size:13px; color:#3DAA6B; text-transform:uppercase; letter-spacing:2px; margin-bottom:20px; }
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:50px; }
+        .card { background:#1B4332; border-radius:12px; overflow:hidden; border:1px solid #1B6B45; text-decoration:none; color:white; display:block; transition:border-color 0.3s; }
+        .card:hover { border-color:#3DAA6B; }
+        .card-header { padding:24px; background:#1B4332; }
+        .card-icon { font-size:32px; margin-bottom:12px; }
+        .card-title { font-size:17px; font-weight:bold; color:#3DAA6B; margin-bottom:6px; }
+        .card-desc { font-size:12px; color:#D6EFE1; line-height:1.7; margin-bottom:15px; }
+        .card-stats { display:flex; gap:12px; margin-bottom:15px; }
+        .card-stat { background:#0D3B2E; border-radius:6px; padding:6px 10px; text-align:center; flex:1; }
+        .card-stat-val { font-size:16px; font-weight:bold; color:#3DAA6B; }
+        .card-stat-label { font-size:9px; color:#2D6A4F; }
+        .card-link { display:inline-block; padding:8px 18px; background:#2D8A5A; color:white; border-radius:8px; font-size:12px; font-weight:bold; text-decoration:none; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;align-items:center;">
+        <a href="/explore?lang=en" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="/explore?lang=fr" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+        <a href="/#analyze" class="nav-link">Analyze a Forest</a>
+        <a href="/" class="nav-link">← Home</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="badge">EXPLORE</div>
+    <h1>{% if lang == 'fr' %}Explorer les Forêts Mondiales{% else %}Explore Global Forests{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}Découvrez les forêts du monde à travers notre carte interactive, nos études de cas et nos datasets ouverts — tous basés sur des données satellites réelles.{% else %}Discover the world's forests through our interactive map, case studies and open datasets — all based on real satellite data.{% endif %}</p>
+
+    <div class="section-title">{% if lang == 'fr' %}Nos ressources d'exploration{% else %}Exploration resources{% endif %}</div>
+    <div class="cards-grid">
+
+        <!-- Global Forest Map -->
+        <a href="/map" class="card">
+            <div class="card-header">
+                <div class="card-icon">🗺️</div>
+                <div class="card-title">{% if lang == 'fr' %}Carte Forestière Mondiale{% else %}Global Forest Map{% endif %}</div>
+                <div class="card-desc">{% if lang == 'fr' %}Carte interactive satellite des 26 zones forestières mondiales surveillées par CanopySat. Filtrez par statut, cliquez sur chaque forêt pour voir les données satellites.{% else %}Interactive satellite map of 26 global forest zones monitored by CanopySat. Filter by status, click each forest to see satellite data.{% endif %}</div>
+                <div class="card-stats">
+                    <div class="card-stat"><div class="card-stat-val">26</div><div class="card-stat-label">{% if lang == 'fr' %}Forêts{% else %}Forests{% endif %}</div></div>
+                    <div class="card-stat"><div class="card-stat-val">4</div><div class="card-stat-label">{% if lang == 'fr' %}Continents{% else %}Continents{% endif %}</div></div>
+                    <div class="card-stat"><div class="card-stat-val">Live</div><div class="card-stat-label">{% if lang == 'fr' %}Données{% else %}Data{% endif %}</div></div>
+                </div>
+                <span class="card-link">{% if lang == 'fr' %}Ouvrir la carte →{% else %}Open Map →{% endif %}</span>
+            </div>
+        </a>
+
+        <!-- Forest Cases -->
+        <a href="/forest" class="card">
+            <div class="card-header">
+                <div class="card-icon">🌿</div>
+                <div class="card-title">{% if lang == 'fr' %}Études de Cas Forestières{% else %}Forest Case Studies{% endif %}</div>
+                <div class="card-desc">{% if lang == 'fr' %}26 études de cas détaillées avec données satellites réelles — Amazon, Congo, Borneo, Black Forest et plus. Chaque étude inclut score, NDVI, biomasse et tendances historiques.{% else %}26 detailed case studies with real satellite data — Amazon, Congo, Borneo, Black Forest and more. Each study includes score, NDVI, biomass and historical trends.{% endif %}</div>
+                <div class="card-stats">
+                    <div class="card-stat"><div class="card-stat-val">26</div><div class="card-stat-label">{% if lang == 'fr' %}Études{% else %}Studies{% endif %}</div></div>
+                    <div class="card-stat"><div class="card-stat-val">6</div><div class="card-stat-label">{% if lang == 'fr' %}Satellites{% else %}Satellites{% endif %}</div></div>
+                    <div class="card-stat"><div class="card-stat-val">40yr</div><div class="card-stat-label">{% if lang == 'fr' %}Historique{% else %}History{% endif %}</div></div>
+                </div>
+                <span class="card-link">{% if lang == 'fr' %}Voir les études →{% else %}View case studies →{% endif %}</span>
+            </div>
+        </a>
+
+        <!-- Reports & Data -->
+        <a href="/library" class="card">
+            <div class="card-header">
+                <div class="card-icon">📊</div>
+                <div class="card-title">{% if lang == 'fr' %}Rapports & Données{% else %}Reports & Data{% endif %}</div>
+                <div class="card-desc">{% if lang == 'fr' %}Publications scientifiques, datasets ouverts et rapports de validation disponibles en téléchargement libre. Licence CC BY 4.0.{% else %}Scientific publications, open datasets and validation reports available for free download. CC BY 4.0 license.{% endif %}</div>
+                <div class="card-stats">
+                    <div class="card-stat"><div class="card-stat-val">2</div><div class="card-stat-label">{% if lang == 'fr' %}Publications{% else %}Publications{% endif %}</div></div>
+                    <div class="card-stat"><div class="card-stat-val">2</div><div class="card-stat-label">Datasets</div></div>
+                    <div class="card-stat"><div class="card-stat-val">CC BY</div><div class="card-stat-label">License</div></div>
+                </div>
+                <span class="card-link">{% if lang == 'fr' %}Voir la bibliothèque →{% else %}View Library →{% endif %}</span>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- Stats globales -->
+    <div style="background:#1B4332;border-radius:12px;padding:24px;border:1px solid #1B6B45;text-align:center;">
+        <div style="font-size:13px;color:#3DAA6B;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;">{% if lang == 'fr' %}CanopySat en chiffres{% else %}CanopySat in numbers{% endif %}</div>
+        <div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;">
+            {% for stat in [('26', 'Forest zones'), ('6', 'Satellites'), ('40yr', 'History since 1984'), ('10m', 'Resolution'), ('3', 'Reference datasets'), ('1', 'Zenodo DOI')] %}
+            <div style="text-align:center;">
+                <div style="font-size:24px;font-weight:bold;color:#3DAA6B;">{{ stat[0] }}</div>
+                <div style="font-size:10px;color:#2D6A4F;margin-top:3px;">{{ stat[1] }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<footer>CanopySat Explore · canopysat.org · contact@canopysat.org · 2026</footer>
+</body>
+</html>

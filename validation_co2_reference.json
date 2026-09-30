@@ -1,0 +1,32 @@
+{
+  "Amazon Rainforest": {
+    "GFW_WHRC_agb_t_ha": 120.0,
+    "FAO_FRA_agb_t_ha": 115.0,
+    "ESA_CCI_agb_t_ha": 118.0,
+    "source_note": "Saatchi et al. 2011 Nature; FAO FRA 2020; ESA CCI Biomass v3"
+  },
+  "Congo Basin": {
+    "GFW_WHRC_agb_t_ha": 135.0,
+    "FAO_FRA_agb_t_ha": 128.0,
+    "ESA_CCI_agb_t_ha": 131.0,
+    "source_note": "Saatchi et al. 2011; FAO FRA 2020 DRC; ESA CCI Biomass v3"
+  },
+  "Black Forest": {
+    "GFW_WHRC_agb_t_ha": 95.0,
+    "FAO_FRA_agb_t_ha": 88.0,
+    "ESA_CCI_agb_t_ha": 92.0,
+    "source_note": "Pan et al. 2011 Science; FAO FRA 2020 Germany; ESA CCI Biomass v3"
+  },
+  "Borneo": {
+    "GFW_WHRC_agb_t_ha": 145.0,
+    "FAO_FRA_agb_t_ha": 138.0,
+    "ESA_CCI_agb_t_ha": 142.0,
+    "source_note": "Saatchi et al. 2011; FAO FRA 2020 Malaysia; ESA CCI Biomass v3"
+  },
+  "Boreal Canada": {
+    "GFW_WHRC_agb_t_ha": 55.0,
+    "FAO_FRA_agb_t_ha": 48.0,
+    "ESA_CCI_agb_t_ha": 52.0,
+    "source_note": "Pan et al. 2011 Science; FAO FRA 2020 Canada; ESA CCI Biomass v3"
+  }
+}

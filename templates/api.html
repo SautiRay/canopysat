@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat API — {% if lang == 'fr' %}Documentation{% else %}Documentation{% endif %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; }
+        header { background: #0D3B2E; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #1B6B45; flex-wrap: wrap; gap: 8px; }
+        .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-emoji { font-size: 28px; }
+        .logo-text h1 { font-size: 18px; letter-spacing: 2px; color: white; }
+        .logo-text p { font-size: 9px; color: #3DAA6B; letter-spacing: 1px; }
+        .nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .nav a { color: #D6EFE1; text-decoration: none; font-size: 12px; padding: 5px 12px; border: 1px solid #1B6B45; border-radius: 20px; transition: all 0.3s; }
+        .nav a:hover, .nav a.active { background: #1B6B45; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
+        h2 { font-size: 28px; color: #3DAA6B; margin-bottom: 10px; }
+        h3 { font-size: 18px; color: #3DAA6B; margin: 30px 0 10px; border-bottom: 1px solid #1B6B45; padding-bottom: 8px; }
+        p { color: #D6EFE1; line-height: 1.8; margin-bottom: 12px; font-size: 14px; }
+        .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin: 15px 0; }
+        .plan { background: #1B4332; border-radius: 10px; padding: 20px; border: 1px solid #1B6B45; }
+        .plan.featured { border-color: #3DAA6B; }
+        .plan-name { font-size: 18px; font-weight: bold; color: #3DAA6B; margin-bottom: 5px; }
+        .plan-price { font-size: 24px; font-weight: bold; color: white; margin-bottom: 10px; }
+        .plan-price span { font-size: 12px; color: #D6EFE1; }
+        .plan-features { list-style: none; font-size: 12px; color: #D6EFE1; line-height: 2; }
+        .plan-features li::before { content: "✅ "; }
+        .plan-btn { display: block; margin-top: 15px; padding: 8px; background: #2D8A5A; color: white; border-radius: 6px; text-align: center; text-decoration: none; font-size: 12px; font-weight: bold; }
+        .endpoint { background: #1B4332; border-radius: 8px; padding: 15px; margin: 10px 0; }
+        .method { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 8px; }
+        .method.post { background: #2D8A5A; }
+        .method.get { background: #1565C0; }
+        .endpoint-path { font-family: monospace; color: #3DAA6B; font-size: 14px; }
+        .endpoint-desc { color: #D6EFE1; font-size: 12px; margin-top: 5px; }
+        pre { background: #0A1F15; border-radius: 8px; padding: 15px; font-size: 12px; overflow-x: auto; margin: 10px 0; border: 1px solid #1B6B45; color: #D6EFE1; }
+        code { font-family: monospace; }
+        .param { background: #0D3B2E; border-radius: 6px; padding: 10px; margin: 6px 0; font-size: 12px; }
+        .param-name { color: #3DAA6B; font-family: monospace; }
+        .param-type { color: #F9A825; font-size: 10px; margin-left: 6px; }
+        .param-desc { color: #D6EFE1; margin-top: 3px; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; margin-left: 6px; }
+        .badge-req { background: #E53935; }
+        .badge-opt { background: #1B6B45; }
+        footer { text-align: center; padding: 15px; font-size: 11px; color: #2D6A4F; border-top: 1px solid #1B6B45; margin-top: 40px; }
+        @media (max-width: 768px) { .nav a { font-size: 10px; padding: 4px 8px; } h2 { font-size: 22px; } }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">
+        <span class="logo-emoji">🛰️</span>
+        <div class="logo-text">
+            <h1>CANOPYSAT</h1>
+            <p>FOREST INTELLIGENCE ECOSYSTEM</p>
+        </div>
+    </a>
+    <nav class="nav">
+        <a href="/">{% if lang == 'fr' %}Plateforme{% else %}Platform{% endif %}</a>
+        <a href="/about">{% if lang == 'fr' %}À propos{% else %}About{% endif %}</a>
+        <a href="/api-docs" class="active">API</a>
+        <a href="/academy">Academy</a>
+        <a href="/community">Community</a>
+        <a href="/resources">Resources</a>
+        <a href="/library">Library</a>
+        <a href="/forest">Forest Cases</a>
+        <a href="/field">Field App</a>
+        <a href="/guardian" style="background:#2D8A5A;border-color:#2D8A5A;">🛡️ Guardian</a>
+        <a href="/contact">Contact</a>
+        <a href="/api-docs?lang=en" style="border-color:#3DAA6B;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="/api-docs?lang=fr" style="border-color:#3DAA6B;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h2>CanopySat Forest Intelligence API</h2>
+    <p>{% if lang == 'fr' %}Intégrez l'intelligence forestière dans vos applications — analyses satellite en temps réel, scores d'intégrité forestière, détection de déforestation et hauteur de canopée NASA GEDI pour n'importe quelle zone sur Terre.{% else %}Integrate forest intelligence into your applications — real-time satellite analysis, forest integrity scores, deforestation detection and NASA GEDI canopy height for any zone on Earth.{% endif %}</p>
+
+    <h3>{% if lang == 'fr' %}Plans & Tarifs{% else %}Plans & Pricing{% endif %}</h3>
+    <div class="plans">
+        <div class="plan">
+            <div class="plan-name">Free</div>
+            <div class="plan-price">0€ <span>/ {% if lang == 'fr' %}mois{% else %}month{% endif %}</span></div>
+            <ul class="plan-features">
+                <li>10 {% if lang == 'fr' %}appels{% else %}calls{% endif %} / {% if lang == 'fr' %}mois{% else %}month{% endif %}</li>
+                <li>{% if lang == 'fr' %}Tous les endpoints{% else %}All endpoints{% endif %}</li>
+                <li>6 satellites</li>
+                <li>NASA GEDI LiDAR</li>
+                <li>{% if lang == 'fr' %}Support communauté{% else %}Community support{% endif %}</li>
+            </ul>
+            <a href="/contact" class="plan-btn">{% if lang == 'fr' %}Commencer — Gratuit{% else %}Get Started — Free{% endif %}</a>
+        </div>
+        <div class="plan featured">
+            <div class="plan-name">Developer</div>
+            <div class="plan-price">29€ <span>/ {% if lang == 'fr' %}mois{% else %}month{% endif %}</span></div>
+            <ul class="plan-features">
+                <li>500 {% if lang == 'fr' %}appels{% else %}calls{% endif %} / {% if lang == 'fr' %}mois{% else %}month{% endif %}</li>
+                <li>{% if lang == 'fr' %}Tous les endpoints{% else %}All endpoints{% endif %}</li>
+                <li>{% if lang == 'fr' %}6 satellites (dont NASA GEDI LiDAR){% else %}6 satellites (incl. NASA GEDI LiDAR){% endif %}</li>
+                <li>{% if lang == 'fr' %}Support email{% else %}Email support{% endif %}</li>
+                <li>{% if lang == 'fr' %}Accès comparaison temporelle{% else %}Temporal comparison access{% endif %}</li>
+            </ul>
+            <a href="/contact" class="plan-btn">{% if lang == 'fr' %}S\'abonner{% else %}Subscribe{% endif %}</a>
+        </div>
+        <div class="plan">
+            <div class="plan-name">Enterprise</div>
+            <div class="plan-price">299€ <span>/ {% if lang == 'fr' %}mois{% else %}month{% endif %}</span></div>
+            <ul class="plan-features">
+                <li>{% if lang == 'fr' %}Illimité{% else %}Unlimited{% endif %}</li>
+                <li>{% if lang == 'fr' %}Tous les endpoints{% else %}All endpoints{% endif %}</li>
+                <li>{% if lang == 'fr' %}Déploiement dédié{% else %}Dedicated deployment{% endif %}</li>
+                <li>{% if lang == 'fr' %}Support prioritaire{% else %}Priority support{% endif %}</li>
+                <li>SLA 99.9%</li>
+            </ul>
+            <a href="/contact" class="plan-btn">{% if lang == 'fr' %}Nous contacter{% else %}Contact Us{% endif %}</a>
+        </div>
+    </div>
+
+    <h3>{% if lang == 'fr' %}Authentification{% else %}Authentication{% endif %}</h3>
+    <p>{% if lang == 'fr' %}Toutes les requêtes API nécessitent un Bearer token dans le header Authorization :{% else %}All API requests require a Bearer token in the Authorization header:{% endif %}</p>
+    <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+    <p>{% if lang == 'fr' %}Créez votre clé API gratuite via l'endpoint ci-dessous ou contactez-nous.{% else %}Create your free API key via the endpoint below or contact us.{% endif %}</p>
+
+    <h3>Endpoints</h3>
+
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/v1/analyze</span>
+        <div class="endpoint-desc">{% if lang == 'fr' %}Analyser une zone forestière avec 6 satellites réels — ESA Sentinel-2/1, NASA Landsat 8/9, NASA Landsat 4/5, NASA FIRMS et NASA GEDI LiDAR{% else %}Analyze a forest zone using 6 real satellites — ESA Sentinel-2/1, NASA Landsat 8/9, NASA Landsat 4/5, NASA FIRMS and NASA GEDI LiDAR{% endif %}</div>
+        <p style="margin-top:10px;font-size:12px;color:#3DAA6B;">{% if lang == 'fr' %}Paramètres :{% else %}Parameters:{% endif %}</p>
+        <div class="param"><span class="param-name">lat</span><span class="param-type">float</span><span class="badge badge-req">{% if lang == 'fr' %}requis{% else %}required{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Latitude (-90 à 90){% else %}Latitude (-90 to 90){% endif %}</div></div>
+        <div class="param"><span class="param-name">lng</span><span class="param-type">float</span><span class="badge badge-req">{% if lang == 'fr' %}requis{% else %}required{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Longitude (-180 à 180){% else %}Longitude (-180 to 180){% endif %}</div></div>
+        <div class="param"><span class="param-name">size</span><span class="param-type">int</span><span class="badge badge-opt">{% if lang == 'fr' %}optionnel{% else %}optional{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Taille de la zone en km (défaut: 10){% else %}Zone size in km (default: 10){% endif %}</div></div>
+        <div class="param"><span class="param-name">lang</span><span class="param-type">string</span><span class="badge badge-opt">{% if lang == 'fr' %}optionnel{% else %}optional{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Langue de réponse : "en" ou "fr" (défaut: "en"){% else %}Response language: "en" or "fr" (default: "en"){% endif %}</div></div>
+        <p style="margin-top:10px;font-size:12px;color:#3DAA6B;">{% if lang == 'fr' %}Exemple :{% else %}Example:{% endif %}</p>
+<pre><code>curl -X POST https://www.canopysat.org/api/v1/analyze \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"lat": -3.4653, "lng": -62.2159, "size": 10}'</code></pre>
+        <p style="margin-top:10px;font-size:12px;color:#3DAA6B;">{% if lang == 'fr' %}Réponse :{% else %}Response:{% endif %}</p>
+<pre><code>{
+  "success": true,
+  "score": 87,
+  "ndvi_current": 0.823,
+  "forest_cover": 98.5,
+  "canopy_height": 24.3,
+  "canopy_height_rh50": 12.1,
+  "gedi_cover": 99.2,
+  "canopy_height_source": "NASA GEDI LiDAR",
+  "ai_forest_type": "Dense Tropical Forest",
+  "deforestation_alert": "STABLE",
+  "active_fires": 0,
+  "sentinel1_vv": -8.234,
+  "trend": "improving",
+  "satellites_used": ["ESA Sentinel-2", "NASA FIRMS", "ESA Sentinel-1", "NASA Landsat 8/9", "NASA Landsat 4/5", "NASA GEDI LiDAR"]
+}</code></pre>
+    </div>
+
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/v1/key/create</span>
+        <div class="endpoint-desc">{% if lang == 'fr' %}Créer une nouvelle clé API gratuite{% else %}Create a new free API key{% endif %}</div>
+        <div class="param"><span class="param-name">name</span><span class="param-type">string</span><span class="badge badge-req">{% if lang == 'fr' %}requis{% else %}required{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Votre nom{% else %}Your name{% endif %}</div></div>
+        <div class="param"><span class="param-name">email</span><span class="param-type">string</span><span class="badge badge-req">{% if lang == 'fr' %}requis{% else %}required{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Votre email{% else %}Your email{% endif %}</div></div>
+        <div class="param"><span class="param-name">use_case</span><span class="param-type">string</span><span class="badge badge-opt">{% if lang == 'fr' %}optionnel{% else %}optional{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Votre cas d'usage{% else %}Your use case{% endif %}</div></div>
+<pre><code>curl -X POST https://www.canopysat.org/api/v1/key/create \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe", "email": "john@example.com"}'</code></pre>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="endpoint-path">/api/v1/key/status</span>
+        <div class="endpoint-desc">{% if lang == 'fr' %}Vérifier votre utilisation et les appels restants{% else %}Check your API key usage and remaining calls{% endif %}</div>
+<pre><code>curl https://www.canopysat.org/api/v1/key/status \
+  -H "Authorization: Bearer YOUR_API_KEY"</code></pre>
+    </div>
+
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="endpoint-path">/api/v1/compare</span>
+        <div class="endpoint-desc">{% if lang == 'fr' %}Comparer deux périodes temporelles pour détecter les changements forestiers{% else %}Compare two time periods to detect forest changes{% endif %}</div>
+        <div class="param"><span class="param-name">lat, lng, size</span><span class="param-type">float</span><span class="badge badge-req">{% if lang == 'fr' %}requis{% else %}required{% endif %}</span></div>
+        <div class="param"><span class="param-name">date1_start, date1_end</span><span class="param-type">string</span><span class="badge badge-req">{% if lang == 'fr' %}requis{% else %}required{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Période 1 (format YYYY-MM-DD){% else %}Period 1 (YYYY-MM-DD format){% endif %}</div></div>
+        <div class="param"><span class="param-name">date2_start, date2_end</span><span class="param-type">string</span><span class="badge badge-req">{% if lang == 'fr' %}requis{% else %}required{% endif %}</span><div class="param-desc">{% if lang == 'fr' %}Période 2 (format YYYY-MM-DD){% else %}Period 2 (YYYY-MM-DD format){% endif %}</div></div>
+    </div>
+
+    <h3>{% if lang == 'fr' %}Satellites Utilisés{% else %}Satellites Used{% endif %}</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:10px 0;">
+        <div style="background:#1B4332;border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:#3DAA6B;font-weight:bold;">ESA Sentinel-2</div>
+            <div style="color:#D6EFE1;margin-top:4px;">{% if lang == 'fr' %}10m · NDVI, NDRE, NBR, couverture{% else %}10m · NDVI, NDRE, NBR, cover{% endif %}</div>
+        </div>
+        <div style="background:#1B4332;border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:#3DAA6B;font-weight:bold;">ESA Sentinel-1</div>
+            <div style="color:#D6EFE1;margin-top:4px;">{% if lang == 'fr' %}10m · Radar VV, classification{% else %}10m · VV radar, classification{% endif %}</div>
+        </div>
+        <div style="background:#1B4332;border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:#3DAA6B;font-weight:bold;">NASA Landsat 8/9</div>
+            <div style="color:#D6EFE1;margin-top:4px;">{% if lang == 'fr' %}30m · Tendance 10 ans{% else %}30m · 10-year trend{% endif %}</div>
+        </div>
+        <div style="background:#1B4332;border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:#3DAA6B;font-weight:bold;">NASA Landsat 4/5</div>
+            <div style="color:#D6EFE1;margin-top:4px;">{% if lang == 'fr' %}30m · Tendance 40 ans depuis 1984{% else %}30m · 40-year trend since 1984{% endif %}</div>
+        </div>
+        <div style="background:#1B4332;border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:#3DAA6B;font-weight:bold;">NASA FIRMS</div>
+            <div style="color:#D6EFE1;margin-top:4px;">{% if lang == 'fr' %}375m · Feux actifs VIIRS/MODIS{% else %}375m · Active fires VIIRS/MODIS{% endif %}</div>
+        </div>
+        <div style="background:#1B4332;border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:#3DAA6B;font-weight:bold;">NASA GEDI (ISS)</div>
+            <div style="color:#D6EFE1;margin-top:4px;">{% if lang == 'fr' %}25m→10m fusion · Hauteur canopée LiDAR{% else %}25m→10m fusion · LiDAR canopy height{% endif %}</div>
+        </div>
+    </div>
+
+    <h3>{% if lang == 'fr' %}Exemples de Code{% else %}Code Examples{% endif %}</h3>
+    <p style="margin-bottom:8px;">{% if lang == 'fr' %}Installez le SDK officiel :{% else %}Install the official SDK:{% endif %}</p>
+    <pre><code>pip install canopysat</code></pre>
+    <p style="font-size:12px;margin-bottom:10px;">📦 <a href="https://pypi.org/project/canopysat/" target="_blank" style="color:#3DAA6B;">pypi.org/project/canopysat</a> · <a href="https://github.com/SautiRay/canopysat" target="_blank" style="color:#3DAA6B;">github.com/SautiRay/canopysat</a></p>
+    <p>Python:</p>
+<pre><code>from canopysat import Forest
+
+# Simple — no API key needed (10 free analyses/month)
+result = Forest.analyze(lat=-3.4653, lng=-62.2159, size=10)
+print(result.score)           # 80
+print(result.canopy_height)   # 13.2m (NASA GEDI LiDAR)
+print(result.summary())
+
+# With API key
+import requests
+
+API_KEY = "YOUR_API_KEY"
+BASE_URL = "https://www.canopysat.org/api/v1"
+
+response = requests.post(f"{BASE_URL}/analyze",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    json={"lat": -3.4653, "lng": -62.2159, "size": 10}
+)
+data = response.json()
+print(f"Forest Score: {data['score']}/100")
+print(f"Canopy Height: {data['canopy_height']}m (NASA GEDI)")
+print(f"Deforestation Alert: {data['deforestation_alert']}")</code></pre>
+
+    <p>JavaScript:</p>
+<pre><code>const response = await fetch('https://www.canopysat.org/api/v1/analyze', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({lat: -3.4653, lng: -62.2159, size: 10})
+});
+const data = await response.json();
+console.log(`Forest Score: ${data.score}/100`);
+console.log(`Canopy Height: ${data.canopy_height}m (NASA GEDI)`);</code></pre>
+
+    <h3>📞 {% if lang == 'fr' %}Obtenir une Clé API{% else %}Get an API Key{% endif %}</h3>
+    <p>{% if lang == 'fr' %}Contactez-nous pour obtenir votre clé API gratuite ou pour upgrader vers un plan supérieur.{% else %}Contact us to get your free API key or to upgrade to a higher plan.{% endif %}</p>
+    <a href="/contact" style="display:inline-block;padding:10px 24px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:14px;font-weight:bold;">✉️ {% if lang == 'fr' %}Obtenir une clé API{% else %}Get API Key{% endif %}</a>
+</div>
+
+<footer>canopysat.org · Forest Intelligence API · Global · 2026 · contact@canopysat.org</footer>
+</body>
+</html>

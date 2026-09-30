@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat Guardian — New Password</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D3B2E; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: #1B4332; border-radius: 12px; padding: 35px; width: 100%; max-width: 400px; border: 1px solid #1B6B45; margin: 20px; }
+        .logo { text-align: center; margin-bottom: 25px; }
+        .logo-emoji { font-size: 40px; }
+        .logo h1 { font-size: 18px; letter-spacing: 2px; color: white; margin-top: 8px; }
+        .logo p { font-size: 10px; color: #3DAA6B; }
+        h2 { font-size: 18px; color: #3DAA6B; margin-bottom: 20px; text-align: center; }
+        label { font-size: 11px; color: #3DAA6B; display: block; margin-bottom: 4px; }
+        input { width: 100%; padding: 10px 12px; background: #0D3B2E; border: 1px solid #1B6B45; border-radius: 6px; color: white; font-size: 13px; margin-bottom: 14px; }
+        .btn { width: 100%; padding: 12px; background: #2D8A5A; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; }
+        .msg { padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 12px; display: none; }
+        .msg-err { background: #3B1B1B; color: #E53935; border: 1px solid #E53935; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="logo">
+        <div class="logo-emoji">🛡️</div>
+        <h1>CANOPYSAT</h1>
+        <p>FOREST GUARDIAN</p>
+    </div>
+    <h2>Set New Password</h2>
+    <div class="msg msg-err" id="msg-err"></div>
+    <label>New Password (min 6 characters)</label>
+    <input type="password" id="password" placeholder="••••••••">
+    <label>Confirm Password</label>
+    <input type="password" id="password2" placeholder="••••••••">
+    <button class="btn" onclick="reset()">🔐 Set New Password</button>
+</div>
+<script>
+async function reset() {
+    const password = document.getElementById('password').value;
+    const password2 = document.getElementById('password2').value;
+    if (password !== password2) {
+        document.getElementById('msg-err').textContent = 'Passwords do not match';
+        document.getElementById('msg-err').style.display = 'block';
+        return;
+    }
+    if (password.length < 6) {
+        document.getElementById('msg-err').textContent = 'Password must be at least 6 characters';
+        document.getElementById('msg-err').style.display = 'block';
+        return;
+    }
+    const token = '{{ token }}';
+    const res = await fetch('/guardian/reset/' + token, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({password})
+    });
+    const data = await res.json();
+    if (data.success) {
+        window.location.href = data.redirect;
+    } else {
+        document.getElementById('msg-err').textContent = data.error || 'Error';
+        document.getElementById('msg-err').style.display = 'block';
+    }
+}
+</script>
+</body>
+</html>

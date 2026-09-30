@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Amazon Rainforest",
+    "lat": -3.4653,
+    "lng": -62.2159,
+    "estimated_agb": 118.5,
+    "carbon_total_co2": 2023190.0,
+    "score": 80
+  },
+  {
+    "name": "Congo Basin",
+    "lat": 0.5,
+    "lng": 24.0,
+    "estimated_agb": 133.3,
+    "carbon_total_co2": 2276875.0,
+    "score": 80
+  },
+  {
+    "name": "Black Forest",
+    "lat": 48.0,
+    "lng": 8.0,
+    "estimated_agb": 91.6,
+    "carbon_total_co2": 1562161.0,
+    "score": 64
+  },
+  {
+    "name": "Borneo",
+    "lat": 1.0,
+    "lng": 114.0,
+    "estimated_agb": 141.6,
+    "carbon_total_co2": 2415105.0,
+    "score": 58
+  },
+  {
+    "name": "Boreal Canada",
+    "lat": 55.0,
+    "lng": -100.0,
+    "estimated_agb": 50.8,
+    "carbon_total_co2": 867867.0,
+    "score": 20
+  }
+]

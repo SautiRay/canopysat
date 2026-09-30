@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CanopySat — Platform</title>
+    <meta name="description" content="CanopySat platform — Forest Analysis, Guardian monitoring, Field App and API for satellite forest intelligence.">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
+        header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+        .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; display:flex; align-items:center; gap:8px; }
+        .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .nav-link:hover { background:#1B6B45; }
+        .container { max-width:960px; margin:0 auto; padding:40px 20px; }
+        .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
+        h1 { font-size:28px; color:white; margin-bottom:8px; }
+        .subtitle { font-size:14px; color:#D6EFE1; margin-bottom:40px; line-height:1.7; max-width:600px; }
+        .tools-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:50px; }
+        .tool-card { background:#1B4332; border-radius:12px; padding:24px; border:1px solid #1B6B45; transition:border-color 0.3s; text-decoration:none; color:white; display:block; }
+        .tool-card:hover { border-color:#3DAA6B; }
+        .tool-icon { font-size:32px; margin-bottom:12px; }
+        .tool-name { font-size:16px; font-weight:bold; color:white; margin-bottom:6px; }
+        .tool-desc { font-size:12px; color:#D6EFE1; line-height:1.6; margin-bottom:12px; }
+        .tool-features { list-style:none; margin-bottom:16px; }
+        .tool-features li { font-size:11px; color:#2D6A4F; padding:2px 0; }
+        .tool-features li::before { content:"→ "; color:#3DAA6B; }
+        .tool-link { display:inline-block; padding:7px 16px; background:#2D8A5A; color:white; border-radius:8px; font-size:12px; font-weight:bold; text-decoration:none; }
+        .tool-link:hover { background:#3DAA6B; }
+        .tool-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:bold; margin-bottom:10px; }
+        .badge-free { background:#1B6B45; color:#3DAA6B; }
+        .badge-pro { background:#1565C0; color:#90CAF9; }
+        .badge-api { background:#6A1B9A; color:#CE93D8; }
+        .section-title { font-size:13px; color:#3DAA6B; text-transform:uppercase; letter-spacing:2px; margin-bottom:20px; }
+        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+    </style>
+</head>
+<body>
+<header>
+    <a href="/" class="logo">🛰️ CANOPYSAT</a>
+    <div style="display:flex;gap:8px;align-items:center;">
+        <a href="/platform?lang=en" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'en' %}background:#1B6B45;{% endif %}">EN</a>
+        <a href="/platform?lang=fr" style="padding:3px 10px;border:1px solid #3DAA6B;border-radius:10px;color:#D6EFE1;text-decoration:none;font-size:11px;{% if lang == 'fr' %}background:#1B6B45;{% endif %}">FR</a>
+        <a href="/#analyze" class="nav-link">Analyze a Forest</a>
+        <a href="/" class="nav-link">← Home</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="badge">PLATFORM</div>
+    <h1>{% if lang == 'fr' %}Les outils CanopySat{% else %}CanopySat Tools{% endif %}</h1>
+    <p class="subtitle">{% if lang == 'fr' %}CanopySat propose 4 outils complémentaires pour surveiller, analyser et intégrer l'intelligence forestière dans vos projets.{% else %}CanopySat offers 4 complementary tools to monitor, analyze and integrate forest intelligence into your projects.{% endif %}</p>
+
+    <div class="section-title">{% if lang == 'fr' %}Nos outils{% else %}Our tools{% endif %}</div>
+    <div class="tools-grid">
+
+        <!-- Forest Analysis -->
+        <div class="tool-card" style="border-color:#2D8A5A;">
+            
+            <span class="tool-badge badge-free">Free</span>
+            <div class="tool-name">{% if lang == 'fr' %}Analyse Forestière{% else %}Forest Analysis{% endif %}</div>
+            <div class="tool-desc">{% if lang == 'fr' %}Analysez n'importe quelle zone GPS sur Terre en quelques minutes. Obtenez un score d'intégrité forestière, des alertes et un rapport PDF automatique.{% else %}Analyze any GPS zone on Earth in minutes. Get a Forest Integrity Score, deforestation alerts and an automated PDF report.{% endif %}</div>
+            <ul class="tool-features">
+                <li>Forest Integrity Score (0-100)</li>
+                <li>{% if lang == 'fr' %}Alerte déforestation{% else %}Deforestation alert{% endif %}</li>
+                <li>NASA GEDI LiDAR {% if lang == 'fr' %}hauteur canopée{% else %}canopy height{% endif %}</li>
+                <li>{% if lang == 'fr' %}Rapport PDF automatique{% else %}Automated PDF report{% endif %}</li>
+                <li>{% if lang == 'fr' %}Tendance NDVI 40 ans{% else %}40-year NDVI trend{% endif %}</li>
+            </ul>
+            <a href="/#analyze" class="tool-link">{% if lang == 'fr' %}Analyser une forêt →{% else %}Analyze a Forest →{% endif %}</a>
+        </div>
+
+        <!-- Guardian -->
+        <div class="tool-card" style="border-color:#1565C0;">
+            
+            <span class="tool-badge badge-pro">Free · Pro · Business</span>
+            <div class="tool-name">Forest Guardian</div>
+            <div class="tool-desc">{% if lang == 'fr' %}Surveillance mensuelle automatique de vos zones forestières. Recevez des alertes par email et des rapports PDF automatiques quand des changements sont détectés.{% else %}Automatic monthly monitoring of your forest zones. Receive email alerts and automated PDF reports when changes are detected.{% endif %}</div>
+            <ul class="tool-features">
+                <li>{% if lang == 'fr' %}Surveillance mensuelle automatique{% else %}Automatic monthly monitoring{% endif %}</li>
+                <li>{% if lang == 'fr' %}Alertes email{% else %}Email alerts{% endif %}</li>
+                <li>{% if lang == 'fr' %}Graphique 6 courbes{% else %}6-curve trend chart{% endif %}</li>
+                <li>{% if lang == 'fr' %}Historique des analyses{% else %}Analysis history{% endif %}</li>
+                <li>{% if lang == 'fr' %}Rapport PDF mensuel{% else %}Monthly PDF report{% endif %}</li>
+            </ul>
+            <a href="/guardian" class="tool-link" style="background:#1565C0;">{% if lang == 'fr' %}Ouvrir Guardian →{% else %}Open Guardian →{% endif %}</a>
+        </div>
+
+        <!-- Field App -->
+        <div class="tool-card" style="border-color:#2D6A4F;">
+            
+            <span class="tool-badge badge-free">Free</span>
+            <div class="tool-name">{% if lang == 'fr' %}Application Terrain{% else %}Field App{% endif %}</div>
+            <div class="tool-desc">{% if lang == 'fr' %}Application mobile pour les équipes terrain. Collectez des observations sur le terrain et combinez-les avec les données satellites.{% else %}Mobile application for field teams. Collect ground observations and combine them with satellite data.{% endif %}</div>
+            <ul class="tool-features">
+                <li>{% if lang == 'fr' %}Collecte terrain GPS{% else %}GPS field data collection{% endif %}</li>
+                <li>{% if lang == 'fr' %}Synchronisation satellite{% else %}Satellite data sync{% endif %}</li>
+                <li>{% if lang == 'fr' %}Mode hors ligne{% else %}Offline mode{% endif %}</li>
+                <li>{% if lang == 'fr' %}Photos et observations{% else %}Photos and observations{% endif %}</li>
+            </ul>
+            <a href="/field" class="tool-link" style="background:#2D6A4F;">{% if lang == 'fr' %}Voir l\'app →{% else %}View App →{% endif %}</a>
+        </div>
+
+        <!-- API -->
+        <div class="tool-card" style="border-color:#6A1B9A;">
+            
+            <span class="tool-badge badge-api">Developer</span>
+            <div class="tool-name">API & SDK</div>
+            <div class="tool-desc">{% if lang == 'fr' %}Intégrez l'intelligence forestière CanopySat directement dans vos applications, pipelines de données ou systèmes GIS.{% else %}Integrate CanopySat forest intelligence directly into your applications, data pipelines or GIS systems.{% endif %}</div>
+            <ul class="tool-features">
+                <li>REST API {% if lang == 'fr' %}authentifiée{% else %}with authentication{% endif %}</li>
+                <li>Python SDK — pip install canopysat</li>
+                <li>{% if lang == 'fr' %}Documentation complète{% else %}Full documentation{% endif %}</li>
+                <li>{% if lang == 'fr' %}Exemples de code{% else %}Code examples{% endif %}</li>
+                <li>500 {% if lang == 'fr' %}appels/mois gratuits{% else %}calls/month free{% endif %}</li>
+            </ul>
+            <a href="/api-docs" class="tool-link" style="background:#6A1B9A;">{% if lang == 'fr' %}Documentation API →{% else %}API Documentation →{% endif %}</a>
+        </div>
+
+    </div>
+
+    <!-- Comparison table -->
+    <div class="section-title">{% if lang == 'fr' %}Choisissez votre plan{% else %}Choose your plan{% endif %}</div>
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+            <thead>
+                <tr style="background:#1B4332;">
+                    <th style="padding:10px;text-align:left;color:#3DAA6B;border-bottom:2px solid #1B6B45;">{% if lang == 'fr' %}Fonctionnalité{% else %}Feature{% endif %}</th>
+                    <th style="padding:10px;text-align:center;color:#D6EFE1;border-bottom:2px solid #1B6B45;">Free</th>
+                    <th style="padding:10px;text-align:center;color:#90CAF9;border-bottom:2px solid #1B6B45;">Pro — €9/mo</th>
+                    <th style="padding:10px;text-align:center;color:#CE93D8;border-bottom:2px solid #1B6B45;">Business — €49/mo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in [
+                    ('Forest analyses/month', '10', '500', 'Unlimited'),
+                    ('Guardian zones', '1', '5', '20'),
+                    ('PDF reports', '✅', '✅ Monthly auto', '✅ Weekly auto'),
+                    ('API access', '✅', '✅', '✅ Full'),
+                    ('Email alerts', '✅', '✅', '✅'),
+                    ('Historical trends', '✅', '✅', '✅'),
+                ] %}
+                <tr style="border-bottom:1px solid #1B4332;">
+                    <td style="padding:9px 10px;color:#D6EFE1;">{{ row[0] }}</td>
+                    <td style="padding:9px 10px;text-align:center;color:#D6EFE1;">{{ row[1] }}</td>
+                    <td style="padding:9px 10px;text-align:center;color:#90CAF9;">{{ row[2] }}</td>
+                    <td style="padding:9px 10px;text-align:center;color:#CE93D8;">{{ row[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="text-align:center;margin-top:20px;">
+        <a href="/guardian/upgrade" style="padding:10px 24px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:13px;font-weight:bold;">{% if lang == 'fr' %}Voir tous les plans →{% else %}View all plans →{% endif %}</a>
+    </div>
+</div>
+
+<footer>CanopySat Platform · canopysat.org · contact@canopysat.org · 2026</footer>
+</body>
+</html>
