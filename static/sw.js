@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canopysat-v12';
+const CACHE_NAME = 'canopysat-v21';
 const STATIC_ASSETS = [
     '/',
     '/static/manifest.json',
