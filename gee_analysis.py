@@ -5,6 +5,109 @@ import re
 import anthropic
 from datetime import datetime, timedelta
 
+def run_random_forest_classification(aoi, credentials_path='/home/canopysat/app/canopysat-service-account.json'):
+    """
+    Random Forest classifier trained on ESA WorldCover 2021 + Hansen GFW 2025
+    Returns pixel-level forest classification stats
+    """
+    try:
+        # Sentinel-2 composite for the zone
+        s2 = (ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+            .filterBounds(aoi)
+            .filterDate('2024-01-01', '2025-01-01')
+            .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20))
+            .select(['B2','B3','B4','B8','B11','B12'])
+            .median())
+
+        # Compute indices
+        ndvi = s2.normalizedDifference(['B8','B4']).rename('NDVI')
+        evi = s2.expression('2.5*(NIR-RED)/(NIR+6*RED-7.5*BLUE+1)',
+            {'NIR':s2.select('B8'),'RED':s2.select('B4'),'BLUE':s2.select('B2')}).rename('EVI')
+        nbr = s2.normalizedDifference(['B8','B12']).rename('NBR')
+        ndwi = s2.normalizedDifference(['B3','B8']).rename('NDWI')
+
+        # Feature stack
+        features = s2.addBands([ndvi, evi, nbr, ndwi])
+
+        # ESA WorldCover 2021 as training labels
+        worldcover = ee.ImageCollection('ESA/WorldCover/v200').first().select('Map')
+
+        # Remap WorldCover to 4 classes:
+        # 10=Trees→1(forest), 20=Shrubland→2(degraded), 30/40/50=Grass/Crop/Urban→3(non-forest), 80=Water→4(water)
+        landcover = worldcover.remap(
+            [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100],
+            [1,  2,  3,  3,  3,  3,  3,  4,  2,  1,  2]
+        ).rename('landcover')
+
+        # Hansen GFW 2025 — add deforestation layer
+        hansen = ee.Image('UMD/hansen/global_forest_change_2025_v1_13')
+        lossYear = hansen.select('lossyear')
+        # Recent loss (dynamic 5 years) = class 5 (deforested)
+        import datetime as _dt
+        _current_year = _dt.datetime.now().year
+        _start_yr = (_current_year - 5) % 100
+        _end_yr = _current_year % 100
+        recentLoss = lossYear.gte(_start_yr).And(lossYear.lte(_end_yr))
+        _loss_period = f"{_current_year-5}-{_current_year}" 
+        landcover = landcover.where(recentLoss.eq(1), 5)
+
+        # Training samples
+        training = features.addBands(landcover).stratifiedSample(
+            numPoints=100,
+            classBand='landcover',
+            region=aoi.buffer(50000),
+            scale=30,
+            seed=42,
+            geometries=True
+        )
+
+        # Train Random Forest
+        classifier = ee.Classifier.smileRandomForest(
+            numberOfTrees=50,
+            seed=42
+        ).train(
+            features=training,
+            classProperty='landcover',
+            inputProperties=['B2','B3','B4','B8','B11','B12','NDVI','EVI','NBR','NDWI']
+        )
+
+        # Classify the zone
+        classified = features.classify(classifier)
+
+        # Compute stats
+        stats = classified.reduceRegion(
+            reducer=ee.Reducer.frequencyHistogram(),
+            geometry=aoi,
+            scale=10,
+            maxPixels=1e9
+        ).getInfo()
+
+        hist = stats.get('classification', {})
+        total = sum(hist.values()) if hist else 1
+
+        rf_forest_pct = round(hist.get('1', 0) / total * 100, 1)
+        rf_degraded_pct = round(hist.get('2', 0) / total * 100, 1)
+        rf_nonforest_pct = round(hist.get('3', 0) / total * 100, 1)
+        rf_water_pct = round(hist.get('4', 0) / total * 100, 1)
+        rf_deforested_pct = round(hist.get('5', 0) / total * 100, 1)
+
+        return {
+            'rf_success': True,
+            'rf_forest_pct': rf_forest_pct,
+            'rf_degraded_pct': rf_degraded_pct,
+            'rf_nonforest_pct': rf_nonforest_pct,
+            'rf_water_pct': rf_water_pct,
+            'rf_deforested_pct': rf_deforested_pct,
+            'rf_training': 'ESA WorldCover 2021 + Hansen GFW 2025',
+            'rf_algorithm': 'Random Forest (50 trees, GEE smileRandomForest)',
+            'rf_loss_period': _loss_period
+        }
+
+    except Exception as e:
+        print(f"RF Error: {e}")
+        return {'rf_success': False}
+
+
 def initialize_gee():
     try:
         ee.Initialize(project=os.getenv('GEE_PROJECT', 'canopysat-platform'))
@@ -13,7 +116,7 @@ def initialize_gee():
         print(f"GEE Error: {e}")
         return False
 
-def analyze_forest(lat, lng, size_km=10):
+def analyze_forest(lat, lng, size_km=10, lang='en'):
     try:
         # Define area of interest
         point = ee.Geometry.Point([float(lng), float(lat)])
@@ -297,15 +400,15 @@ def analyze_forest(lat, lng, size_km=10):
                     dev_stage_age = '0-20 years'
                 elif ndvi_val < 0.6 or nbr_val < 0.3:
                     dev_stage = 'Growing forest (20-60 years)'
-                    dev_stage_fr = 'Foret en croissance (20-60 ans)'
+                    dev_stage_fr = 'Forêt en croissance (20-60 ans)'
                     dev_stage_age = '20-60 years'
                 elif ndvi_val < 0.75 or nbr_val < 0.5:
                     dev_stage = 'Mature forest (60-120 years)'
-                    dev_stage_fr = 'Foret mature (60-120 ans)'
+                    dev_stage_fr = 'Forêt mature (60-120 ans)'
                     dev_stage_age = '60-120 years'
                 else:
                     dev_stage = 'Old-growth forest (>120 years)'
-                    dev_stage_fr = 'Foret ancienne (>120 ans)'
+                    dev_stage_fr = 'Forêt ancienne (>120 ans)'
                     dev_stage_age = '>120 years'
             else:
                 dev_stage = None
@@ -461,6 +564,13 @@ def analyze_forest(lat, lng, size_km=10):
             nbr_val = stats.get('NBR', 0) or 0
             ndwi_val = stats.get('NDWI', 0) or 0
 
+            # Random Forest Classification
+            rf_result = {'rf_success': False}
+            try:
+                rf_result = run_random_forest_classification(aoi)
+            except Exception as rf_err:
+                print(f"RF skipped: {rf_err}")
+
             # AI Forest Analysis — Claude API (Anthropic)
             ai_deforestation_risk = 'Unknown'
             ai_degradation_signs = 'None detected'
@@ -477,17 +587,40 @@ def analyze_forest(lat, lng, size_km=10):
                                 _api_key = _line.strip().split('=', 1)[1]
                                 break
                 claude_client = anthropic.Anthropic(api_key=_api_key)
+                rf_info = ""
+                if rf_result.get('rf_success'):
+                    _period = rf_result.get('rf_loss_period', '2021-2026')
+                    rf_info = (
+                        f"\nRandom Forest pixel classification (ESA WorldCover + Hansen GFW 2025):"
+                        f"\n- Forest (healthy): {rf_result.get('rf_forest_pct')}%"
+                        f"\n- Degraded: {rf_result.get('rf_degraded_pct')}%"
+                        f"\n- Deforested ({_period}): {rf_result.get('rf_deforested_pct')}%"
+                        f"\n- Non-forest: {rf_result.get('rf_nonforest_pct')}%"
+                        f"\n- Water: {rf_result.get('rf_water_pct')}%"
+                    )
+
+                _response_lang = "French" if lang == "fr" else "English"
+                try:
+                    import reverse_geocoder as _rg
+                    _geo = _rg.search([(float(lat), float(lng))], verbose=False)
+                    _location = f"{_geo[0].get('name','')}, {_geo[0].get('cc','')}" if _geo else f"{lat}, {lng}"
+                except:
+                    _location = f"{lat}, {lng}"
                 prompt = (
-                    f"You are an expert forest ecologist. Analyze satellite data for coordinates ({lat}, {lng}).\n"
-                    f"NDVI: {round(ndvi_val,3)}, EVI: {round(evi_val,3)}, NBR: {round(nbr_val,3)}, NDWI: {round(ndwi_val,3)}\n"
-                    f"Respond ONLY with valid JSON:\n"
+                    f"You are an expert forest ecologist and remote sensing specialist.\n"
+                    f"Analyze satellite and ML data for location: {_location} (coordinates: {lat}, {lng}).\n"
+                    f"IMPORTANT: Write degradation_signs, recovery_signs, main_cause and recommendation in {_response_lang} language.\n"
+                    f"\nSpectral indices (Sentinel-2):"
+                    f"\n- NDVI: {round(ndvi_val,3)}, EVI: {round(evi_val,3)}, NBR: {round(nbr_val,3)}, NDWI: {round(ndwi_val,3)}"
+                    f"{rf_info}"
+                    f"\n\nRespond ONLY with valid JSON:"
                     f'{{"forest_type":"one of: Dense Tropical Forest/Temperate Forest/Boreal Forest/Savanna/Grassland/Water/Wetland/Bare soil/Mixed Forest/Mangrove/Mediterranean Forest",'
                     f'"forest_type_fr":"French translation",'
                     f'"deforestation_risk":"Low/Moderate/High/Critical",'
-                    f'"degradation_signs":"brief or None detected",'
-                    f'"recovery_signs":"brief or None detected",'
-                    f'"main_cause":"most likely cause",'
-                    f'"recommendation":"one sentence"}}'
+                    f'"degradation_signs":"If RF deforestation > 2% or RF degraded > 2%, describe signs — otherwise None detected",'
+                    f'"recovery_signs":"brief description or None detected",'
+                    f'"main_cause":"most likely cause based on ALL data including RF results",'
+                    f'"recommendation":"one specific sentence based on RF + spectral analysis"}}'
                 )
                 response = claude_client.messages.create(
                     model="claude-haiku-4-5",
@@ -508,6 +641,40 @@ def analyze_forest(lat, lng, size_km=10):
                     ai_recovery_signs = cr.get('recovery_signs', 'None detected')
                     ai_main_cause = cr.get('main_cause', '')
                     ai_recommendation = cr.get('recommendation', '')
+                    # Override leaf_type with Claude — normalize + geographic correction
+                    # Correct leaf_type based on Claude's forest_type + geography
+                    _ft = cr.get('forest_type', '').lower()
+                    _abs_lat = abs(float(lat))
+                    if 'tropical' in _ft or 'mangrove' in _ft or (_abs_lat <= 23.5 and 'forest' in _ft):
+                        leaf_type = 'Broadleaf (Deciduous/Evergreen)'
+                        leaf_type_fr = 'Feuillus (Decidus/Persistants)'
+                    elif 'boreal' in _ft or 'conifer' in _ft:
+                        leaf_type = 'Coniferous (Needleleaf)'
+                        leaf_type_fr = 'Coniferes (Aiguilles)'
+                    elif 'mediterranean' in _ft or 'mixed' in _ft:
+                        leaf_type = 'Mixed (Coniferous/Broadleaf)'
+                        leaf_type_fr = 'Mixte (Coniferes/Feuillus)'
+                    elif 'temperate' in _ft:
+                        # Temperate — keep NDRE-based leaf_type (already calculated)
+                        pass
+                    # Override dev_stage with Claude — normalize to standard values
+                    if cr.get('dev_stage'):
+                        _ds = cr.get('dev_stage', '').lower()
+                        if 'old' in _ds or '>120' in _ds or 'old-growth' in _ds:
+                            dev_stage = 'Old-growth forest (>120 years)'
+                            dev_stage_fr = 'Forêt ancienne (>120 ans)'
+                        elif 'mature' in _ds or '60-120' in _ds:
+                            dev_stage = 'Mature forest (60-120 years)'
+                            dev_stage_fr = 'Forêt mature (60-120 ans)'
+                        elif 'growing' in _ds or '20-60' in _ds:
+                            dev_stage = 'Growing forest (20-60 years)'
+                            dev_stage_fr = 'Forêt en croissance (20-60 ans)'
+                        elif 'young' in _ds or '5-20' in _ds:
+                            dev_stage = 'Young forest (5-20 years)'
+                            dev_stage_fr = 'Jeune forêt (5-20 ans)'
+                        elif 'seedling' in _ds or '<5' in _ds:
+                            dev_stage = 'Seedling/shrub (<5 years)'
+                            dev_stage_fr = 'Semis/arbuste (<5 ans)'
                 else:
                     raise ValueError("No JSON")
             except Exception as _e:
@@ -619,6 +786,23 @@ def analyze_forest(lat, lng, size_km=10):
         pts_cover = score_result['pts_cover']
         pts_s1 = score_result['pts_s1']
         pts_fire = score_result['pts_fire']
+
+        # RF penalty — adjust score based on Random Forest deforestation detection
+        # Reference: Hansen GFW + ESA WorldCover pixel-level classification
+        rf_penalty = 0
+        if rf_result.get('rf_success'):
+            _defor = rf_result.get('rf_deforested_pct', 0) or 0
+            _degr = rf_result.get('rf_degraded_pct', 0) or 0
+            # Deforestation penalty
+            if _defor > 15:   rf_penalty += 20
+            elif _defor > 10: rf_penalty += 15
+            elif _defor > 5:  rf_penalty += 8
+            elif _defor > 2:  rf_penalty += 3
+            # Degradation penalty
+            if _degr > 20:    rf_penalty += 10
+            elif _degr > 10:  rf_penalty += 6
+            elif _degr > 5:   rf_penalty += 3
+            score = max(0, score - rf_penalty)
 
         # Trend
         ndvi_change = ndvi_current_mean - ndvi_past_mean
@@ -739,6 +923,13 @@ def analyze_forest(lat, lng, size_km=10):
             'ai_recovery_signs': ai_recovery_signs,
             'ai_main_cause': ai_main_cause,
             'ai_recommendation': ai_recommendation,
+            'rf_forest_pct': rf_result.get('rf_forest_pct'),
+            'rf_degraded_pct': rf_result.get('rf_degraded_pct'),
+            'rf_deforested_pct': rf_result.get('rf_deforested_pct'),
+            'rf_nonforest_pct': rf_result.get('rf_nonforest_pct'),
+            'rf_water_pct': rf_result.get('rf_water_pct'),
+            'rf_success': rf_result.get('rf_success', False),
+            'rf_loss_period': rf_result.get('rf_loss_period', '2021-2026'),
             'ai_indices': ai_indices,
             'ndvi_change_1y': ndvi_change_1y,
             'ndvi_change_5y': ndvi_change_5y,

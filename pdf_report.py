@@ -16,19 +16,24 @@ ORANGE = HexColor('#F9A825')
 WHITE = white
 
 def get_score_color(score):
-    if score >= 70: return ACCENT_GREEN
-    elif score >= 40: return ORANGE
+    if score >= 80: return ACCENT_GREEN
+    elif score >= 65: return HexColor('#2D8A5A')
+    elif score >= 45: return ORANGE
     else: return RED
 
 def get_score_label(score, lang='en'):
     if lang == 'fr':
-        if score >= 70: return 'Foret Saine'
-        elif score >= 40: return 'Foret Degradee'
-        else: return 'Foret Critique'
+        if score >= 80: return 'Foret Saine'
+        elif score >= 65: return 'Bonne Foret'
+        elif score >= 45: return 'Foret Degradee'
+        elif score >= 20: return 'Foret Critique'
+        else: return 'Non-Forestier'
     else:
-        if score >= 70: return 'Healthy Forest'
-        elif score >= 40: return 'Degraded Forest'
-        else: return 'Critical Forest'
+        if score >= 80: return 'Healthy Forest'
+        elif score >= 65: return 'Good Forest'
+        elif score >= 45: return 'Degraded Forest'
+        elif score >= 20: return 'Critical Forest'
+        else: return 'Non-Forest'
 
 def generate_pdf(data, lang='en'):
     filename = f"canopysat_report_{data['lat']}_{data['lng']}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
@@ -485,6 +490,19 @@ def generate_pdf(data, lang='en'):
             elif s1_vv >= -12: pts_s1 = 10
             elif s1_vv >= -16: pts_s1 = 5
 
+        # RF penalty FR
+        rf_defor = data.get('rf_deforested_pct') or 0
+        rf_degr = data.get('rf_degraded_pct') or 0
+        rf_penalty = 0
+        if rf_defor > 15: rf_penalty += 20
+        elif rf_defor > 10: rf_penalty += 15
+        elif rf_defor > 5: rf_penalty += 8
+        elif rf_defor > 2: rf_penalty += 3
+        if rf_degr > 20: rf_penalty += 10
+        elif rf_degr > 10: rf_penalty += 6
+        elif rf_degr > 5: rf_penalty += 3
+        base_score = pts_ndvi + pts_trend + pts_cover + pts_s1 + pts_fire
+
         bd_rows = [
             ['Composant', 'Points', 'Maximum'],
             ['Vegetation actuelle (NDVI)', str(pts_ndvi), '25'],
@@ -492,8 +510,14 @@ def generate_pdf(data, lang='en'):
             ['Couverture forestiere', str(pts_cover), '25'],
             ['Sentinel-1 Radar (VV)', str(pts_s1), '15'],
             ['Score feux (0=beaucoup, 10=aucun)', str(pts_fire), '10'],
-            ['TOTAL', str(score), '100'],
+            ['Score de base (satellites)', str(base_score), '100'],
         ]
+        if rf_penalty > 0:
+            bd_rows.append(['Penalite RF deforestation (2021-2026)', '-' + str(rf_penalty), ''])
+        bd_rows.append(['SCORE FINAL (apres correction RF)', str(score), '100'])
+        if data.get('ai_deforestation_risk') and data.get('ai_deforestation_risk') != 'Unknown':
+            risk_fr = {'Low':'Faible','Moderate':'Modere','High':'Eleve','Critical':'Critique'}.get(data.get('ai_deforestation_risk',''), data.get('ai_deforestation_risk',''))
+            bd_rows.append(['Risque deforestation (IA)', risk_fr, ''])
     else:
         s1_vv = data.get('sentinel1_vv')
         pts_s1 = 0
@@ -502,6 +526,19 @@ def generate_pdf(data, lang='en'):
             elif s1_vv >= -12: pts_s1 = 10
             elif s1_vv >= -16: pts_s1 = 5
 
+        # RF penalty
+        rf_defor = data.get('rf_deforested_pct') or 0
+        rf_degr = data.get('rf_degraded_pct') or 0
+        rf_penalty = 0
+        if rf_defor > 15: rf_penalty += 20
+        elif rf_defor > 10: rf_penalty += 15
+        elif rf_defor > 5: rf_penalty += 8
+        elif rf_defor > 2: rf_penalty += 3
+        if rf_degr > 20: rf_penalty += 10
+        elif rf_degr > 10: rf_penalty += 6
+        elif rf_degr > 5: rf_penalty += 3
+        base_score = pts_ndvi + pts_trend + pts_cover + pts_s1 + pts_fire
+
         bd_rows = [
             ['Component', 'Points', 'Maximum'],
             ['Current vegetation (NDVI)', str(pts_ndvi), '25'],
@@ -509,8 +546,13 @@ def generate_pdf(data, lang='en'):
             ['Forest cover', str(pts_cover), '25'],
             ['Sentinel-1 Radar (VV)', str(pts_s1), '15'],
             ['Fire score (0=many fires, 10=none)', str(pts_fire), '10'],
-            ['TOTAL', str(score), '100'],
+            ['Base score (satellite)', str(base_score), '100'],
         ]
+        if rf_penalty > 0:
+            bd_rows.append(['RF deforestation penalty (2021-2026)', '-' + str(rf_penalty), ''])
+        bd_rows.append(['FINAL SCORE (after RF correction)', str(score), '100'])
+        if data.get('ai_deforestation_risk') and data.get('ai_deforestation_risk') != 'Unknown':
+            bd_rows.append(['AI Deforestation Risk', data.get('ai_deforestation_risk', ''), ''])
 
     bdt = Table(bd_rows, colWidths=[10*cm, 4*cm, 3*cm])
     bdt.setStyle(TableStyle([

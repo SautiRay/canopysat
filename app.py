@@ -39,7 +39,7 @@ def analyze():
         size = float(data.get('size', 10))
         lang = data.get('lang', 'en')
 
-        result = analyze_forest(lat, lng, size)
+        result = analyze_forest(lat, lng, size, lang=lang)
 
         if result['success']:
             # Log to community DB
@@ -94,6 +94,13 @@ def analyze():
                 'ai_recovery_signs': result.get('ai_recovery_signs'),
                 'ai_main_cause': result.get('ai_main_cause'),
                 'ai_recommendation': result.get('ai_recommendation'),
+                'rf_forest_pct': result.get('rf_forest_pct'),
+                'rf_degraded_pct': result.get('rf_degraded_pct'),
+                'rf_deforested_pct': result.get('rf_deforested_pct'),
+                'rf_nonforest_pct': result.get('rf_nonforest_pct'),
+                'rf_water_pct': result.get('rf_water_pct'),
+                'rf_success': result.get('rf_success'),
+                'rf_loss_period': result.get('rf_loss_period'),
                 'ai_indices': result.get('ai_indices'),
                 'ndvi_change_1y': result.get('ndvi_change_1y'),
                 'ndvi_change_5y': result.get('ndvi_change_5y'),
@@ -130,6 +137,13 @@ def analyze():
                 'ai_recovery_signs': result.get('ai_recovery_signs'),
                 'ai_main_cause': result.get('ai_main_cause'),
                 'ai_recommendation': result.get('ai_recommendation'),
+                'rf_forest_pct': result.get('rf_forest_pct'),
+                'rf_degraded_pct': result.get('rf_degraded_pct'),
+                'rf_deforested_pct': result.get('rf_deforested_pct'),
+                'rf_nonforest_pct': result.get('rf_nonforest_pct'),
+                'rf_water_pct': result.get('rf_water_pct'),
+                'rf_success': result.get('rf_success'),
+                'rf_loss_period': result.get('rf_loss_period'),
                 'ai_indices': result.get('ai_indices'),
                 'ndvi_change_1y': result.get('ndvi_change_1y'),
                 'ndvi_change_5y': result.get('ndvi_change_5y'),
@@ -174,7 +188,7 @@ def report_view():
         return 'Missing coordinates', 400
     try:
         from gee_analysis import analyze_forest
-        result = analyze_forest(float(lat), float(lng), 10)
+        result = analyze_forest(float(lat), float(lng), 10, lang=lang)
         result['lang'] = lang
         from pdf_report import generate_pdf
         filename = generate_pdf(result, lang)
@@ -1526,7 +1540,7 @@ def api_analyze():
             return jsonify({'error': 'Maximum zone size is 100km'}), 400
         
         from gee_analysis import analyze_forest
-        result = analyze_forest(lat, lng, size)
+        result = analyze_forest(lat, lng, size, lang=lang)
         
         response_time = round(time.time() - start_time, 2)
         

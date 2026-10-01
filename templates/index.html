@@ -620,13 +620,13 @@ var T = {
         'm-platform': 'Platform', 'm-about': 'About', 'm-contact': 'Contact',
         'analyzing': '⏳ Analyzing...', 'connecting': 'Connecting to Sentinel-2...',
         'score-label': 'FOREST INTEGRITY SCORE / 100',
-        'healthy': 'Healthy Forest', 'degraded': 'Degraded Forest', 'critical': 'Critical Forest',
+        'healthy': 'Healthy Forest', 'good': 'Good Forest', 'degraded': 'Degraded Forest', 'critical': 'Critical Forest', 'nonforest': 'Non-Forest',
         'pdf': '📄 DOWNLOAD PDF REPORT', 'pdf-loading': '⏳ Generating PDF...',
         'no-coords': 'Please enter GPS coordinates or draw a zone on the map.',
-        'veg': '🌿 Vegetation', 'trend3': '📈 Trend 3y (Sentinel-2)',
-        'trend10': '📡 Trend 10y (Landsat)', 'trend40': '🕰️ Trend 40y (Landsat 1984)',
-        'cover': '🌳 Forest cover', 'fires': '🔥 Active fires',
-        'trendlabel': '📊 Trend', 'date': '📅 Date'
+        'veg': 'NDVI', 'trend3': 'NDVI Trend 3y (Sentinel-2)',
+        'trend10': 'Trend 10y (Landsat)', 'trend40': 'Trend 40y (Landsat 1984)',
+        'cover': 'Forest cover', 'fires': 'Fire activity',
+        'trendlabel': 'Trend', 'date': 'Analysis date'
     },
     fr: {
         'hero-title': '🌍 Surveillez n\'importe quelle forêt sur Terre — en quelques minutes.',
@@ -651,13 +651,13 @@ var T = {
         'm-platform': 'Plateforme', 'm-about': 'À propos', 'm-contact': 'Contact',
         'analyzing': '⏳ Analyse en cours...', 'connecting': 'Connexion aux satellites...',
         'score-label': "SCORE D'INTÉGRITÉ FORESTIÈRE / 100",
-        'healthy': 'Forêt Saine', 'degraded': 'Forêt Dégradée', 'critical': 'Forêt Critique',
+        'healthy': 'Forêt Saine', 'good': 'Bonne Forêt', 'degraded': 'Forêt Dégradée', 'critical': 'Forêt Critique', 'nonforest': 'Non-Forestier',
         'pdf': '📄 TÉLÉCHARGER RAPPORT PDF', 'pdf-loading': '⏳ Génération PDF...',
         'no-coords': 'Veuillez entrer des coordonnées GPS ou dessiner une zone sur la carte.',
-        'veg': '🌿 Végétation', 'trend3': '📈 Tendance 3 ans (Sentinel-2)',
-        'trend10': '📡 Tendance 10 ans (Landsat)', 'trend40': '🕰️ Tendance 40 ans (Landsat 1984)',
-        'cover': '🌳 Couverture', 'fires': '🔥 Feux actifs',
-        'trendlabel': '📊 Tendance', 'date': '📅 Date'
+        'veg': 'NDVI', 'trend3': 'Tendance NDVI 3 ans (Sentinel-2)',
+        'trend10': 'Tendance 10 ans (Landsat)', 'trend40': 'Tendance 40 ans (Landsat 1984)',
+        'cover': 'Couverture forestière', 'fires': 'Activité feux',
+        'trendlabel': 'Tendance', 'date': 'Analysis date'
     }
 };
 
@@ -775,7 +775,7 @@ async function compareForest() {
                     // Period 1 map
                     if (data.map_period1) {
                         mapHtml += '<div style="margin-bottom:8px;">' +
-                            '<div style="font-size:10px;color:#D6EFE1;margin-bottom:3px;">📅 Period 1: ' + data.period1.start + ' → ' + data.period1.end + '</div>' +
+                            '<div style="font-size:10px;color:#D6EFE1;margin-bottom:3px;">Period 1: ' + data.period1.start + ' → ' + data.period1.end + '</div>' +
                             '<img src="/' + data.map_period1 + '" style="width:100%;border-radius:6px;border:1px solid #1B6B45;">' +
                             '<a href="/' + data.map_period1 + '" download="CanopySat_Period1_NDVI.png" ' +
                             'style="display:block;margin-top:4px;padding:5px;background:#1B6B45;color:white;text-align:center;border-radius:6px;font-size:10px;text-decoration:none;">📥 Download Period 1 Map</a></div>';
@@ -784,7 +784,7 @@ async function compareForest() {
                     // Period 2 map
                     if (data.map_period2) {
                         mapHtml += '<div style="margin-bottom:8px;">' +
-                            '<div style="font-size:10px;color:#D6EFE1;margin-bottom:3px;">📅 Period 2: ' + data.period2.start + ' → ' + data.period2.end + '</div>' +
+                            '<div style="font-size:10px;color:#D6EFE1;margin-bottom:3px;">Period 2: ' + data.period2.start + ' → ' + data.period2.end + '</div>' +
                             '<img src="/' + data.map_period2 + '" style="width:100%;border-radius:6px;border:1px solid #1B6B45;">' +
                             '<a href="/' + data.map_period2 + '" download="CanopySat_Period2_NDVI.png" ' +
                             'style="display:block;margin-top:4px;padding:5px;background:#1B6B45;color:white;text-align:center;border-radius:6px;font-size:10px;text-decoration:none;">📥 Download Period 2 Map</a></div>';
@@ -813,7 +813,7 @@ async function compareForest() {
                     '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🌳 Forest Cover</td><td style="text-align:center;">' + p1.forest_cover + '%</td><td style="text-align:center;">' + p2.forest_cover + '%</td><td style="text-align:center;color:' + c + '">' + sign(chg.forest_cover) + chg.forest_cover + '%</td></tr>' +
                     (p1.sentinel1_vv ? '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>📡 Sentinel-1 VV</td><td style="text-align:center;">' + p1.sentinel1_vv + ' dB</td><td style="text-align:center;">' + p2.sentinel1_vv + ' dB</td><td style="text-align:center;color:' + c + '">' + (chg.sentinel1_vv ? sign(chg.sentinel1_vv) + chg.sentinel1_vv + ' dB' : 'N/A') + '</td></tr>' : '') +
                     '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🔥 Fire Pixels</td><td style="text-align:center;">' + p1.fire_pixels + '</td><td style="text-align:center;">' + p2.fire_pixels + '</td><td style="text-align:center;color:' + (chg.fire_pixels > 0 ? '#E53935' : '#3DAA6B') + '">' + sign(chg.fire_pixels) + chg.fire_pixels + '</td></tr>' +
-                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>📉 Annual NDVI Rate</td><td colspan="3" style="text-align:center;color:' + c + '">' + sign(chg.annual_ndvi_rate) + chg.annual_ndvi_rate + ' / year</td></tr>' +
+                    '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>' + (lang === "fr" ? "Taux NDVI annuel" : "Annual NDVI Rate") + '</td><td colspan="3" style="text-align:center;color:' + c + '">' + sign(chg.annual_ndvi_rate) + chg.annual_ndvi_rate + ' / year</td></tr>' +
                     '<tr style="color:#D6EFE1;border-top:1px solid #1B6B45;"><td>🗺️ Area Change</td><td colspan="3" style="text-align:center;color:' + c + '">~' + chg.area_ha + ' ha</td></tr>' +
                     '</table>' +
                     mapHtml +
@@ -1042,8 +1042,8 @@ function analyzeForest() {
 }
 
 function showResult(data) {
-    var sc = data.score >= 70 ? '#3DAA6B' : data.score >= 40 ? '#F9A825' : '#E53935';
-    var ss = data.score >= 70 ? t('healthy') : data.score >= 40 ? t('degraded') : t('critical');
+    var sc = data.score >= 80 ? '#3DAA6B' : data.score >= 65 ? '#2D8A5A' : data.score >= 45 ? '#F9A825' : '#E53935';
+    var ss = data.score >= 80 ? t('healthy') : data.score >= 65 ? t('good') : data.score >= 45 ? t('degraded') : data.score >= 20 ? t('critical') : t('nonforest');
     var tc = data.ndvi_change >= 0 ? '#3DAA6B' : '#E53935';
     var fc = data.active_fires === 0 ? '#3DAA6B' : '#E53935';
 
@@ -1058,22 +1058,31 @@ function showResult(data) {
         '<div class="score-status" style="color:' + sc + '">' + ss + '</div>' +
         (data.ai_forest_type ? 
             '<div style="background:#0D3B2E;border:1px solid #3DAA6B;border-radius:8px;padding:10px;margin-bottom:8px;text-align:center;">' +
-            '<div style="font-size:10px;color:#3DAA6B;letter-spacing:1px;margin-bottom:4px;">🤖 ' + (lang === "fr" ? "CLASSIFICATION IA" : "AI CLASSIFICATION") + '</div>' +
+            '<div style="font-size:9px;color:#3DAA6B;letter-spacing:1px;margin-bottom:4px;text-transform:uppercase;font-weight:bold;">' + (lang === "fr" ? "CLASSIFICATION IA" : "AI CLASSIFICATION") + '</div>' +
             '<div style="font-size:15px;font-weight:bold;color:white;">' + (lang === "fr" ? data.ai_forest_type_fr : data.ai_forest_type) + '</div>' +
-            (data.leaf_type ? '<div style="font-size:11px;color:#D6EFE1;margin-top:4px;">🍃 ' + (lang === "fr" ? data.leaf_type_fr : data.leaf_type) + '</div>' : '') +
-            (data.dev_stage ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">🌱 ' + (lang === "fr" ? data.dev_stage_fr : data.dev_stage) + '</div>' : '') +
-            (data.biomass_class ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">⚖️ ' + (lang === "fr" ? data.biomass_class_fr : data.biomass_class) + (data.estimated_agb ? " (~" + data.estimated_agb + " t/ha)" : "") + '</div>' : '') +
-            (data.canopy_height ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">📏 ' + (lang === "fr" ? "Hauteur canopée (GEDI+S2 10m)" : "Canopy Height (GEDI+S2 10m)") + ': ' + data.canopy_height + 'm max / ' + (data.canopy_height_rh50 || '?') + 'm median</div>' : '') +
+            (data.leaf_type ? '<div style="font-size:11px;color:#D6EFE1;margin-top:4px;">' + (lang === "fr" ? "Type de feuilles: " : "Leaf type: ") + (lang === "fr" ? data.leaf_type_fr : data.leaf_type) + '</div>' : '') +
+            (data.dev_stage ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">' + (lang === "fr" ? "Stade de développement: " : "Development stage: ") + (lang === "fr" ? data.dev_stage_fr : data.dev_stage) + '</div>' : '') +
+            (data.biomass_class ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">' + (lang === "fr" ? "Biomasse: " : "Biomass: ") + (lang === "fr" ? data.biomass_class_fr : data.biomass_class) + (data.estimated_agb ? " (~" + data.estimated_agb + " t/ha)" : "") + '</div>' : '') +
+            (data.canopy_height ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">' + (lang === "fr" ? "Hauteur canopée (GEDI+S2 10m): " : "Canopy Height (GEDI+S2 10m): ") + data.canopy_height + 'm max / ' + (data.canopy_height_rh50 || '?') + 'm median</div>' : '') +
+            (data.rf_success ?
+                '<div style="font-size:11px;margin-top:6px;padding:8px;background:#0D3B2E;border-radius:6px;border:1px solid #1B6B45;">' +
+                '<div style="font-weight:bold;color:#3DAA6B;margin-bottom:6px;">' + (lang === "fr" ? "Classification Random Forest (ESA WorldCover + Hansen GFW 2025)" : "Random Forest Classification (ESA WorldCover + Hansen GFW 2025)") + '</div>' +
+                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">' +
+                '<div style="background:#1B4332;padding:4px 8px;border-radius:4px;font-size:10px;">' + (lang === "fr" ? "Forêt: " : "Forest: ") + '<b style="color:#3DAA6B;">' + (data.rf_forest_pct || 0) + '%</b></div>' +
+                '<div style="background:#1B4332;padding:4px 8px;border-radius:4px;font-size:10px;">' + (lang === "fr" ? "Dégradée: " : "Degraded: ") + '<b style="color:#F9A825;">' + (data.rf_degraded_pct || 0) + '%</b></div>' +
+                '<div style="background:#1B4332;padding:4px 8px;border-radius:4px;font-size:10px;">' + (lang === "fr" ? "Déforestée " : "Deforested ") + (data.rf_loss_period || '2021-2026') + ': <b style="color:#E53935;">' + (data.rf_deforested_pct || 0) + '%</b></div>' +
+                '<div style="background:#1B4332;padding:4px 8px;border-radius:4px;font-size:10px;">' + (lang === "fr" ? "Non-forêt: " : "Non-forest: ") + '<b style="color:#D6EFE1;">' + (data.rf_nonforest_pct || 0) + '%</b></div>' +
+                '</div></div>' : '') +
             (data.ai_deforestation_risk && data.ai_deforestation_risk !== 'Unknown' ?
                 '<div style="font-size:11px;margin-top:6px;padding:8px;background:#0D3B2E;border-radius:6px;border-left:3px solid ' +
                 (data.ai_deforestation_risk === 'Low' ? '#3DAA6B' : data.ai_deforestation_risk === 'Moderate' ? '#F9A825' : '#E53935') + ';">' +
                 '<div style="font-weight:bold;color:' +
                 (data.ai_deforestation_risk === 'Low' ? '#3DAA6B' : data.ai_deforestation_risk === 'Moderate' ? '#F9A825' : '#E53935') +
-                ';margin-bottom:4px;">' + (lang === "fr" ? "Risque déforestation" : "Deforestation Risk") + ': ' + data.ai_deforestation_risk + '</div>' +
-                (data.ai_degradation_signs && data.ai_degradation_signs !== 'None detected' ? '<div style="color:#D6EFE1;font-size:10px;margin-bottom:2px;">' + (lang === "fr" ? "Dégradation" : "Degradation") + ': ' + data.ai_degradation_signs + '</div>' : '') +
-                (data.ai_recovery_signs && data.ai_recovery_signs !== 'None detected' ? '<div style="color:#3DAA6B;font-size:10px;margin-bottom:2px;">' + (lang === "fr" ? "Récupération" : "Recovery") + ': ' + data.ai_recovery_signs + '</div>' : '') +
-                (data.ai_main_cause ? '<div style="color:#D6EFE1;font-size:10px;margin-bottom:2px;">' + (lang === "fr" ? "Cause principale" : "Main cause") + ': ' + data.ai_main_cause + '</div>' : '') +
-                (data.ai_recommendation ? '<div style="color:#3DAA6B;font-size:10px;font-style:italic;">' + (lang === "fr" ? "Recommandation" : "Recommendation") + ': ' + data.ai_recommendation + '</div>' : '') +
+                ';margin-bottom:4px;">' + (lang === "fr" ? "Risque de déforestation" : "Deforestation Risk") + ': ' + (lang === "fr" ? (data.ai_deforestation_risk === 'Low' ? 'Faible' : data.ai_deforestation_risk === 'Moderate' ? 'Modéré' : data.ai_deforestation_risk === 'High' ? 'Élevé' : 'Critique') : data.ai_deforestation_risk) + '</div>' +
+                (data.ai_degradation_signs && data.ai_degradation_signs !== 'None detected' ? '<div style="color:#D6EFE1;font-size:10px;margin-bottom:2px;"><b>' + (lang === "fr" ? "Dégradation: " : "Degradation: ") + '</b>' + data.ai_degradation_signs + '</div>' : '') +
+                (data.ai_recovery_signs && data.ai_recovery_signs !== 'None detected' ? '<div style="color:#3DAA6B;font-size:10px;margin-bottom:2px;"><b>' + (lang === "fr" ? "Récupération: " : "Recovery: ") + '</b>' + data.ai_recovery_signs + '</div>' : '') +
+                (data.ai_main_cause ? '<div style="color:#D6EFE1;font-size:10px;margin-bottom:2px;"><b>' + (lang === "fr" ? "Cause principale: " : "Main cause: ") + '</b>' + data.ai_main_cause + '</div>' : '') +
+                (data.ai_recommendation ? '<div style="color:#3DAA6B;font-size:10px;font-style:italic;"><b>' + (lang === "fr" ? "Recommandation: " : "Recommendation: ") + '</b>' + data.ai_recommendation + '</div>' : '') +
                 '</div>' : '') +
             (data.carbon_total_co2 ? '<div style="font-size:11px;color:#3DAA6B;margin-top:6px;padding:6px 8px;background:#1B4332;border-radius:6px;border-left:3px solid #3DAA6B;">' +
             '<div style="font-weight:bold;margin-bottom:3px;">Carbon Assessment (IPCC)</div>' +
@@ -1082,32 +1091,32 @@ function showResult(data) {
             '<div>Zone area: ' + Number(data.carbon_area_ha).toLocaleString() + ' ha</div>' +
             '<div style="color:#F9A825;font-weight:bold;">Carbon credit value: EUR ' + Number(data.carbon_value_eur).toLocaleString() + '</div>' +
             '</div>' : '') +
-            (data.gedi_cover ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">🛰️ ' + (lang === "fr" ? "Couverture GEDI" : "GEDI Tree Cover") + ': ' + data.gedi_cover + '%</div>' : '') +
+            (data.gedi_cover ? '<div style="font-size:11px;color:#D6EFE1;margin-top:2px;">' + (lang === "fr" ? "Couverture GEDI: " : "GEDI Tree Cover: ") + data.gedi_cover + '%</div>' : '') +
             '</div>' : '') +
         '<div class="result-row"><span>' + t('veg') + '</span><span class="result-val" style="color:#3DAA6B">' + data.ndvi_current + '</span></div>' +
         '<div class="result-row"><span>' + t('trend3') + '</span><span class="result-val" style="color:' + tc + '">' + (data.ndvi_change >= 0 ? '+' : '') + data.ndvi_change + '</span></div>' +
         l10row + l40row +
         (data.sentinel1_vv != null ?
-            '<div class="result-row"><span>📡 Sentinel-1 Radar</span><span class="result-val" style="color:#3DAA6B">' + data.sentinel1_vv + ' dB</span></div>' +
-            '<div class="result-row"><span>🌲 Radar classification</span><span class="result-val" style="color:#3DAA6B">' + (data.sentinel1_forest || '') + '</span></div>' : '') +
-        '<div class="result-row"><span>' + t('cover') + '</span><span class="result-val" style="color:#3DAA6B">' + data.forest_cover + '%</span></div>' +
+            '<div class="result-row"><span>' + (lang === "fr" ? "Radar Sentinel-1 (VV)" : "Sentinel-1 Radar (VV)") + '</span><span class="result-val" style="color:#3DAA6B">' + data.sentinel1_vv + ' dB</span></div>' +
+            '<div class="result-row"><span>' + (lang === "fr" ? "Classification radar" : "Radar classification") + '</span><span class="result-val" style="color:#3DAA6B">' + (data.sentinel1_forest || '') + '</span></div>' : '') +
+        '<div class="result-row" title="' + (lang === "fr" ? "Couverture végétale via NDVI Sentinel-2 — inclut toute végétation dense" : "Vegetation cover via NDVI Sentinel-2 — includes all dense vegetation") + '"><span>' + t('cover') + ' (NDVI)</span><span class="result-val" style="color:#3DAA6B">' + data.forest_cover + '%</span></div>' +
         '<div class="result-row"><span>' + t('fires') + '</span><span class="result-val" style="color:' + fc + '">' + 
         (data.fire_pixels || data.active_fires) + ' px' + 
         (data.fire_events_estimated > 0 ? ' (~' + data.fire_events_estimated + ' events)' : '') + 
         '</span></div>' +
         '<div class="result-row"><span>' + t('trendlabel') + '</span><span class="result-val">' + data.trend + '</span></div>' +
-        (data.forest_status ? '<div class="result-row"><span>🌲 ' + (lang === "fr" ? "Statut forestier" : "Forest status") + '</span><span class="result-val" style="color:' + (data.forest_status.includes("recovery") || data.forest_status === "Stable" ? "#3DAA6B" : data.forest_status.includes("Light") ? "#F9A825" : "#E53935") + '">' + (lang === "fr" ? data.forest_status_fr : data.forest_status) + '</span></div>' : '') +
-        (data.annual_rate != null ? '<div class="result-row"><span>📉 ' + (lang === "fr" ? "Taux annuel NDVI" : "Annual NDVI rate") + '</span><span class="result-val" style="color:' + (data.annual_rate >= 0 ? "#3DAA6B" : "#E53935") + '">' + (data.annual_rate >= 0 ? "+" : "") + (data.annual_rate * 100).toFixed(3) + '% / ' + (lang === "fr" ? "an" : "year") + '</span></div>' : '') +
+        (data.forest_status ? '<div class="result-row"><span>' + (lang === "fr" ? "Statut forestier" : "Forest status") + '</span><span class="result-val" style="color:' + (data.forest_status.includes("recovery") || data.forest_status === "Stable" ? "#3DAA6B" : data.forest_status.includes("Light") ? "#F9A825" : "#E53935") + '">' + (lang === "fr" ? data.forest_status_fr : data.forest_status) + '</span></div>' : '') +
+        (data.annual_rate != null ? '<div class="result-row"><span>' + (lang === "fr" ? "Taux annuel NDVI" : "Annual NDVI rate") + '</span><span class="result-val" style="color:' + (data.annual_rate >= 0 ? "#3DAA6B" : "#E53935") + '">' + (data.annual_rate >= 0 ? "+" : "") + (data.annual_rate * 100).toFixed(3) + '% / ' + (lang === "fr" ? "an" : "year") + '</span></div>' : '') +
         (data.deforestation_alert ?
             '<div style="background:' + (data.deforestation_alert.includes("CRITICAL") ? "#E53935" : data.deforestation_alert.includes("WARNING") ? "#F9A825" : data.deforestation_alert.includes("CAUTION") ? "#FF8C00" : "#3DAA6B") + ';border-radius:8px;padding:10px;margin-top:6px;">' +
-            '<div style="text-align:center;font-size:12px;font-weight:bold;color:white;margin-bottom:6px;">⚠️ ' + (lang === "fr" ? data.deforestation_alert_fr : data.deforestation_alert) + '</div>' +
+            '<div style="text-align:center;font-size:12px;font-weight:bold;color:white;margin-bottom:6px;">' + (lang === "fr" ? data.deforestation_alert_fr : data.deforestation_alert) + '</div>' +
             '<div style="font-size:10px;color:rgba(255,255,255,0.9);display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;">' +
-            (data.forest_change_pct != null ? '<span>📊 3y: ' + (data.forest_change_pct >= 0 ? "+" : "") + data.forest_change_pct + '%</span>' : '') +
-            (data.forest_change_ha != null ? '<span>🌳 3y: ' + (data.forest_change_ha >= 0 ? "+" : "") + data.forest_change_ha + ' ha</span>' : '') +
-            (data.annual_ha_rate != null ? '<span>📉 ' + (lang === "fr" ? "Taux/an" : "Rate/yr") + ': ' + (data.annual_ha_rate >= 0 ? "+" : "") + data.annual_ha_rate + ' ha</span>' : '') +
-            (data.forest_change_pct_10y != null ? '<span>📊 10y: ' + (data.forest_change_pct_10y >= 0 ? "+" : "") + data.forest_change_pct_10y + '%</span>' : '') +
-            (data.forest_change_ha_10y != null ? '<span>🌳 10y: ' + (data.forest_change_ha_10y >= 0 ? "+" : "") + data.forest_change_ha_10y + ' ha</span>' : '') +
-            (data.annual_ha_rate_10y != null ? '<span>📉 10y ' + (lang === "fr" ? "taux/an" : "rate/yr") + ': ' + (data.annual_ha_rate_10y >= 0 ? "+" : "") + data.annual_ha_rate_10y + ' ha</span>' : '') +
+            (data.forest_change_pct != null ? '<span>' + (lang === "fr" ? "3 ans: " : "3y: ") + (data.forest_change_pct >= 0 ? "+" : "") + data.forest_change_pct + '%</span>' : '') +
+            (data.forest_change_ha != null ? '<span>' + (lang === "fr" ? "3 ans (ha): " : "3y (ha): ") + (data.forest_change_ha >= 0 ? "+" : "") + data.forest_change_ha + ' ha</span>' : '') +
+            (data.annual_ha_rate != null ? '<span>' + (lang === "fr" ? "Taux/an: " : "Rate/yr: ") + (data.annual_ha_rate >= 0 ? "+" : "") + data.annual_ha_rate + ' ha</span>' : '') +
+            (data.forest_change_pct_10y != null ? '<span>' + (lang === "fr" ? "10 ans: " : "10y: ") + (data.forest_change_pct_10y >= 0 ? "+" : "") + data.forest_change_pct_10y + '%</span>' : '') +
+            (data.forest_change_ha_10y != null ? '<span>' + (lang === "fr" ? "10 ans (ha): " : "10y (ha): ") + (data.forest_change_ha_10y >= 0 ? "+" : "") + data.forest_change_ha_10y + ' ha</span>' : '') +
+            (data.annual_ha_rate_10y != null ? '<span>' + (lang === "fr" ? "Taux/an 10 ans: " : "10y rate/yr: ") + (data.annual_ha_rate_10y >= 0 ? "+" : "") + data.annual_ha_rate_10y + ' ha</span>' : '') +
             '</div>' +
             '</div>' : '') +
         '<div class="result-row"><span>' + t('date') + '</span><span class="result-val">' + data.analysis_date + '</span></div>' +

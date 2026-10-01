@@ -3,108 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CanopySat — Forest Integrity Score</title>
-    <meta name="description" content="How the CanopySat Forest Integrity Score (0-100) is calculated — indicator weighting, algorithm and interpretation guide.">
+    <title>Forest Integrity Score — CanopySat</title>
+    <meta name="description" content="How CanopySat calculates the Forest Integrity Score using 6 satellites, Random Forest ML and Artificial Intelligence.">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:'Segoe UI',Arial,sans-serif; background:#0D3B2E; color:white; }
         header { background:#0D3B2E; padding:12px 20px; border-bottom:2px solid #1B6B45; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
         .logo { color:white; text-decoration:none; font-size:18px; font-weight:bold; letter-spacing:2px; }
         .nav-link { color:#3DAA6B; text-decoration:none; font-size:12px; padding:4px 12px; border:1px solid #1B6B45; border-radius:20px; }
+        .lang-btn { padding:4px 10px; border-radius:12px; border:1px solid #3DAA6B; background:transparent; color:#D6EFE1; text-decoration:none; font-size:11px; font-weight:bold; }
+        .lang-btn.active { background:#3DAA6B; color:white; }
         .container { max-width:860px; margin:0 auto; padding:40px 20px; }
         .breadcrumb { font-size:11px; color:#2D6A4F; margin-bottom:15px; }
         .breadcrumb a { color:#3DAA6B; text-decoration:none; }
         .badge { display:inline-block; background:#1B6B45; color:#3DAA6B; padding:4px 14px; border-radius:12px; font-size:11px; font-weight:bold; margin-bottom:12px; }
-        h1 { font-size:26px; color:white; margin-bottom:8px; }
-        .subtitle { font-size:13px; color:#D6EFE1; margin-bottom:30px; line-height:1.7; }
-        h2 { font-size:16px; color:#3DAA6B; margin:25px 0 10px; }
+        h1 { font-size:28px; color:white; margin-bottom:8px; }
+        h2 { font-size:16px; color:#3DAA6B; margin:30px 0 12px; border-bottom:1px solid #1B6B45; padding-bottom:8px; }
+        h3 { font-size:13px; color:white; margin:16px 0 8px; }
         p { font-size:12px; color:#D6EFE1; line-height:1.8; margin-bottom:10px; }
-        .score-display { text-align:center; background:#1B4332; border-radius:12px; padding:25px; margin:20px 0; border:1px solid #1B6B45; }
-        .score-big { font-size:64px; font-weight:bold; color:#3DAA6B; }
-        .score-label { font-size:12px; color:#D6EFE1; letter-spacing:2px; }
-        .indicator-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #1B4332; }
-        .indicator-name { font-size:12px; color:#D6EFE1; }
-        .indicator-weight { font-size:12px; color:#3DAA6B; font-weight:bold; }
-        .indicator-bar { height:6px; background:#1B4332; border-radius:3px; margin-top:4px; }
-        .indicator-fill { height:6px; background:#3DAA6B; border-radius:3px; }
-        .scale-box { background:#1B4332; border-radius:10px; padding:20px; margin:20px 0; }
-        .scale-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #0D3B2E; }
-        .scale-range { font-size:13px; font-weight:bold; min-width:60px; }
-        .scale-label { font-size:12px; color:#D6EFE1; }
-        .scale-badge { padding:3px 10px; border-radius:6px; font-size:10px; font-weight:bold; min-width:80px; text-align:center; }
-        footer { text-align:center; padding:15px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:30px; }
+        .subtitle { font-size:14px; color:#D6EFE1; margin-bottom:30px; line-height:1.7; }
+
+        /* Score example */
+        .score-box { background:#1B4332; border-radius:14px; padding:24px; margin:20px 0; border:2px solid #3DAA6B; text-align:center; }
+        .score-num { font-size:72px; font-weight:bold; color:#3DAA6B; line-height:1; }
+        .score-label { font-size:13px; color:#D6EFE1; letter-spacing:2px; margin-top:8px; }
+
+        /* Components grid */
+        .components { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:12px; margin:16px 0; }
+        .component { background:#1B4332; border-radius:10px; padding:16px; border-top:3px solid #3DAA6B; }
+        .comp-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+        .comp-name { font-size:12px; font-weight:bold; color:white; }
+        .comp-pts { font-size:18px; font-weight:bold; color:#3DAA6B; }
+        .comp-max { font-size:10px; color:#2D6A4F; }
+        .comp-desc { font-size:11px; color:#D6EFE1; line-height:1.6; }
+        .comp-formula { font-size:10px; color:#3DAA6B; font-family:monospace; margin-top:6px; background:#0D3B2E; padding:6px 8px; border-radius:4px; }
+
+        /* Formula box */
+        .formula-box { background:#0D3B2E; border-radius:8px; padding:16px; border:1px solid #1B6B45; font-family:monospace; font-size:11px; color:#3DAA6B; line-height:2; margin:12px 0; }
+
+        /* RF + AI section */
+        .ai-box { background:#1B4332; border-radius:10px; padding:16px; border-left:3px solid #6A1B9A; margin:12px 0; }
+        .rf-box { background:#1B4332; border-radius:10px; padding:16px; border-left:3px solid #1565C0; margin:12px 0; }
+
+        /* Score table */
+        .score-table { width:100%; border-collapse:collapse; font-size:11px; margin:12px 0; }
+        .score-table th { background:#1B4332; color:#3DAA6B; padding:8px; text-align:left; border-bottom:1px solid #1B6B45; }
+        .score-table td { padding:8px; border-bottom:1px solid #0D3B2E; color:#D6EFE1; }
+        .score-table tr:nth-child(odd) { background:#1B4332; }
+
+        /* Interpretation */
+        .interp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:8px; margin:12px 0; }
+        .interp-item { border-radius:8px; padding:12px; text-align:center; }
+        .interp-score { font-size:18px; font-weight:bold; margin-bottom:4px; }
+        .interp-label { font-size:10px; font-weight:bold; letter-spacing:1px; }
+        .interp-desc { font-size:10px; color:#D6EFE1; margin-top:4px; }
+
+        footer { text-align:center; padding:20px; font-size:11px; color:#2D6A4F; border-top:1px solid #1B6B45; margin-top:40px; }
     </style>
 </head>
 <body>
 <header>
     <a href="/" class="logo">🛰️ CANOPYSAT</a>
-    <div style="display:flex;gap:8px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <a class="lang-btn {% if lang == 'en' %}active{% endif %}" href="/science/forest-integrity-score?lang=en">EN</a>
+        <a class="lang-btn {% if lang == 'fr' %}active{% endif %}" href="/science/forest-integrity-score?lang=fr">FR</a>
         <a href="/science" class="nav-link">← Science</a>
-        <a href="/science/methodology" class="nav-link">Methodology</a>
-        <a href="/" class="nav-link">Home</a>
+        <a href="/" class="nav-link">{% if lang == 'fr' %}Accueil{% else %}Home{% endif %}</a>
     </div>
 </header>
+
 <div class="container">
-    <div class="breadcrumb"><a href="/">Home</a> → <a href="/science">Science</a> → Forest Integrity Score</div>
-    <div class="badge">SCIENCE · FOREST INTEGRITY SCORE</div>
-    <h1>Forest Integrity Score</h1>
-    <p class="subtitle">{% if lang == 'fr' %}Le Forest Integrity Score est un indicateur composite 0-100 qui résume la santé forestière d'une zone en combinant plusieurs signaux satellites.{% else %}The Forest Integrity Score is a composite 0-100 indicator that summarizes the forest health of a zone by combining multiple satellite signals.{% endif %}</p>
-
-    <div class="score-display">
-        <div class="score-big">80</div>
-        <div class="score-label">FOREST INTEGRITY SCORE · AMAZON RAINFOREST EXAMPLE</div>
+    <div class="breadcrumb">
+        <a href="/">{% if lang == 'fr' %}Accueil{% else %}Home{% endif %}</a> →
+        <a href="/science">Science</a> →
+        Forest Integrity Score
     </div>
 
-    <h2>{% if lang == 'fr' %}Comment le score est calculé{% else %}How the score is calculated{% endif %}</h2>
-    <p>{% if lang == 'fr' %}Le score est calculé en combinant 5 indicateurs satellites pondérés, chacun normalisé sur une échelle 0-100 avant d'être agrégé.{% else %}The score is calculated by combining 5 weighted satellite indicators, each normalized on a 0-100 scale before aggregation.{% endif %}</p>
+    <div class="badge">SCIENCE · METHODOLOGY</div>
+    <h1>{% if lang == 'fr' %}Forest Integrity Score{% else %}Forest Integrity Score{% endif %}</h1>
+    <p class="subtitle">
+        {% if lang == 'fr' %}
+        Un score composite 0-100 qui intègre 6 sources satellites, un classifieur Random Forest ML entraîné sur ESA WorldCover + Hansen GFW, et une analyse par Intelligence Artificielle pour quantifier l'intégrité d'une zone forestière.
+        {% else %}
+        A composite 0-100 score integrating 6 satellite sources, a Random Forest ML classifier trained on ESA WorldCover + Hansen GFW, and Artificial Intelligence analysis to quantify forest zone integrity.
+        {% endif %}
+    </p>
 
-    <div style="background:#1B4332;border-radius:10px;padding:20px;margin:15px 0;">
-        {% for ind in [
-            ('NDVI (Sentinel-2)', 35, 'Vegetation health and density'),
-            ('Forest Cover %', 25, 'Percentage of forested pixels'),
-            ('NDVI Trend (10yr)', 20, 'Forest change direction'),
-            ('Fire Activity (inverse)', 10, 'Lower fires = higher score'),
-            ('SAR Backscatter (Sentinel-1)', 10, 'Forest structure via radar'),
-        ] %}
-        <div class="indicator-row">
-            <div style="flex:1;">
-                <div class="indicator-name">{{ ind[0] }}</div>
-                <div style="font-size:10px;color:#2D6A4F;">{{ ind[2] }}</div>
-                <div class="indicator-bar" style="width:{{ ind[1]*2 }}px;margin-top:5px;">
-                    <div class="indicator-fill" style="width:100%;"></div>
-                </div>
+    <!-- Score example -->
+    <div class="score-box">
+        <div class="score-num">80</div>
+        <div class="score-label">{% if lang == 'fr' %}EXEMPLE — FORÊT AMAZONIENNE{% else %}EXAMPLE — AMAZON RAINFOREST{% endif %}</div>
+        <p style="font-size:11px;color:#2D6A4F;margin-top:8px;">{% if lang == 'fr' %}Score calculé en temps réel à partir de données satellites du jour{% else %}Score calculated in real time from current-day satellite data{% endif %}</p>
+    </div>
+
+    <!-- Formula -->
+    <h2>{% if lang == 'fr' %}1. Formule de calcul{% else %}1. Calculation formula{% endif %}</h2>
+    <div class="formula-box">
+        {% if lang == 'fr' %}# Formule de base (avant correction RF){% else %}# Base formula (before RF correction){% endif %}<br>
+        Score = pts_NDVI + pts_Trend + pts_Cover + pts_Radar + pts_Fire<br>
+        Score_max = 25 + 25 + 25 + 15 + 10 = <b style="color:white;">100 points</b><br><br>
+        {% if lang == 'fr' %}# Correction Random Forest (pénalité déforestation){% else %}# Random Forest correction (deforestation penalty){% endif %}<br>
+        {% if lang == 'fr' %}if déforestation RF > 15%: Score -= 20{% else %}if RF deforestation > 15%: Score -= 20{% endif %}<br>
+        {% if lang == 'fr' %}if déforestation RF > 10%: Score -= 15{% else %}if RF deforestation > 10%: Score -= 15{% endif %}<br>
+        {% if lang == 'fr' %}if déforestation RF > 5%:  Score -= 8{% else %}if RF deforestation > 5%:  Score -= 8{% endif %}<br>
+        {% if lang == 'fr' %}if déforestation RF > 2%:  Score -= 3{% else %}if RF deforestation > 2%:  Score -= 3{% endif %}<br>
+        {% if lang == 'fr' %}if dégradation RF > 20%:   Score -= 10{% else %}if RF degradation > 20%:   Score -= 10{% endif %}<br>
+        {% if lang == 'fr' %}if dégradation RF > 10%:   Score -= 6{% else %}if RF degradation > 10%:   Score -= 6{% endif %}<br>
+        {% if lang == 'fr' %}if dégradation RF > 5%:    Score -= 3{% else %}if RF degradation > 5%:    Score -= 3{% endif %}<br><br>
+        Final Score = max(0, Score - RF_penalty)
+    </div>
+
+    <!-- Components -->
+    <h2>{% if lang == 'fr' %}2. Composantes du score{% else %}2. Score components{% endif %}</h2>
+
+    <div class="components">
+        <div class="component">
+            <div class="comp-header">
+                <div class="comp-name">{% if lang == 'fr' %}Végétation actuelle (NDVI){% else %}Current vegetation (NDVI){% endif %}</div>
+                <div><span class="comp-pts">25</span><span class="comp-max">/25 pts</span></div>
             </div>
-            <div class="indicator-weight">{{ ind[1] }}%</div>
+            <div class="comp-desc">{% if lang == 'fr' %}NDVI Sentinel-2 (10m) — mesure la densité et la santé du couvert végétal actuel.{% else %}NDVI from Sentinel-2 (10m) — measures current vegetation density and health.{% endif %}</div>
+            <div class="comp-formula">
+                NDVI ≥ 0.70 → 25 pts ({% if lang == 'fr' %}Excellent{% else %}Excellent{% endif %})<br>
+                NDVI ≥ 0.50 → 18 pts ({% if lang == 'fr' %}Bon{% else %}Good{% endif %})<br>
+                NDVI ≥ 0.30 → 11 pts ({% if lang == 'fr' %}Modéré{% else %}Moderate{% endif %})<br>
+                NDVI ≥ 0.10 → 5 pts ({% if lang == 'fr' %}Faible{% else %}Low{% endif %})<br>
+                NDVI < 0.10 → 0 pts
+            </div>
         </div>
-        {% endfor %}
+
+        <div class="component">
+            <div class="comp-header">
+                <div class="comp-name">{% if lang == 'fr' %}Tendance NDVI (10 ans){% else %}NDVI Trend (10 years){% endif %}</div>
+                <div><span class="comp-pts">25</span><span class="comp-max">/25 pts</span></div>
+            </div>
+            <div class="comp-desc">{% if lang == 'fr' %}Comparaison NDVI Sentinel-2 actuel vs Landsat 8/9 il y a 10 ans. Indique si la forêt s'améliore ou se dégrade.{% else %}Comparison of current Sentinel-2 NDVI vs Landsat 8/9 from 10 years ago. Indicates whether the forest is improving or degrading.{% endif %}</div>
+            <div class="comp-formula">
+                Δ ≥ +0.10 → 25 pts ({% if lang == 'fr' %}Forte amélioration{% else %}Strong improvement{% endif %})<br>
+                Δ ≥ +0.05 → 20 pts<br>
+                Δ ≥ 0     → 15 pts ({% if lang == 'fr' %}Stable{% else %}Stable{% endif %})<br>
+                Δ ≥ -0.05 → 8 pts<br>
+                Δ ≥ -0.10 → 4 pts<br>
+                Δ < -0.10 → 0 pts ({% if lang == 'fr' %}Forte dégradation{% else %}Strong degradation{% endif %})
+            </div>
+        </div>
+
+        <div class="component">
+            <div class="comp-header">
+                <div class="comp-name">{% if lang == 'fr' %}Couverture forestière{% else %}Forest cover{% endif %}</div>
+                <div><span class="comp-pts">25</span><span class="comp-max">/25 pts</span></div>
+            </div>
+            <div class="comp-desc">{% if lang == 'fr' %}Pourcentage de pixels végétalisés (NDVI > 0.3) dans la zone analysée via Sentinel-2 10m.{% else %}Percentage of vegetated pixels (NDVI > 0.3) in the analyzed zone via Sentinel-2 10m.{% endif %}</div>
+            <div class="comp-formula">
+                Cover ≥ 80% → 25 pts<br>
+                Cover ≥ 60% → 18 pts<br>
+                Cover ≥ 40% → 11 pts<br>
+                Cover ≥ 20% → 5 pts<br>
+                Cover < 20% → 0 pts
+            </div>
+        </div>
+
+        <div class="component">
+            <div class="comp-header">
+                <div class="comp-name">{% if lang == 'fr' %}Radar Sentinel-1 (VV){% else %}Sentinel-1 Radar (VV){% endif %}</div>
+                <div><span class="comp-pts">15</span><span class="comp-max">/15 pts</span></div>
+            </div>
+            <div class="comp-desc">{% if lang == 'fr' %}Rétrodiffusion radar VV ESA Sentinel-1 (10m). Mesure la structure forestière indépendamment des nuages et de la nuit.{% else %}ESA Sentinel-1 VV radar backscatter (10m). Measures forest structure independently of clouds and nighttime.{% endif %}</div>
+            <div class="comp-formula">
+                VV ≥ -8 dB  → 15 pts ({% if lang == 'fr' %}Forêt dense{% else %}Dense forest{% endif %})<br>
+                VV ≥ -12 dB → 10 pts<br>
+                VV ≥ -16 dB → 5 pts<br>
+                VV < -16 dB → 0 pts
+            </div>
+        </div>
+
+        <div class="component">
+            <div class="comp-header">
+                <div class="comp-name">{% if lang == 'fr' %}Activité feux (FIRMS){% else %}Fire activity (FIRMS){% endif %}</div>
+                <div><span class="comp-pts">10</span><span class="comp-max">/10 pts</span></div>
+            </div>
+            <div class="comp-desc">{% if lang == 'fr' %}Pixels feux actifs NASA FIRMS/VIIRS (375m) sur 12 mois. Moins de feux = score plus élevé.{% else %}NASA FIRMS/VIIRS active fire pixels (375m) over 12 months. Fewer fires = higher score.{% endif %}</div>
+            <div class="comp-formula">
+                0 {% if lang == 'fr' %}pixel{% else %}pixels{% endif %}    → 10 pts ({% if lang == 'fr' %}Aucun feu{% else %}No fire{% endif %})<br>
+                ≤ 5 {% if lang == 'fr' %}pixels{% else %}pixels{% endif %}  → 5 pts<br>
+                > 5 {% if lang == 'fr' %}pixels{% else %}pixels{% endif %}  → 0 pts
+            </div>
+        </div>
     </div>
 
-    <h2>{% if lang == 'fr' %}Interprétation du score{% else %}Score interpretation{% endif %}</h2>
-    <div class="scale-box">
-        {% for row in [
-            ('80-100', 'STABLE', '#1B6B45', '#3DAA6B', 'Healthy, dense forest. Minimal deforestation risk.'),
-            ('65-79', 'POSITIVE', '#1565C0', '#90CAF9', 'Good forest health. Positive trend detected.'),
-            ('50-64', 'CAUTION', '#E65100', '#FFCC02', 'Moderate forest health. Some degradation signals.'),
-            ('30-49', 'WARNING', '#B71C1C', '#EF5350', 'Significant forest degradation detected.'),
-            ('0-29', 'CRITICAL', '#7B1FA2', '#CE93D8', 'Severe deforestation or forest loss detected.'),
-        ] %}
-        <div class="scale-row">
-            <div class="scale-range" style="color:{{ row[3] }};">{{ row[0] }}</div>
-            <span class="scale-badge" style="background:{{ row[2] }};color:{{ row[3] }};">{{ row[1] }}</span>
-            <div class="scale-label">{{ row[4] }}</div>
+    <!-- RF Section -->
+    <h2>{% if lang == 'fr' %}3. Correction Random Forest ML{% else %}3. Random Forest ML correction{% endif %}</h2>
+    <div class="rf-box">
+        <h3 style="color:#1E88E5;">{% if lang == 'fr' %}Classifieur Random Forest (50 arbres){% else %}Random Forest classifier (50 trees){% endif %}</h3>
+        <p>{% if lang == 'fr' %}Un classifieur Random Forest entraîné sur ESA WorldCover 2021 et Hansen GFW 2025 classifie chaque pixel de la zone en 5 catégories. Les résultats sont utilisés pour corriger le score de base.{% else %}A Random Forest classifier trained on ESA WorldCover 2021 and Hansen GFW 2025 classifies each pixel in the zone into 5 categories. Results are used to correct the base score.{% endif %}</p>
+        <div class="comp-formula" style="margin-top:10px;">
+            {% if lang == 'fr' %}Données d'entraînement:{% else %}Training data:{% endif %}<br>
+            - ESA WorldCover 2021 (10m) → {% if lang == 'fr' %}labels occupation sols{% else %}land cover labels{% endif %}<br>
+            - Hansen GFW 2025 (30m) → {% if lang == 'fr' %}déforestation 2021-2026{% else %}deforestation 2021-2026{% endif %}<br>
+            - ESA Sentinel-2 (10m) → {% if lang == 'fr' %}features: B2,B3,B4,B8,B11,B12,NDVI,EVI,NBR,NDWI{% else %}features: B2,B3,B4,B8,B11,B12,NDVI,EVI,NBR,NDWI{% endif %}<br><br>
+            {% if lang == 'fr' %}Classes de sortie:{% else %}Output classes:{% endif %}<br>
+            1 → {% if lang == 'fr' %}Forêt saine{% else %}Healthy forest{% endif %}<br>
+            2 → {% if lang == 'fr' %}Dégradée{% else %}Degraded{% endif %}<br>
+            3 → {% if lang == 'fr' %}Non-forêt{% else %}Non-forest{% endif %}<br>
+            4 → {% if lang == 'fr' %}Eau{% else %}Water{% endif %}<br>
+            5 → {% if lang == 'fr' %}Déforestée (2021-2026){% else %}Deforested (2021-2026){% endif %}
         </div>
-        {% endfor %}
     </div>
 
-    <h2>{% if lang == 'fr' %}Limites du score{% else %}Score limitations{% endif %}</h2>
-    <p>{% if lang == 'fr' %}Le score représente une zone d'analyse de 1-100km de rayon — pas la forêt entière. Des zones mixtes (agriculture + forêt) peuvent produire des scores intermédiaires qui reflètent la réalité du paysage analysé. Voir la page Limitations pour plus de détails.{% else %}The score represents an analysis zone of 1-100km radius — not the entire forest. Mixed zones (agriculture + forest) may produce intermediate scores that reflect the reality of the analyzed landscape. See the Limitations page for more details.{% endif %}</p>
+    <!-- AI Section -->
+    <h2>{% if lang == 'fr' %}4. Analyse par Intelligence Artificielle{% else %}4. Artificial Intelligence Analysis{% endif %}</h2>
+    <div class="ai-box">
+        <h3 style="color:#CE93D8;">{% if lang == 'fr' %}Intelligence Artificielle (IA){% else %}Artificial Intelligence (AI){% endif %}</h3>
+        <p>{% if lang == 'fr' %}L'Intelligence Artificielle reçoit l'ensemble des données satellites et des résultats RF pour générer une analyse intelligente du type de forêt, des risques et des recommandations de conservation.{% else %}The Artificial Intelligence receives all satellite data and RF results to generate an intelligent analysis of forest type, risks and conservation recommendations.{% endif %}</p>
+        <div class="comp-formula" style="margin-top:10px;">
+            {% if lang == 'fr' %}Entrées IA:{% else %}AI inputs:{% endif %}<br>
+            - {% if lang == 'fr' %}Indices spectraux: NDVI, EVI, NBR, NDWI{% else %}Spectral indices: NDVI, EVI, NBR, NDWI{% endif %}<br>
+            - {% if lang == 'fr' %}Résultats RF: % forêt saine, dégradée, déforestée{% else %}RF results: % healthy forest, degraded, deforested{% endif %}<br>
+            - {% if lang == 'fr' %}Localisation géographique{% else %}Geographic location{% endif %}<br>
+            - {% if lang == 'fr' %}Période de déforestation dynamique{% else %}Dynamic deforestation period{% endif %}<br><br>
+            {% if lang == 'fr' %}Sorties IA:{% else %}AI outputs:{% endif %}<br>
+            - {% if lang == 'fr' %}Type de forêt (Dense Tropical/Temperate/Boreal/...){% else %}Forest type (Dense Tropical/Temperate/Boreal/...){% endif %}<br>
+            - {% if lang == 'fr' %}Type de feuilles (Feuillus/Conifères/Mixte){% else %}Leaf type (Broadleaf/Coniferous/Mixed){% endif %}<br>
+            - {% if lang == 'fr' %}Stade de développement{% else %}Development stage{% endif %}<br>
+            - {% if lang == 'fr' %}Risque de déforestation (Faible/Modéré/Élevé/Critique){% else %}Deforestation risk (Low/Moderate/High/Critical){% endif %}<br>
+            - {% if lang == 'fr' %}Signes de dégradation et récupération{% else %}Degradation and recovery signs{% endif %}<br>
+            - {% if lang == 'fr' %}Cause principale et recommandation{% else %}Main cause and recommendation{% endif %}
+        </div>
+    </div>
 
-    <div style="margin-top:25px;display:flex;gap:10px;flex-wrap:wrap;">
-        <a href="/#analyze" style="padding:8px 18px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold;">{% if lang == 'fr' %}Calculer un score →{% else %}Calculate a score →{% endif %}</a>
-        <a href="/science/methodology" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Methodology →</a>
-        <a href="/science/limitations" style="padding:8px 18px;background:#0D3B2E;color:#3DAA6B;border:1px solid #3DAA6B;border-radius:8px;text-decoration:none;font-size:12px;">Limitations →</a>
+    <!-- Score interpretation -->
+    <h2>{% if lang == 'fr' %}5. Interprétation du score{% else %}5. Score interpretation{% endif %}</h2>
+    <div class="interp-grid">
+        <div class="interp-item" style="background:#1B4332;border-top:3px solid #3DAA6B;">
+            <div class="interp-score" style="color:#3DAA6B;">80–100</div>
+            <div class="interp-label" style="color:#3DAA6B;">{% if lang == 'fr' %}FORÊT SAINE{% else %}HEALTHY FOREST{% endif %}</div>
+            <div class="interp-desc">{% if lang == 'fr' %}Végétation dense, stable, peu de feux, pas de déforestation RF détectée{% else %}Dense stable vegetation, few fires, no RF deforestation detected{% endif %}</div>
+        </div>
+        <div class="interp-item" style="background:#1B4332;border-top:3px solid #66BB6A;">
+            <div class="interp-score" style="color:#66BB6A;">60–79</div>
+            <div class="interp-label" style="color:#66BB6A;">{% if lang == 'fr' %}FORÊT BONNE{% else %}GOOD FOREST{% endif %}</div>
+            <div class="interp-desc">{% if lang == 'fr' %}Bonne couverture, tendance positive, risque modéré{% else %}Good cover, positive trend, moderate risk{% endif %}</div>
+        </div>
+        <div class="interp-item" style="background:#1B4332;border-top:3px solid #F9A825;">
+            <div class="interp-score" style="color:#F9A825;">40–59</div>
+            <div class="interp-label" style="color:#F9A825;">{% if lang == 'fr' %}FORÊT DÉGRADÉE{% else %}DEGRADED FOREST{% endif %}</div>
+            <div class="interp-desc">{% if lang == 'fr' %}Dégradation détectée, tendance négative ou feux importants{% else %}Degradation detected, negative trend or significant fires{% endif %}</div>
+        </div>
+        <div class="interp-item" style="background:#1B4332;border-top:3px solid #EF5350;">
+            <div class="interp-score" style="color:#EF5350;">20–39</div>
+            <div class="interp-label" style="color:#EF5350;">{% if lang == 'fr' %}FORÊT CRITIQUE{% else %}CRITICAL FOREST{% endif %}</div>
+            <div class="interp-desc">{% if lang == 'fr' %}Déforestation active, forte dégradation RF détectée{% else %}Active deforestation, strong RF degradation detected{% endif %}</div>
+        </div>
+        <div class="interp-item" style="background:#1B4332;border-top:3px solid #B71C1C;">
+            <div class="interp-score" style="color:#B71C1C;">0–19</div>
+            <div class="interp-label" style="color:#B71C1C;">{% if lang == 'fr' %}NON-FORESTIER{% else %}NON-FOREST{% endif %}</div>
+            <div class="interp-desc">{% if lang == 'fr' %}Pas de couvert forestier détectable{% else %}No detectable forest cover{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- Data sources -->
+    <h2>{% if lang == 'fr' %}6. Sources de données{% else %}6. Data sources{% endif %}</h2>
+    <table class="score-table">
+        <tr>
+            <th>{% if lang == 'fr' %}Source{% else %}Source{% endif %}</th>
+            <th>{% if lang == 'fr' %}Résolution{% else %}Resolution{% endif %}</th>
+            <th>{% if lang == 'fr' %}Usage{% else %}Usage{% endif %}</th>
+            <th>{% if lang == 'fr' %}Composante{% else %}Component{% endif %}</th>
+        </tr>
+        <tr><td>ESA Sentinel-2</td><td>10m</td><td>NDVI, EVI, NBR, NDWI, {% if lang == 'fr' %}couverture{% else %}cover{% endif %}</td><td>NDVI, Trend, Cover, RF</td></tr>
+        <tr><td>NASA Landsat 8/9</td><td>30m</td><td>{% if lang == 'fr' %}Tendance 10 ans{% else %}10-year trend{% endif %}</td><td>Trend</td></tr>
+        <tr><td>NASA Landsat 4/5</td><td>30m</td><td>{% if lang == 'fr' %}Tendance 40 ans{% else %}40-year trend{% endif %}</td><td>{% if lang == 'fr' %}Historique{% else %}Historical{% endif %}</td></tr>
+        <tr><td>ESA Sentinel-1</td><td>10m</td><td>{% if lang == 'fr' %}Radar VV — structure forêt{% else %}VV radar — forest structure{% endif %}</td><td>Radar</td></tr>
+        <tr><td>NASA FIRMS/VIIRS</td><td>375m</td><td>{% if lang == 'fr' %}Feux actifs{% else %}Active fires{% endif %}</td><td>Fire</td></tr>
+        <tr><td>NASA GEDI LiDAR</td><td>25m→10m</td><td>{% if lang == 'fr' %}Hauteur canopée{% else %}Canopy height{% endif %}</td><td>{% if lang == 'fr' %}Biomasse{% else %}Biomass{% endif %}</td></tr>
+        <tr><td>ESA WorldCover 2021</td><td>10m</td><td>{% if lang == 'fr' %}Labels RF{% else %}RF labels{% endif %}</td><td>RF</td></tr>
+        <tr><td>Hansen GFW 2025</td><td>30m</td><td>{% if lang == 'fr' %}Déforestation RF{% else %}RF deforestation{% endif %}</td><td>RF</td></tr>
+        <tr><td>{% if lang == 'fr' %}Intelligence Artificielle (IA){% else %}Artificial Intelligence (AI){% endif %}</td><td>—</td><td>{% if lang == 'fr' %}Analyse intelligente{% else %}Intelligent analysis{% endif %}</td><td>AI</td></tr>
+        <tr><td>GBIF / WorldClim / CMIP6</td><td>—</td><td>{% if lang == 'fr' %}Suitabilité espèces{% else %}Species suitability{% endif %}</td><td>BEA</td></tr>
+    </table>
+
+    <!-- Limitations -->
+    <h2>{% if lang == 'fr' %}7. Limitations{% else %}7. Limitations{% endif %}</h2>
+    <div style="background:#1B4332;border-radius:10px;padding:16px;border:1px solid #F9A825;">
+        <p style="color:#F9A825;font-weight:bold;margin-bottom:8px;">{% if lang == 'fr' %}Points importants{% else %}Important points{% endif %}</p>
+        <ul style="font-size:11px;color:#D6EFE1;line-height:1.9;padding-left:16px;">
+            <li>{% if lang == 'fr' %}Le score représente une zone d'analyse (1-100km) — pas la forêt entière{% else %}The score represents an analysis zone (1-100km) — not the entire forest{% endif %}</li>
+            <li>{% if lang == 'fr' %}GEDI LiDAR limité au-dessus de 51.6° de latitude{% else %}GEDI LiDAR limited above 51.6° latitude{% endif %}</li>
+            <li>{% if lang == 'fr' %}{% if lang == 'fr' %}Le classifieur RF est entraîné sur 100 points/classe{% else %}RF classifier trained on 100 points/class{% endif %} — un entraînement plus large améliorerait la précision{% else %}RF classifier trained on 100 points/class — larger training would improve accuracy{% endif %}</li>
+            <li>{% if lang == 'fr' %}L'IA analyse des données spectrales — pas des images directes{% else %}AI analyzes spectral data — not direct images{% endif %}</li>
+            <li>{% if lang == 'fr' %}La déforestation RF couvre dynamiquement les 5 dernières années (2021-2026) — mise à jour automatique chaque année{% else %}RF deforestation dynamically covers the last 5 years (2021-2026) — updated automatically each year{% endif %}</li>
+        </ul>
+    </div>
+
+    <div style="text-align:center;margin-top:30px;">
+        <a href="/" style="padding:10px 24px;background:#2D8A5A;color:white;border-radius:8px;text-decoration:none;font-size:13px;font-weight:bold;">{% if lang == 'fr' %}Analyser une forêt →{% else %}Analyze a forest →{% endif %}</a>
+        <a href="/library" style="padding:10px 24px;background:#1B4332;color:#3DAA6B;border-radius:8px;text-decoration:none;font-size:13px;font-weight:bold;border:1px solid #3DAA6B;margin-left:10px;">{% if lang == 'fr' %}Publications →{% else %}Publications →{% endif %}</a>
     </div>
 </div>
+
 <footer>CanopySat Science · Forest Integrity Score · canopysat.org · 2026</footer>
 </body>
 </html>
